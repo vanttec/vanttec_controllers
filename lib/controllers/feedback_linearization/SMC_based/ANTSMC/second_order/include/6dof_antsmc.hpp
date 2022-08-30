@@ -1,18 +1,17 @@
 /** ----------------------------------------------------------------------------
- * @file: 6dof_asmc.hpp
- * @date: March 2, 2022
- * @date: June 4, 2022
+ * @file: 6dof_antsmc.hpp
+ * @date: August 30, 2022
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: 6-DOF adaptive sliding mode controller class
+ * @brief: 6-DOF adaptive non-singular terminal sliding mode controller class
  * -----------------------------------------------------------------------------
  * */
 
-#ifndef __ASMC6DOF_H__
-#define __ASMC6DOF_H__
+#ifndef __ANTSMC6DOF_H__
+#define __ANTSMC6DOF_H__
 
-#include "asmc.hpp"
+#include "antsmc.hpp"
 #include "vanttec_msgs/ThrustControl.h"
 #include "vanttec_msgs/SystemDynamics.h"
 
@@ -23,7 +22,7 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
-class ASMC6DOF
+class ANTSMC6DOF
 {
     private:
         ros::NodeHandle handle;
@@ -39,20 +38,21 @@ class ASMC6DOF
     public:
         Eigen::VectorXf u;              // Control
         Eigen::VectorXf ua;             // Auxiliary Control
+        Eigen::VectorXf delta;
         Eigen::VectorXf f;
         Eigen::MatrixXf g;
         Eigen::VectorXf q_dot_dot;      //ref_dot_dot
         vanttec_msgs::ThrustControl  thrust;
 
-        ASMC ASMC_x;
-        ASMC ASMC_y;
-        ASMC ASMC_z;
-        ASMC ASMC_phi;
-        ASMC ASMC_theta;
-        ASMC ASMC_psi;
+        ANTSMC ANTSMC_x;
+        ANTSMC ANTSMC_y;
+        ANTSMC ANTSMC_z;
+        ANTSMC ANTSMC_phi;
+        ANTSMC ANTSMC_theta;
+        ANTSMC ANTSMC_psi;
         
-        ASMC6DOF(const float sample_time_s, const float lambda[6], const float K2[6], const float K_alpha[6], const float K1_init[6], const float K_min[6],  const float mu[6]);
-        ~ASMC6DOF();
+        ANTSMC6DOF(const float sample_time_s, const float alpha[6], const float beta[6], const float K2[6], const float K_alpha[6], const float K_min[6],  const float K_min_init[6], const float mu[6]);
+        ~ANTSMC6DOF();
 
         void SetMaxThrust(const float* MAX_TAU);
         void UpdateDynamics(const vanttec_msgs::SystemDynamics& non_linear_functions);

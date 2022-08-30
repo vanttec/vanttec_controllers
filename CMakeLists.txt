@@ -121,6 +121,7 @@ include_directories(
     lib/common_lib/include
     lib/controllers/feedback_linearization/PID_based/second_order/include
     lib/controllers/feedback_linearization/SMC_based/ASMC/second_order/include
+    lib/controllers/feedback_linearization/SMC_based/ANTSMC/second_order/include
     lib/dynamic_models/marine_vehicles/include
     lib/simulation/include
     include/UUVs
@@ -175,6 +176,15 @@ add_executable(vtec_u4_asmc_node
     lib/dynamic_models/marine_vehicles/src/generic_6dof_uuv_dynamic_model.cpp
     lib/common_lib/src/common.cpp)
 target_link_libraries(vtec_u4_asmc_node ${catkin_LIBRARIES})
+
+add_executable(vtec_u4_antsmc_node
+    src/UUVs/controllers/vtec_u4_antsmc_node.cpp
+    lib/controllers/feedback_linearization/SMC_based/ANTSMC/second_order/src/6dof_antsmc.cpp
+    lib/controllers/feedback_linearization/SMC_based/ANTSMC/second_order/src/antsmc.cpp
+    lib/dynamic_models/marine_vehicles/src/vtec_u4_6dof_dynamic_model.cpp
+    lib/dynamic_models/marine_vehicles/src/generic_6dof_uuv_dynamic_model.cpp
+    lib/common_lib/src/common.cpp)
+target_link_libraries(vtec_u4_antsmc_node ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

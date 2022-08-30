@@ -1,7 +1,6 @@
 /** ----------------------------------------------------------------------------
- * @file: asmc.hpp
- * @date: June 17, 2021
- * @date: June 4, 2022
+ * @file: antsmc.hpp
+ * @date: August 30, 2022
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
@@ -9,14 +8,14 @@
  * -----------------------------------------------------------------------------
  * */
 
-#ifndef __ASMC_H__
-#define __ASMC_H__
+#ifndef __ANTSMC_H__
+#define __ANTSMC_H__
 
 #include "common.hpp"
 #include "vanttec_msgs/EtaPose.h"
 #include <cmath>
 
-class ASMC
+class ANTSMC
 {
     private:
         float _sample_time_s;
@@ -30,9 +29,11 @@ class ASMC
         // Auxiliar control
         float _ua;
 
-        // Sliding surface
-        float _lambda;
+        // Control parameters
+        float _alpha;
+        float _beta;
         float _s;
+        float _delta;
 
         // Gains
         float _K1;
@@ -48,16 +49,18 @@ class ASMC
         DOFControllerType_E _controller_type;
     public:
         // Constructor
-        ASMC(const float sample_time_s, const float lambda,  const float K2, const float K_alpha, const float K1_init, const float K_min, const float mu, const DOFControllerType_E type);
+        ANTSMC(const float sample_time_s, const float alpha, const float beta, const float K2, const float K_alpha, const float K_min, const float K_min_init, const float mu, const DOFControllerType_E type);
 
         // Destructor
-        ~ASMC();
+        ~ANTSMC();
 
         void Reset();
         void UpdateSetPoint(const float q_d, const float q_dot_d);
         void CalculateAuxControl(float q, float q_dot);
+        float sign(const float e);
+        float sig(const float e, const float a);
 
-        friend class ASMC6DOF;
+        friend class ANTSMC6DOF;
 };
 
 #endif

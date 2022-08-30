@@ -26,9 +26,9 @@ ASMC_GUIDANCE::~ASMC_GUIDANCE(){}
 void ASMC_GUIDANCE::Reset()
 {
     error1 = 0.0;
-    prev_error1 = 0.0;
+    prev_error_1 = 0.0;
     error2 = 0.0;
-    prev_error2 = 0.0;
+    prev_error_2 = 0.0;
     error_i = 0.0;
     prev_error_i = 0.0;
     Uax = 0.0;
@@ -37,8 +37,8 @@ void ASMC_GUIDANCE::Reset()
 void ASMC_GUIDANCE::Manipulation(double _current)
 {
     double sign = 0.0;
-    prev_error1 = error1;
-    prev_error2 = error2;
+    prev_error_1 = error1;
+    prev_error_2 = error2;
     prev_dot_K1 = dot_K1;
 
     error1 = set_point - _current_pos;

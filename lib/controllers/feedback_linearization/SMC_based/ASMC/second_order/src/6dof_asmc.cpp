@@ -1,5 +1,5 @@
 /** ----------------------------------------------------------------------------
- * @file: 6dof_controller.cpp
+ * @file: 6dof_asmc.cpp
  * @date: March 2, 2022
  * @date: June 4, 2022
  * @author: Sebas Mtz
@@ -11,13 +11,13 @@
 
 #include "6dof_asmc.hpp"
 
-ASMC6DOF::ASMC6DOF(const float sample_time_s, const float lambda[6], const float K2[6], const float K_alpha[6], const float K_min[6], const float mu[6])
-                    : ASMC_x(sample_time_s, lambda[0], K2[0], K_alpha[0], 0, K_min[0], mu[0], LINEAR_DOF)
-                    , ASMC_y(sample_time_s, lambda[1], K2[1], K_alpha[1], 0, K_min[1], mu[1], LINEAR_DOF)
-                    , ASMC_z(sample_time_s, lambda[2], K2[2], K_alpha[2], 0, K_min[2], mu[2], LINEAR_DOF)
-                    , ASMC_phi(sample_time_s, lambda[3], K2[3], K_alpha[3], 1, K_min[3], mu[3], ANGULAR_DOF)
-                    , ASMC_theta(sample_time_s, lambda[4], K2[4], K_alpha[4], 1, K_min[4], mu[4], ANGULAR_DOF)
-                    , ASMC_psi(sample_time_s, lambda[5], K2[5], K_alpha[5], 1, K_min[5], mu[5], ANGULAR_DOF)
+ASMC6DOF::ASMC6DOF(const float sample_time_s, const float lambda[6], const float K2[6], const float K_alpha[6], const float K1_init[6], const float K_min[6], const float mu[6])
+                    : ASMC_x(sample_time_s, lambda[0], K2[0], K_alpha[0], K1_init[0], K_min[0], mu[0], LINEAR_DOF)
+                    , ASMC_y(sample_time_s, lambda[1], K2[1], K_alpha[1], K1_init[1], K_min[1], mu[1], LINEAR_DOF)
+                    , ASMC_z(sample_time_s, lambda[2], K2[2], K_alpha[2], K1_init[2], K_min[2], mu[2], LINEAR_DOF)
+                    , ASMC_phi(sample_time_s, lambda[3], K2[3], K_alpha[3], K1_init[3], K_min[3], mu[3], ANGULAR_DOF)
+                    , ASMC_theta(sample_time_s, lambda[4], K2[4], K_alpha[4], K1_init[4], K_min[4], mu[4], ANGULAR_DOF)
+                    , ASMC_psi(sample_time_s, lambda[5], K2[5], K_alpha[5], K1_init[5], K_min[5], mu[5], ANGULAR_DOF)
 {
     u.resize(6,1);              // Control
     ua.resize(6,1);             // Auxiliary Control
