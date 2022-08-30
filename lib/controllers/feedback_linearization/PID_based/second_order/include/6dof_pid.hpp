@@ -22,11 +22,18 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
-class SixDOFPID
+class PID6DOF
 {
     private:
         ros::NodeHandle handle;
         bool functs_arrived;
+        float MAX_FORCE_X;
+        float MAX_FORCE_Y;
+        float MAX_FORCE_Z;
+        float MAX_TORQUE_K;
+        float MAX_TORQUE_M;
+        float MAX_TORQUE_N; 
+        
     public:
         Eigen::VectorXf u;              // Control
         Eigen::VectorXf ua;             // Auxiliary Control
@@ -42,9 +49,10 @@ class SixDOFPID
         PID PID_theta;
         PID PID_psi;
 
-        SixDOFPID(const float &_sample_time_s, const float *_k_p, const float *_k_i, const float *_k_d, const DOFControllerType_E *_type);
-        ~SixDOFPID();
+        PID6DOF(const float &_sample_time_s, const float *_k_p, const float *_k_i, const float *_k_d, const DOFControllerType_E *_type);
+        ~PID6DOF();
 
+        void SetMaxThrust(const float* MAX_TAU);
         void CalculateManipulations();
         void UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions);
         void UpdateSetPoints(const vanttec_msgs::EtaPose& _set_points);

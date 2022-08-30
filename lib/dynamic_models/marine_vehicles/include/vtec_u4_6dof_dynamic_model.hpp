@@ -21,6 +21,7 @@ class VTecU4DynamicModel : public Generic6DOFUUVDynamicModel
         ~VTecU4DynamicModel();
 
         void UpdateThrust();
+        
     private:
         Eigen::MatrixXf L;          // Thrust mapping matrix
         Eigen::VectorXf Thrust;     // Thrust vector (6 elements, 1 per thruster)

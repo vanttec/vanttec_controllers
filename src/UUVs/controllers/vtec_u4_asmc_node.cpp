@@ -1,10 +1,10 @@
 /** ----------------------------------------------------------------------------
- * @file: uuv_asmc_node.cpp
+ * @file: vtec_u4_asmc_node.cpp
  * @date: June 4, 2022
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: ROS adaptive sliding mode control node for the UUV. Uses uuv_control library.
+ * @brief: ROS adaptive sliding mode control node for the VTec U4.
  * -----------------------------------------------------------------------------
  **/
 
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     float MAX_TAU[6] = {127, 34, 118, 28, 9.6, 36.6};
 
     UUV_6DOF_ASMC   system_controller(SAMPLE_TIME_S, lambda, K2, K_alpha, K_min, mu);
-    system_controller.SetTauLimits(MAX_TAU);
+    system_controller.SetMaxThrust(MAX_TAU);
     
     ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
     ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_dynamics/non_linear_functions", 10, 

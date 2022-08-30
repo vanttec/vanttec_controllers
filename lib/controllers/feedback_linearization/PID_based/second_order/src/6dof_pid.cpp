@@ -10,7 +10,7 @@
 
 #include "6dof_pid.hpp"
 
-SixDOFPID::SixDOFPID(const float &_sample_time_s, const float *_k_p, const float *_k_i, const float *_k_d, const DOFControllerType_E *_type) : 
+PID6DOF::PID6DOF(const float &_sample_time_s, const float *_k_p, const float *_k_i, const float *_k_d, const DOFControllerType_E *_type) : 
                     PID_x    (_sample_time_s, _k_p[0], _k_i[0], _k_d[0], _type[0]),
                     PID_y    (_sample_time_s, _k_p[1], _k_i[1], _k_d[1], _type[1]),
                     PID_z    (_sample_time_s, _k_p[2], _k_i[2], _k_d[2], _type[2]),
@@ -55,6 +55,13 @@ SixDOFPID::SixDOFPID(const float &_sample_time_s, const float *_k_p, const float
          0,
          0;
 
+    MAX_FORCE_X = 0.0;
+    MAX_FORCE_Y = 0.0;
+    MAX_FORCE_Z = 0.0;
+    MAX_TORQUE_K = 0.0;
+    MAX_TORQUE_M = 0.0;
+    MAX_TORQUE_N = 0.0;
+
     thrust.tau_x = 0;
     thrust.tau_y = 0;
     thrust.tau_z = 0;
@@ -65,10 +72,19 @@ SixDOFPID::SixDOFPID(const float &_sample_time_s, const float *_k_p, const float
     functs_arrived = 0;
 }
 
-SixDOFPID::~SixDOFPID(){};
+PID6DOF::~PID6DOF(){};
 
 
-void SixDOFPID::UpdateSetPoints(const vanttec_msgs::EtaPose& _set_points)
+void PID6DOF::SetMaxThrust(const float* MAX_TAU){
+    MAX_FORCE_X = MAX_TAU[0];
+    MAX_FORCE_Y = MAX_TAU[1];
+    MAX_FORCE_Z = MAX_TAU[2];
+    MAX_TORQUE_K = MAX_TAU[3];
+    MAX_TORQUE_M = MAX_TAU[4];
+    MAX_TORQUE_N = MAX_TAU[5];
+}
+
+void PID6DOF::UpdateSetPoints(const vanttec_msgs::EtaPose& _set_points)
 {
     PID_x.UpdateSetPoint(_set_points.x);
     PID_y.UpdateSetPoint(_set_points.y);
@@ -78,7 +94,7 @@ void SixDOFPID::UpdateSetPoints(const vanttec_msgs::EtaPose& _set_points)
     PID_psi.UpdateSetPoint(_set_points.psi);
 }
 
-void SixDOFPID::UpdatePose(const vanttec_msgs::EtaPose& _current)
+void PID6DOF::UpdatePose(const vanttec_msgs::EtaPose& _current)
 {
     PID_x.CalculateManipulation(_current.x);
     PID_y.CalculateManipulation(_current.y);
@@ -88,9 +104,11 @@ void SixDOFPID::UpdatePose(const vanttec_msgs::EtaPose& _current)
     PID_psi.CalculateManipulation(_current.psi);
 }
 
-void SixDOFPID::CalculateManipulations()
+void PID6DOF::CalculateManipulations()
 {
-    if (functs_arrived) {
+    Eigen::FullPivLU<Eigen::MatrixXf> g_lu(g);
+    // if (functs_arrived) {
+    if (g_lu.isInvertible()) {
         ua << PID_x.manipulation,
             PID_y.manipulation,
             PID_z.manipulation,
@@ -100,12 +118,14 @@ void SixDOFPID::CalculateManipulations()
 
         u << g.inverse()*(ref_dot_dot - f + ua);
 
-        if(fabs(u(0)) > 127)  u(0) = u(0) / fabs(u(0)) * 127;
-        if(fabs(u(1)) > 34)   u(1) = u(1) / fabs(u(1)) * 34;
-        if(fabs(u(2)) > 118)  u(2) = u(2) / fabs(u(2)) * 118;
-        if(fabs(u(3)) > 28)   u(3) = u(3) / fabs(u(3)) * 28;
-        if(fabs(u(4)) > 9.6)  u(4) = u(4) / fabs(u(4)) * 9.6;
-        if(fabs(u(5)) > 36.6) u(5) = u(5) / fabs(u(5)) * 36.6;
+
+        // Saturate for maximum thrust in each degree of freedom
+        if(fabs(u(0)) > MAX_FORCE_X)  u(0) = u(0) / fabs(u(0)) * MAX_FORCE_X;
+        if(fabs(u(1)) > MAX_FORCE_Y)  u(1) = u(1) / fabs(u(1)) * MAX_FORCE_Y;
+        if(fabs(u(2)) > MAX_FORCE_Z)  u(2) = u(2) / fabs(u(2)) * MAX_FORCE_Z;
+        if(fabs(u(3)) > MAX_TORQUE_K) u(3) = u(3) / fabs(u(3)) * MAX_TORQUE_K;
+        if(fabs(u(4)) > MAX_TORQUE_M) u(4) = u(4) / fabs(u(4)) * MAX_TORQUE_M;
+        if(fabs(u(5)) > MAX_TORQUE_N) u(5) = u(5) / fabs(u(5)) * MAX_TORQUE_N;
     
         thrust.tau_x = u(0);
         thrust.tau_y = u(1);
@@ -116,7 +136,7 @@ void SixDOFPID::CalculateManipulations()
     }
 }
 
-void SixDOFPID::UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions)
+void PID6DOF::UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions)
 {
     uint8_t stride =  (uint8_t) _non_linear_functions.g.layout.dim[0].stride;
     uint8_t offset =  (uint8_t) _non_linear_functions.g.layout.data_offset;

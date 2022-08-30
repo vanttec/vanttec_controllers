@@ -74,7 +74,7 @@ ASMC6DOF::ASMC6DOF(const float sample_time_s, const float lambda[6], const float
 
 ASMC6DOF::~ASMC6DOF(){}
 
-void ASMC6DOF::SetTauLimits(const float* MAX_TAU){
+void ASMC6DOF::SetMaxThrust(const float* MAX_TAU){
     MAX_FORCE_X = MAX_TAU[0];
     MAX_FORCE_Y = MAX_TAU[1];
     MAX_FORCE_Z = MAX_TAU[2];

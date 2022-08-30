@@ -14,10 +14,10 @@ VTecU4DynamicModel::VTecU4DynamicModel(float _sample_time_s) : Generic6DOFUUVDyn
 {
     /* Physical Parameters */
 
-    m     = 24;
-    W   = 235.44;
+    m        = 24;
+    W        = 235.44;
     volume   = 0.0252;
-    B = 247.212;
+    B        = 247.212;
     Ixx      = 0.900121387;
     Ixy      = 0;
     Ixz      = 0;
@@ -73,11 +73,11 @@ VTecU4DynamicModel::VTecU4DynamicModel(float _sample_time_s) : Generic6DOFUUVDyn
     rv_z            = 0;
 
     /* Maximum forces and torques per degree of freedom */
-    MAX_FORCE_X = 127; 
-    MAX_FORCE_Y = 34;  
-    MAX_FORCE_Z = 118; 
-    MAX_TORQUE_K = 28;  
-    MAX_TORQUE_M = 9.6; 
+    MAX_FORCE_X = 127;
+    MAX_FORCE_Y = 34;
+    MAX_FORCE_Z = 118;
+    MAX_TORQUE_K = 28; 
+    MAX_TORQUE_M = 9.6;
     MAX_TORQUE_N = 36.6;
 }
 

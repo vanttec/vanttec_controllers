@@ -54,7 +54,7 @@ class ASMC6DOF
         ASMC6DOF(const float sample_time_s, const float lambda[6], const float K2[6], const float K_alpha[6],  const float K_min[6],  const float mu[6]);
         ~ASMC6DOF();
 
-        void SetTauLimits(const float* MAX_TAU);
+        void SetMaxThrust(const float* MAX_TAU);
         void UpdateDynamics(const vanttec_msgs::SystemDynamics& non_linear_functions);
         void UpdatePose(const vanttec_msgs::EtaPose& current);
         void UpdateSetPoints(const vanttec_msgs::EtaPose& set_points);
