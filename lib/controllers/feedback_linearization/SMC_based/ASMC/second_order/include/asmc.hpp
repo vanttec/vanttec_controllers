@@ -12,7 +12,7 @@
 #ifndef __ASMC_H__
 #define __ASMC_H__
 
-#include "uuv_common.hpp"
+#include "common.hpp"
 #include "vanttec_msgs/EtaPose.h"
 #include <cmath>
 

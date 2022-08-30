@@ -8,7 +8,7 @@
  * -----------------------------------------------------------------------------
  **/
 
-#include "uuv_6dof_pid.hpp"
+#include "6dof_pid.hpp"
 #include "vtec_u4_6dof_dynamic_model.hpp"
 #include "vanttec_msgs/EtaPose.h"
 
@@ -20,27 +20,36 @@ const float SAMPLE_TIME_S = 0.01;
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "uuv_control_node");
-    ros::NodeHandle nh;
+    ros::NodeHandle nh("~");
     
-    ros::Rate           cycle_rate(int(1 / SAMPLE_TIME_S));
-    float k_p[6] = {8, 5, 7, 60, 40, 80};
-    float k_i[6] = {0, 0, 0, 0, 0.01, 0.01};
-    float k_d[6] = {1.5, 5, 0.7, 7, 5, 20};
+    ros::Rate      cycle_rate(int(1 / SAMPLE_TIME_S));
+    std::vector<float> g_p;
+    std::vector<float> g_i;
+    std::vector<float> g_d;
+
+    nh.getParam("k_p", g_p);
+    nh.getParam("k_i", g_i);
+    nh.getParam("k_d", g_d);
+
+    float* k_p = &g_p[0];
+    float* k_i = &g_i[0];
+    float* k_d = &g_d[0];
+
     DOFControllerType_E types[6] = {LINEAR_DOF, LINEAR_DOF, LINEAR_DOF, ANGULAR_DOF, ANGULAR_DOF, ANGULAR_DOF};
 
-    UUV6DOFPIDController   system_controller(SAMPLE_TIME_S, k_p, k_i, k_d, types);
+    SixDOFPID   system_controller(SAMPLE_TIME_S, k_p, k_i, k_d, types);
     
     ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
     ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_simulation/dynamic_model/non_linear_functions", 10, 
-                                                    &UUV6DOFPIDController::UpdateDynamics,
+                                                    &SixDOFPID::UpdateDynamics,
                                                     &system_controller);
 
     ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose", 10,
-                                                    &UUV6DOFPIDController::UpdatePose,
+                                                    &SixDOFPID::UpdatePose,
                                                     &system_controller);
 
     ros::Subscriber uuv_setpoint    = nh.subscribe("/uuv_control/uuv_control_node/setpoint", 10,
-                                                    &UUV6DOFPIDController::UpdateSetPoints,
+                                                    &SixDOFPID::UpdateSetPoints,
                                                     &system_controller); 
 
     int counter = 0;

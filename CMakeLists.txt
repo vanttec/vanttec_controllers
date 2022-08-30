@@ -9,8 +9,8 @@ project(vanttec_controllers)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
     roscpp
-    nodelet
-    pluginlib
+    # nodelet
+    # pluginlib
     vanttec_msgs
 )
 
@@ -104,9 +104,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME}
-#  CATKIN_DEPENDS other_catkin_pkg
+    # INCLUDE_DIRS include
+    # LIBRARIES ${PROJECT_NAME}
+    # CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
 
@@ -117,7 +117,11 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-    lib/vehicle_dynamic_models/marine_vehicles/include
+    lib/common_lib/include
+    lib/controllers/feedback_linearization/PID_based/second_order/include
+    lib/controllers/feedback_linearization/SMC_based/ASMC/second_order/include
+    lib/dynamic_models/marine_vehicles/include
+    lib/simulation/include
     include/UUVs
     ${catkin_INCLUDE_DIRS}
 )
@@ -126,9 +130,10 @@ include_directories(
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/vanttec_controllers.cpp
 # )
-add_library(vtec_u4_model_plugin
-    src/UUVs/model/vtec_u4_model_nodelet.cpp
-)
+
+# add_library(vtec_u4_model_plugin
+#     src/UUVs/model/vtec_u4_model_nodelet.cpp
+# )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -139,7 +144,15 @@ add_library(vtec_u4_model_plugin
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/vanttec_controllers_node.cpp)
-add_executable(uuv_2nd_order_asmc_node src/UUVs/vanttec_controllers_node.cpp)
+# add_executable(uuv_2nd_order_asmc_node src/UUVs/vanttec_controllers_node.cpp)
+add_executable(vtec_u4_pid_node
+    src/UUVs/controllers/uuv_pid_control_node.cpp
+    lib/controllers/feedback_linearization/PID_based/second_order/src/6dof_pid.cpp
+    lib/controllers/feedback_linearization/PID_based/second_order/src/pid.cpp
+    lib/dynamic_models/marine_vehicles/src/vtec_u4_6dof_dynamic_model.cpp
+    lib/dynamic_models/marine_vehicles/src/generic_6dof_uuv_dynamic_model.cpp
+    lib/common_lib/src/common.cpp)
+target_link_libraries(vtec_u4_pid_node ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -156,9 +169,9 @@ add_executable(uuv_2nd_order_asmc_node src/UUVs/vanttec_controllers_node.cpp)
 #   ${catkin_LIBRARIES}
 # )
 
-target_link_libraries(vtec_u4_model_plugin
-    ${catkin_LIBRARIES}
-)
+# target_link_libraries(vtec_u4_model_plugin
+#     ${catkin_LIBRARIES}
+# )
 
 #############
 ## Install ##

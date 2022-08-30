@@ -1,18 +1,18 @@
 /** ----------------------------------------------------------------------------
- * @file: uuv_common.cpp
+ * @file: common.cpp
  * @date: March 2, 2022
  * @author: Pedro Sanchez
  * @email: pedro.sc.97@gmail.com
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Common functions and constants used throughout the uuv package.
+ * @brief: Common functions and constants used throughout the package.
  * -----------------------------------------------------------------------------
  * */
 
-#include "uuv_common.hpp"
+#include "common.hpp"
 
-namespace uuv_common
+namespace common
 {
     vanttec_msgs::GuidanceWaypoints GenerateCircle(float _radius, float _x_center, float _y_center, float _z_center, float _angle_offset)
     {

@@ -1,17 +1,17 @@
 /** ----------------------------------------------------------------------------
- * @file: uuv_common.hpp
+ * @file: common.hpp
  * @date: March 2, 2022
  * @author: Pedro Sanchez
  * @email: pedro.sc.97@gmail.com
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Common functions and constants used throughout the uuv package.
+ * @brief: Common functions and constants used throughout the package.
  * -----------------------------------------------------------------------------
  * */
 
-#ifndef __UUV_COMMON_H__
-#define __UUV_COMMON_H__
+#ifndef __COMMON_H__
+#define __COMMON_H__
 
 #include <vanttec_msgs/GuidanceWaypoints.h>
 #include <cmath>
@@ -29,7 +29,7 @@ typedef enum DOFControllerType_E
     ANGULAR_DOF = 1,
 } DOFControllerType_E;
 
-namespace uuv_common
+namespace common
 {
     /* Helper constants */
     static const float rho = 1000;

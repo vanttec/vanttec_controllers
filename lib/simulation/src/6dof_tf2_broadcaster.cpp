@@ -1,5 +1,5 @@
 /** ----------------------------------------------------------------------------
- * @file: tf2_broadcaster.cpp
+ * @file: 6dof_tf2_broadcaster.cpp
  * @date: April 10, 2022
  * @author: Pedro Sanchez
  * @email: pedro.sc.97@gmail.com

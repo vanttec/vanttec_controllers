@@ -1,10 +1,10 @@
 /** ----------------------------------------------------------------------------
- * @file: uuv_4dof_pid_controller.hpp
+ * @file: uuv_4dof_pid.hpp
  * @date: July 30, 2020
  * @author: Pedro Sanchez
  * @email: pedro.sc.97@gmail.com
  * 
- * @brief: 4-DOF controller class, using a different, decoupled controller for
+ * @brief: 4-DOF controller class, using different, decoupled controller for
  *         each DOF.
            OUTDATED.
  * -----------------------------------------------------------------------------
@@ -13,7 +13,7 @@
 #ifndef __UUV_4DOF_PID_CONTROLLER_H__
 #define __UUV_4DOF_PID_CONTROLLER_H__
 
-#include "pid_controller.hpp"
+#include "pid.hpp"
 #include "vtec_u3_parameters.hpp"
 #include "vanttec_msgs/ThrustControl.h"
 
@@ -34,10 +34,10 @@ class UUV4DOFController
 
         float yaw_psi_angle;
 
-        PIDController surge_speed_controller;
-        PIDController sway_speed_controller;
-        PIDController depth_controller;
-        PIDController heading_controller;
+        PID surge_speed_controller;
+        PID sway_speed_controller;
+        PID depth_controller;
+        PID heading_controller;
 
         Eigen::Vector4f f_x;
         Eigen::Vector4f g_x;

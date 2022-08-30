@@ -1,5 +1,5 @@
 /** ----------------------------------------------------------------------------
- * @file: uuv_6dof_pid.hpp
+ * @file: 6dof_pid.hpp
  * @date: April 10, 2022
  * @author: Sebastian Martinez
  * @email: sebas.martp@gmail.com
@@ -8,10 +8,10 @@
  * -----------------------------------------------------------------------------
  * */
 
-#ifndef __UUV_6DOF_PID_H__
-#define __UUV_6DOF_PID_H__
+#ifndef __6DOF_PID_H__
+#define __6DOF_PID_H__
 
-#include "pid_controller.hpp"
+#include "pid.hpp"
 #include "vanttec_msgs/ThrustControl.h"
 #include "vanttec_msgs/SystemDynamics.h"
 
@@ -22,7 +22,7 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
-class UUV6DOFPIDController
+class SixDOFPID
 {
     private:
         ros::NodeHandle handle;
@@ -35,15 +35,15 @@ class UUV6DOFPIDController
         Eigen::VectorXf ref_dot_dot;
         vanttec_msgs::ThrustControl  thrust;
 
-        PIDController PID_x;
-        PIDController PID_y;
-        PIDController PID_z;
-        PIDController PID_phi;
-        PIDController PID_theta;
-        PIDController PID_psi;
+        PID PID_x;
+        PID PID_y;
+        PID PID_z;
+        PID PID_phi;
+        PID PID_theta;
+        PID PID_psi;
 
-        UUV6DOFPIDController(const float &_sample_time_s, const float *_k_p, const float *_k_i, const float *_k_d, const DOFControllerType_E *_type);
-        ~UUV6DOFPIDController();
+        SixDOFPID(const float &_sample_time_s, const float *_k_p, const float *_k_i, const float *_k_d, const DOFControllerType_E *_type);
+        ~SixDOFPID();
 
         void CalculateManipulations();
         void UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions);

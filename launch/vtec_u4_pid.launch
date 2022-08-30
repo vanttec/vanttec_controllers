@@ -1,0 +1,5 @@
+<launch>
+    <node name="vtec_u4_pid_node" pkg="vanttec_controllers" type="vtec_u4_pid_node">
+        <rosparam file="$(find vanttec_controllers)/config/VTec_U4_PID_Gains.yaml"/>
+    </node>
+</launch>

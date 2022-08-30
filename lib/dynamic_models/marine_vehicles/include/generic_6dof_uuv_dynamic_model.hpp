@@ -16,7 +16,7 @@
 
 #include "vanttec_msgs/ThrustControl.h"
 #include "vanttec_msgs/EtaPose.h"
-#include "uuv_common.hpp"
+#include "common.hpp"
 
 #include <geometry_msgs/Accel.h>
 #include <geometry_msgs/Twist.h>

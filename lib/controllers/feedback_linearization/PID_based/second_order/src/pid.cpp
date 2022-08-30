@@ -1,18 +1,18 @@
 /** ----------------------------------------------------------------------------
- * @file: pid_controller.cpp
+ * @file: pid.cpp
  * @date: July 30, 2020
  * @author: Sebastian Martinez
  * @email: sebas.martp@gmail.com
  * @author: Pedro Sanchez
  * @email: pedro.sc.97@gmail.com
  * 
- * @brief: PID Controller class, which implements a single DOF controller.
+ * @brief: Single DOF PID Controller class.
  * -----------------------------------------------------------------------------
  * */
 
-#include "pid_controller.hpp"
+#include "pid.hpp"
 
-PIDController::PIDController(const float _sample_time_s, const float _k_p, const float _k_i, const float _k_d, const DOFControllerType_E _type)
+PID::PID(const float _sample_time_s, const float _k_p, const float _k_i, const float _k_d, const DOFControllerType_E _type)
 {
     sample_time_s     = _sample_time_s;
     k_p               = _k_p;
@@ -30,9 +30,9 @@ PIDController::PIDController(const float _sample_time_s, const float _k_p, const
     controller_type   = _type;
 }
 
-PIDController::~PIDController(){}
+PID::~PID(){}
 
-void PIDController::CalculateManipulation(const float _current_value)
+void PID::CalculateManipulation(const float _current_value)
 {
     prev_error    = error;
     error         = set_point - _current_value;
@@ -53,7 +53,7 @@ void PIDController::CalculateManipulation(const float _current_value)
     manipulation  = k_p * error + k_i * error_i + k_d * error_d;
 }
 
-void PIDController::UpdateSetPoint(const float& _set_point)
+void PID::UpdateSetPoint(const float& _set_point)
 {
     set_point = _set_point;
 }

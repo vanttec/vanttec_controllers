@@ -1,5 +1,5 @@
 /** ----------------------------------------------------------------------------
- * @file: uuv_6dof_pid.cpp
+ * @file: 6dof_pid.cpp
  * @date: April 10, 2022
  * @author: Sebastian Martinez
  * @email: sebas.martp@gmail.com
@@ -8,9 +8,9 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include "uuv_6dof_pid.hpp"
+#include "6dof_pid.hpp"
 
-UUV6DOFPIDController::UUV6DOFPIDController(const float &_sample_time_s, const float *_k_p, const float *_k_i, const float *_k_d, const DOFControllerType_E *_type) : 
+SixDOFPID::SixDOFPID(const float &_sample_time_s, const float *_k_p, const float *_k_i, const float *_k_d, const DOFControllerType_E *_type) : 
                     PID_x    (_sample_time_s, _k_p[0], _k_i[0], _k_d[0], _type[0]),
                     PID_y    (_sample_time_s, _k_p[1], _k_i[1], _k_d[1], _type[1]),
                     PID_z    (_sample_time_s, _k_p[2], _k_i[2], _k_d[2], _type[2]),
@@ -65,10 +65,10 @@ UUV6DOFPIDController::UUV6DOFPIDController(const float &_sample_time_s, const fl
     functs_arrived = 0;
 }
 
-UUV6DOFPIDController::~UUV6DOFPIDController(){};
+SixDOFPID::~SixDOFPID(){};
 
 
-void UUV6DOFPIDController::UpdateSetPoints(const vanttec_msgs::EtaPose& _set_points)
+void SixDOFPID::UpdateSetPoints(const vanttec_msgs::EtaPose& _set_points)
 {
     PID_x.UpdateSetPoint(_set_points.x);
     PID_y.UpdateSetPoint(_set_points.y);
@@ -78,7 +78,7 @@ void UUV6DOFPIDController::UpdateSetPoints(const vanttec_msgs::EtaPose& _set_poi
     PID_psi.UpdateSetPoint(_set_points.psi);
 }
 
-void UUV6DOFPIDController::UpdatePose(const vanttec_msgs::EtaPose& _current)
+void SixDOFPID::UpdatePose(const vanttec_msgs::EtaPose& _current)
 {
     PID_x.CalculateManipulation(_current.x);
     PID_y.CalculateManipulation(_current.y);
@@ -88,7 +88,7 @@ void UUV6DOFPIDController::UpdatePose(const vanttec_msgs::EtaPose& _current)
     PID_psi.CalculateManipulation(_current.psi);
 }
 
-void UUV6DOFPIDController::CalculateManipulations()
+void SixDOFPID::CalculateManipulations()
 {
     if (functs_arrived) {
         ua << PID_x.manipulation,
@@ -116,7 +116,7 @@ void UUV6DOFPIDController::CalculateManipulations()
     }
 }
 
-void UUV6DOFPIDController::UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions)
+void SixDOFPID::UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions)
 {
     uint8_t stride =  (uint8_t) _non_linear_functions.g.layout.dim[0].stride;
     uint8_t offset =  (uint8_t) _non_linear_functions.g.layout.data_offset;

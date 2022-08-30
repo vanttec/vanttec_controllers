@@ -8,7 +8,7 @@
  * -----------------------------------------------------------------------------
 **/
 
-#include "uuv_6dof_pid.hpp"
+#include "6dof_pid.hpp"
 #include "vtec_u4_6dof_dynamic_model.hpp"
 #include "vanttec_msgs/EtaPose.h"
 
@@ -27,24 +27,24 @@ TEST(ControlSuite, regulationObjective)
     float k_d[6] = {1.5, 5, 0.7, 7, 5, 20};
     DOFControllerType_E types[6] = {LINEAR_DOF, LINEAR_DOF, LINEAR_DOF, ANGULAR_DOF, ANGULAR_DOF, ANGULAR_DOF};
 
-    UUV6DOFPIDController   system_controller(SAMPLE_TIME_S, k_p, k_i, k_d, types);
+    SixDOFPID   system_controller(SAMPLE_TIME_S, k_p, k_i, k_d, types);
     
     ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
     ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_simulation/dynamic_model/non_linear_functions", 10, 
-                                                    &UUV6DOFPIDController::UpdateDynamics,
+                                                    &SixDOFPID::UpdateDynamics,
                                                     &system_controller);
 
     ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose", 10,
-                                                    &UUV6DOFPIDController::UpdatePose,
+                                                    &SixDOFPID::UpdatePose,
                                                     &system_controller);
 
     // ros::Subscriber uuv_twist       = nh.subscribe("/uuv_simulation/dynamic_model/vel", 
     //                                                 10,
-    //                                                 &UUV6DOFPIDController::UpdateTwist,
+    //                                                 &SixDOFPID::UpdateTwist,
     //                                                 &system_controller);
 
     ros::Subscriber uuv_setpoint    = nh.subscribe("/uuv_control/uuv_control_node/setpoint", 10,
-                                                    &UUV6DOFPIDController::UpdateSetPoints,
+                                                    &SixDOFPID::UpdateSetPoints,
                                                     &system_controller); 
 
     int counter = 0;

@@ -11,7 +11,7 @@
 #ifndef __WAYPOINT_PUBLISHER_H__
 #define __WAYPOINT_PUBLISHER_H__
 
-#include <uuv_common.hpp>
+#include <common.hpp>
 #include <vanttec_msgs/GuidanceWaypoints.h>
 
 #include <geometry_msgs/PoseStamped.h>
