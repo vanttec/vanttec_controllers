@@ -1,5 +1,5 @@
 /** ----------------------------------------------------------------------------
- * @file: uuv_6dof_controller.hpp
+ * @file: 6dof_controller.hpp
  * @date: March 2, 2022
  * @date: June 4, 2022
  * @author: Sebas Mtz
@@ -9,8 +9,8 @@
  * -----------------------------------------------------------------------------
  * */
 
-#ifndef __UUV_6DOF_ASMC_H__
-#define __UUV_6DOF_ASMC_H__
+#ifndef __ASMC6DOF_H__
+#define __ASMC6DOF_H__
 
 #include "asmc.hpp"
 #include "vanttec_msgs/ThrustControl.h"
@@ -23,7 +23,7 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
-class UUV_6DOF_ASMC
+class ASMC6DOF
 {
     private:
         ros::NodeHandle handle;
@@ -51,8 +51,8 @@ class UUV_6DOF_ASMC
         ASMC ASMC_theta;
         ASMC ASMC_psi;
         
-        UUV_6DOF_ASMC(const float sample_time_s, const float lambda[6], const float K2[6], const float K_alpha[6],  const float K_min[6],  const float mu[6]);
-        ~UUV_6DOF_ASMC();
+        ASMC6DOF(const float sample_time_s, const float lambda[6], const float K2[6], const float K_alpha[6],  const float K_min[6],  const float mu[6]);
+        ~ASMC6DOF();
 
         void SetTauLimits(const float* MAX_TAU);
         void UpdateDynamics(const vanttec_msgs::SystemDynamics& non_linear_functions);

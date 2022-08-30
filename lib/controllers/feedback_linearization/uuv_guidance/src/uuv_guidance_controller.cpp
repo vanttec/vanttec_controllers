@@ -17,10 +17,10 @@
 GuidanceController::GuidanceController(const float SAMPLE_TIME_S) : ASMC_Guidance((double) SAMPLE_TIME_S, 0.001, 0.01, 0.01, 0.01, 0.1)
 {
     /* Desired speed output initalization */
-    this->desired_setpoints.linear.x = 0;
-    this->desired_setpoints.linear.y = 0;
-    this->desired_setpoints.linear.z = 0;
-    this->desired_setpoints.angular.z = 0;
+    this->desired_set_points.linear.x = 0;
+    this->desired_set_points.linear.y = 0;
+    this->desired_set_points.linear.z = 0;
+    this->desired_set_points.angular.z = 0;
 
     /* State Machines Initialization */
     this->current_guidance_law = NONE;
@@ -109,10 +109,10 @@ void GuidanceController::OnWaypointReception(const vanttec_msgs::GuidanceWaypoin
             this->asmc_state_machine.state_machine = ASMC_LAW_STANDBY;
             break;
         case NONE:
-            this->desired_setpoints.linear.x = _waypoints.waypoint_list_x[0];
-            this->desired_setpoints.linear.y = _waypoints.waypoint_list_y[0];
-            this->desired_setpoints.linear.z = _waypoints.depth_setpoint;
-            this->desired_setpoints.angular.z = _waypoints.heading_setpoint;
+            this->desired_set_points.linear.x = _waypoints.waypoint_list_x[0];
+            this->desired_set_points.linear.y = _waypoints.waypoint_list_y[0];
+            this->desired_set_points.linear.z = _waypoints.depth_set_point;
+            this->desired_set_points.angular.z = _waypoints.heading_set_point;
             break;
         default:
             break;
@@ -131,8 +131,8 @@ void GuidanceController::OnWaypointReception(const vanttec_msgs::GuidanceWaypoin
 void GuidanceController::OnEmergencyStop(const std_msgs::Empty& _msg)
 {
     /* Stop the vehicle from moving. Depth and heading keep the previous setpoint. */
-    this->desired_setpoints.linear.x = 0;
-    this->desired_setpoints.linear.y = 0;
+    this->desired_set_points.linear.x = 0;
+    this->desired_set_points.linear.y = 0;
 
     /* Reset the guidance law and the state machines */
     this->current_guidance_law = NONE;
@@ -156,8 +156,8 @@ void GuidanceController::UpdateStateMachines()
             switch(this->asmc_state_machine.state_machine)
             {
                 case ASMC_LAW_STANDBY:
-                    this->desired_setpoints.linear.x = 0;
-                    this->desired_setpoints.linear.y = 0;
+                    this->desired_set_points.linear.x = 0;
+                    this->desired_set_points.linear.y = 0;
                     this->asmc_state_machine.current_waypoint = 0;
                     break;
                 case ASMC_LAW_WAYPOINT_NAV:
@@ -172,7 +172,7 @@ void GuidanceController::UpdateStateMachines()
                     set_points[0] = waypoint_x;
                     set_points[1] = waypoint_y;
                     set_points[2] = waypoint_z;
-                    set_points[3] = std::atan2((waypoint_y - uuv_y),(waypoint_x - uuv_x)); //this->current_waypoint_list.heading_setpoint;//
+                    set_points[3] = std::atan2((waypoint_y - uuv_y),(waypoint_x - uuv_x)); //this->current_waypoint_list.heading_set_point;//
 
                     std::cout << set_points[0] << std::endl;
                     std::cout << set_points[1] << std::endl;
@@ -182,10 +182,10 @@ void GuidanceController::UpdateStateMachines()
                     ASMC_Guidance.SetSetpoints(set_points);
                     ASMC_Guidance.CalculateManipulation(current_positions_ned);
 
-                    this->desired_setpoints.linear.x = ASMC_Guidance.U(0);
-                    this->desired_setpoints.linear.y = ASMC_Guidance.U(1);
-                    this->desired_setpoints.linear.z = ASMC_Guidance.U(2);
-                    this->desired_setpoints.angular.z = ASMC_Guidance.U(3);
+                    this->desired_set_points.linear.x = ASMC_Guidance.U(0);
+                    this->desired_set_points.linear.y = ASMC_Guidance.U(1);
+                    this->desired_set_points.linear.z = ASMC_Guidance.U(2);
+                    this->desired_set_points.angular.z = ASMC_Guidance.U(3);
 
                     this->asmc_guidance_euclidean_distance = std::sqrt(std::pow((waypoint_x - uuv_x), 2)
                                                                  + std::pow((waypoint_y - uuv_y), 2)
@@ -194,14 +194,14 @@ void GuidanceController::UpdateStateMachines()
 
                     if (this->asmc_guidance_euclidean_distance <= this->asmc_guidance_position_error_threshold)
                     {
-                        this->desired_setpoints.linear.x = 0;
-                        this->desired_setpoints.linear.y = 0;
-                        this->desired_setpoints.linear.z = 0;
+                        this->desired_set_points.linear.x = 0;
+                        this->desired_set_points.linear.y = 0;
+                        this->desired_set_points.linear.z = 0;
                         this->asmc_guidance_euclidean_distance = 0;
 
                         if (this->asmc_guidance_radial_distance <= this->asmc_guidance_radial_error_threshold)
                         {
-                            this->desired_setpoints.angular.z = 0;
+                            this->desired_set_points.angular.z = 0;
                             this->asmc_guidance_radial_distance = 0;
 
                             if ((this->asmc_state_machine.current_waypoint + 1) < this->current_waypoint_list.waypoint_list_length)
@@ -234,18 +234,18 @@ void GuidanceController::UpdateStateMachines()
             {
                 case LOS_LAW_STANDBY:
                 {
-                    this->desired_setpoints.linear.x = 0;
-                    this->desired_setpoints.linear.y = 0;
+                    this->desired_set_points.linear.x = 0;
+                    this->desired_set_points.linear.y = 0;
                     this->los_state_machine.current_waypoint = 0;
                     break;
                 }
                 case LOS_LAW_DEPTH_NAV:
                 {
-                    this->desired_setpoints.linear.x = 0;
-                    this->desired_setpoints.linear.y = 0;
-                    //this->desired_setpoints.angular.z = 0;
-                    this->desired_setpoints.linear.z = this->current_waypoint_list.waypoint_list_z[this->los_state_machine.current_waypoint + 1];
-                    float los_depth_error = std::abs((float) this->current_positions_ned.position.z - (float) this->desired_setpoints.linear.z);
+                    this->desired_set_points.linear.x = 0;
+                    this->desired_set_points.linear.y = 0;
+                    //this->desired_set_points.angular.z = 0;
+                    this->desired_set_points.linear.z = this->current_waypoint_list.waypoint_list_z[this->los_state_machine.current_waypoint + 1];
+                    float los_depth_error = std::abs((float) this->current_positions_ned.position.z - (float) this->desired_set_points.linear.z);
                     if (los_depth_error <= this->los_depth_error_threshold)
                     {
                         this->los_state_machine.state_machine = LOS_LAW_WAYPOINT_NAV;
@@ -305,16 +305,16 @@ void GuidanceController::UpdateStateMachines()
                         float desired_velocity = 0.075;
                     }
 
-                    this->desired_setpoints.linear.x = desired_velocity;
-                    this->desired_setpoints.linear.y = 0;
-                    this->desired_setpoints.angular.z = desired_heading;
+                    this->desired_set_points.linear.x = desired_velocity;
+                    this->desired_set_points.linear.y = 0;
+                    this->desired_set_points.angular.z = desired_heading;
 
                     this->los_euclidean_distance = std::sqrt(std::pow((x_k1 - x_uuv), 2) + std::pow((y_k1 - y_uuv), 2));
 
                     if (this->los_euclidean_distance <= this->los_position_error_threshold)
                     {
-                        this->desired_setpoints.linear.x = 0;
-                        this->desired_setpoints.linear.y = 0;
+                        this->desired_set_points.linear.x = 0;
+                        this->desired_set_points.linear.y = 0;
                         this->los_euclidean_distance = 0;
 
                         if ((this->los_state_machine.current_waypoint + LOS_WAYPOINT_OFFSET) < this->current_waypoint_list.waypoint_list_length)
@@ -348,19 +348,19 @@ void GuidanceController::UpdateStateMachines()
             {
                 case ORBIT_LAW_STANDBY:
                 {
-                    this->desired_setpoints.linear.x = 0;
-                    this->desired_setpoints.linear.y = 0;
+                    this->desired_set_points.linear.x = 0;
+                    this->desired_set_points.linear.y = 0;
                     this->orbit_state_machine.current_waypoint = 0;
                     break;
                 }
 
                 case ORBIT_LAW_DEPTH_NAV:
                 {
-                    this->desired_setpoints.linear.x = 0;
-                    this->desired_setpoints.linear.y = 0;
-                    //this->desired_setpoints.angular.z = 0;
-                    this->desired_setpoints.linear.z = this->current_waypoint_list.waypoint_list_z[this->orbit_state_machine.current_waypoint + 1];
-                    float orbit_depth_error = std::abs((float) this->current_positions_ned.position.z - (float) this->desired_setpoints.linear.z);
+                    this->desired_set_points.linear.x = 0;
+                    this->desired_set_points.linear.y = 0;
+                    //this->desired_set_points.angular.z = 0;
+                    this->desired_set_points.linear.z = this->current_waypoint_list.waypoint_list_z[this->orbit_state_machine.current_waypoint + 1];
+                    float orbit_depth_error = std::abs((float) this->current_positions_ned.position.z - (float) this->desired_set_points.linear.z);
                     if (orbit_depth_error <= this->orbit_depth_error_threshold)
                     {
                         this->orbit_state_machine.state_machine = ORBIT_LAW_WAYPOINT_NAV;
@@ -410,19 +410,19 @@ void GuidanceController::UpdateStateMachines()
                     }
 
                     //Change direction of movement
-                    this->desired_setpoints.linear.x = 0;
-                    this->desired_setpoints.linear.y = desired_velocity;
-                    this->desired_setpoints.angular.z = desired_heading - PI/2;
-                    //this->desired_setpoints.linear.x = 0;
-                    //this->desired_setpoints.linear.y = -desired_velocity;
-                    //this->desired_setpoints.angular.z = desired_heading + PI / 2;
+                    this->desired_set_points.linear.x = 0;
+                    this->desired_set_points.linear.y = desired_velocity;
+                    this->desired_set_points.angular.z = desired_heading - PI/2;
+                    //this->desired_set_points.linear.x = 0;
+                    //this->desired_set_points.linear.y = -desired_velocity;
+                    //this->desired_set_points.angular.z = desired_heading + PI / 2;
 
                     this->orbit_euclidean_distance = std::sqrt(std::pow((x_k1 - x_uuv), 2) + std::pow((y_k1 - y_uuv), 2));
 
                     if (this->orbit_euclidean_distance <= this->orbit_position_error_threshold)
                     {
-                        this->desired_setpoints.linear.x = 0;
-                        this->desired_setpoints.linear.y = 0;
+                        this->desired_set_points.linear.x = 0;
+                        this->desired_set_points.linear.y = 0;
                         this->orbit_euclidean_distance = 0;
 
                         if ((this->orbit_state_machine.current_waypoint + LOS_WAYPOINT_OFFSET) < this->current_waypoint_list.waypoint_list_length)

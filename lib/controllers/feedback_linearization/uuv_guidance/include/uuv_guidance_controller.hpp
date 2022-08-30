@@ -107,7 +107,7 @@ class GuidanceController
         ASMCLawStateMachine_S   asmc_state_machine;
         
         geometry_msgs::Pose                 current_positions_ned;
-        geometry_msgs::Twist                desired_setpoints;
+        geometry_msgs::Twist                desired_set_points;
         vanttec_msgs::GuidanceWaypoints      current_waypoint_list;
         vanttec_msgs::MasterStatus           uuv_status;
 

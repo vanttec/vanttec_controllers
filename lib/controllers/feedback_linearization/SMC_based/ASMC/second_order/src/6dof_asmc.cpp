@@ -1,5 +1,5 @@
 /** ----------------------------------------------------------------------------
- * @file: uuv_6dof_controller.cpp
+ * @file: 6dof_controller.cpp
  * @date: March 2, 2022
  * @date: June 4, 2022
  * @author: Sebas Mtz
@@ -9,9 +9,9 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include "uuv_6dof_asmc.hpp"
+#include "6dof_asmc.hpp"
 
-UUV_6DOF_ASMC::UUV_6DOF_ASMC(const float sample_time_s, const float lambda[6], const float K2[6], const float K_alpha[6], const float K_min[6], const float mu[6])
+ASMC6DOF::ASMC6DOF(const float sample_time_s, const float lambda[6], const float K2[6], const float K_alpha[6], const float K_min[6], const float mu[6])
                     : ASMC_x(sample_time_s, lambda[0], K2[0], K_alpha[0], 0, K_min[0], mu[0], LINEAR_DOF)
                     , ASMC_y(sample_time_s, lambda[1], K2[1], K_alpha[1], 0, K_min[1], mu[1], LINEAR_DOF)
                     , ASMC_z(sample_time_s, lambda[2], K2[2], K_alpha[2], 0, K_min[2], mu[2], LINEAR_DOF)
@@ -72,9 +72,9 @@ UUV_6DOF_ASMC::UUV_6DOF_ASMC(const float sample_time_s, const float lambda[6], c
     // functs_arrived = 0;
 }
 
-UUV_6DOF_ASMC::~UUV_6DOF_ASMC(){}
+ASMC6DOF::~ASMC6DOF(){}
 
-void UUV_6DOF_ASMC::SetTauLimits(const float* MAX_TAU){
+void ASMC6DOF::SetTauLimits(const float* MAX_TAU){
     MAX_FORCE_X = MAX_TAU[0];
     MAX_FORCE_Y = MAX_TAU[1];
     MAX_FORCE_Z = MAX_TAU[2];
@@ -84,7 +84,7 @@ void UUV_6DOF_ASMC::SetTauLimits(const float* MAX_TAU){
 }
 
 
-void UUV_6DOF_ASMC::UpdateSetPoints(const vanttec_msgs::EtaPose& q_d)//, const vanttec_msgs::EtaPose& q_dot_d)
+void ASMC6DOF::UpdateSetPoints(const vanttec_msgs::EtaPose& q_d)//, const vanttec_msgs::EtaPose& q_dot_d)
 {
     ASMC_x.UpdateSetPoint(q_d.x, 0.0);        //, q_dot_d.x, 0.0);
     ASMC_y.UpdateSetPoint(q_d.y, 0.0);        //, q_dot_d.y, 0.0);
@@ -94,7 +94,7 @@ void UUV_6DOF_ASMC::UpdateSetPoints(const vanttec_msgs::EtaPose& q_d)//, const v
     ASMC_psi.UpdateSetPoint(q_d.psi, 0.0);        //, q_dot_d.psi);
 }
 
-void UUV_6DOF_ASMC::UpdatePose(const vanttec_msgs::EtaPose& q)//, const vanttec_msgs::EtaPose& q_dot)
+void ASMC6DOF::UpdatePose(const vanttec_msgs::EtaPose& q)//, const vanttec_msgs::EtaPose& q_dot)
 {
     ASMC_x.CalculateAuxControl(q.x, 0.0);     //, q_dot.x);
     ASMC_y.CalculateAuxControl(q.y, 0.0);     //, q_dot.y);
@@ -104,7 +104,7 @@ void UUV_6DOF_ASMC::UpdatePose(const vanttec_msgs::EtaPose& q)//, const vanttec_
     ASMC_psi.CalculateAuxControl(q.psi, 0.0);     //, q_dot.psi);
 }
 
-void UUV_6DOF_ASMC::CalculateManipulation()
+void ASMC6DOF::CalculateManipulation()
 {
     Eigen::FullPivLU<Eigen::MatrixXf> g_lu(g);
     // if(functs_arrived){
@@ -134,7 +134,7 @@ void UUV_6DOF_ASMC::CalculateManipulation()
     }
 }
 
-void UUV_6DOF_ASMC::UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions)
+void ASMC6DOF::UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions)
 {
     uint8_t stride =  (uint8_t) _non_linear_functions.g.layout.dim[0].stride;
     uint8_t offset =  (uint8_t) _non_linear_functions.g.layout.data_offset;

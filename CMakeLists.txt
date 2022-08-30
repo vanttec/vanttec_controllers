@@ -160,7 +160,7 @@ target_link_libraries(vtec_u4_simulation_node ${catkin_LIBRARIES})
 
 
 add_executable(vtec_u4_pid_node
-    src/UUVs/controllers/uuv_pid_control_node.cpp
+    src/UUVs/controllers/vtec_u4_pid_control_node.cpp
     lib/controllers/feedback_linearization/PID_based/second_order/src/6dof_pid.cpp
     lib/controllers/feedback_linearization/PID_based/second_order/src/pid.cpp
     lib/dynamic_models/marine_vehicles/src/vtec_u4_6dof_dynamic_model.cpp

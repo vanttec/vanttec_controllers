@@ -43,7 +43,7 @@ TEST(ControlSuite, regulationObjective)
     //                                                 &SixDOFPID::UpdateTwist,
     //                                                 &system_controller);
 
-    ros::Subscriber uuv_setpoint    = nh.subscribe("/uuv_control/uuv_control_node/setpoint", 10,
+    ros::Subscriber uuv_set_point    = nh.subscribe("/uuv_control/uuv_control_node/set_point", 10,
                                                     &SixDOFPID::UpdateSetPoints,
                                                     &system_controller); 
 
