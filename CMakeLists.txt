@@ -8,10 +8,11 @@ project(vanttec_controllers)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+    tf2_ros
     roscpp
+    vanttec_msgs
     # nodelet
     # pluginlib
-    vanttec_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -145,6 +146,19 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/vanttec_controllers_node.cpp)
 # add_executable(uuv_2nd_order_asmc_node src/UUVs/vanttec_controllers_node.cpp)
+
+add_executable(tf2_broadcaster_node
+    src/UUVs/6dof_tf2_broadcast_node.cpp
+    lib/simulation/src/6dof_tf2_broadcaster.cpp)
+target_link_libraries(tf2_broadcaster_node ${catkin_LIBRARIES})
+
+add_executable(vtec_u4_simulation_node
+    src/UUVs/model/vtec_u4_simulation_node.cpp
+    lib/dynamic_models/marine_vehicles/src/vtec_u4_6dof_dynamic_model.cpp
+    lib/dynamic_models/marine_vehicles/src/generic_6dof_uuv_dynamic_model.cpp)
+target_link_libraries(vtec_u4_simulation_node ${catkin_LIBRARIES})
+
+
 add_executable(vtec_u4_pid_node
     src/UUVs/controllers/uuv_pid_control_node.cpp
     lib/controllers/feedback_linearization/PID_based/second_order/src/6dof_pid.cpp

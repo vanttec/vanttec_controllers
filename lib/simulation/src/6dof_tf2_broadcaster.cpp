@@ -12,17 +12,17 @@
  * -----------------------------------------------------------------------------
  **/
 
-#include "tf2_broadcaster.hpp"
+#include "6dof_tf2_broadcaster.hpp"
 
-TfBroadcaster::TfBroadcaster(const std::string& _parent, const std::string& _child)
+TF2Broadcaster::TF2Broadcaster(const std::string& _parent, const std::string& _child)
 {
     this->parent_frame = _parent;
     this->child_frame = _child;
 }
 
-TfBroadcaster::~TfBroadcaster(){}
+TF2Broadcaster::~TF2Broadcaster(){}
 
-void TfBroadcaster::BroadcastTransform(const vanttec_msgs::EtaPose& _pose)
+void TF2Broadcaster::BroadcastTransform(const vanttec_msgs::EtaPose& _pose)
 {    
     geometry_msgs::TransformStamped transformStamped;
     

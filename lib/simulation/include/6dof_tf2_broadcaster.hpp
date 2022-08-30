@@ -11,8 +11,8 @@
  * -----------------------------------------------------------------------------
  **/
 
-#ifndef __TF_BROADCASTER_H__
-#define __TF_BROADCASTER_H__
+#ifndef __6DOF_TF2_BROADCASTER_H__
+#define __6DOF_TF2_BROADCASTER_H__
 
 #include <math.h>
 #include <ros/ros.h>
@@ -25,7 +25,7 @@
 #include <nav_msgs/Path.h>
 #include "vanttec_msgs/EtaPose.h"
 
-class TfBroadcaster
+class TF2Broadcaster
 {
     public:
         
@@ -35,8 +35,8 @@ class TfBroadcaster
         std::string parent_frame;
         std::string child_frame;
         
-        TfBroadcaster(const std::string& _parent, const std::string& _child);
-        ~TfBroadcaster();
+        TF2Broadcaster(const std::string& _parent, const std::string& _child);
+        ~TF2Broadcaster();
 
         void BroadcastTransform(const vanttec_msgs::EtaPose& msg);
 };
