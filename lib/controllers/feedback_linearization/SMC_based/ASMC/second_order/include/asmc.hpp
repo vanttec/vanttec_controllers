@@ -57,7 +57,7 @@ class ASMC
         void UpdateSetPoint(const float q_d, const float q_dot_d);
         void CalculateAuxControl(float q, float q_dot);
 
-        friend class UUV_6DOF_ASMC;
+        friend class ASMC6DOF;
 };
 
 #endif

@@ -8,7 +8,7 @@
  * -----------------------------------------------------------------------------
  **/
 
-#include "uuv_6dof_asmc.hpp"
+#include "6dof_asmc.hpp"
 #include "vtec_u4_6dof_dynamic_model.hpp"
 #include "vanttec_msgs/EtaPose.h"
 
@@ -20,43 +20,50 @@ const float SAMPLE_TIME_S = 0.01;
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "uuv_control_node");
-    ros::NodeHandle nh;
+    ros::NodeHandle nh("~");
     
     ros::Rate cycle_rate(int(1 / SAMPLE_TIME_S));
 
+    std::vector<float> lambda_v;
+    std::vector<float> K2_v;
+    std::vector<float> K_alpha_v;
+    std::vector<float> K_min_v;
+    std::vector<float> mu_v;
+
     // Sliding surface params
-    float lambda[6] = {0.3, 0.3, 0.3, 0.8, 0.8, 0.8};
-    
+    nh.getParam("lambda", lambda_v);
+
     // K2 gains
-    // float K2[6] = {0.5, 0.5, 0.3, 0.3, 0.3, 0.3};
-    float K2[6] = {1,1,1,1,1,1};
+    nh.getParam("K2", K2_v);
     
     // Adaptive law params
-    // float K_alpha[6] = {1.2, 0.8, 0.5, 6, 0.7, 4};
-    // float K_min[6] = {0.1, 0.1, 0.1, 0.2, 0.1, 0.2};
-    // float mu[6] = {0.01, 0.01, 0.01, 0.005, 0.005, 0.005};
-    
-    float K_alpha[6] = {0.1,0.1,0.1,0.1,0.1,0.1};
-    float K_min[6] = {0.01, 0.01, 0.01,0.01, 0.01, 0.01};
-    float mu[6] = {0.01, 0.01, 0.01,0.01, 0.01, 0.01};
+    nh.getParam("K_alpha", K_alpha_v);
+    nh.getParam("K_min", K_min_v);
+    nh.getParam("mu", mu_v);
 
     // Max Tau
     float MAX_TAU[6] = {127, 34, 118, 28, 9.6, 36.6};
 
-    UUV_6DOF_ASMC   system_controller(SAMPLE_TIME_S, lambda, K2, K_alpha, K_min, mu);
+    float* lambda = &lambda_v[0];
+    float* K2 = &K2_v[0];
+    float* K_alpha = &K_alpha_v[0];
+    float* K_min = &K_min_v[0];
+    float* mu = &mu_v[0];
+
+    ASMC6DOF   system_controller(SAMPLE_TIME_S, lambda, K2, K_alpha, K_min, mu);
     system_controller.SetMaxThrust(MAX_TAU);
     
     ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
-    ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_dynamics/non_linear_functions", 10, 
-                                                    &UUV_6DOF_ASMC::UpdateDynamics,
+    ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_simulation/dynamic_model/non_linear_functions", 10, 
+                                                    &ASMC6DOF::UpdateDynamics,
                                                     &system_controller);
 
     ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose", 10,
-                                                    &UUV_6DOF_ASMC::UpdatePose,
+                                                    &ASMC6DOF::UpdatePose,
                                                     &system_controller);
 
     ros::Subscriber uuv_set_point    = nh.subscribe("/uuv_control/uuv_control_node/set_point", 10,
-                                                    &UUV_6DOF_ASMC::UpdateSetPoints,
+                                                    &ASMC6DOF::UpdateSetPoints,
                                                     &system_controller); 
 
     while(ros::ok())
