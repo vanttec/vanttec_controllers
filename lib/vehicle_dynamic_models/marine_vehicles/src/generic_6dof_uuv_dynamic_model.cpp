@@ -8,7 +8,7 @@
            Euler Angles.
    @todo: Modify matrices for the true general case of non-diagonal matrices.
           Include ALL terms. Also, include offset vector in the case the origin
-          is no the COM.
+          is not the COM.
  * -----------------------------------------------------------------------------
  **/
 

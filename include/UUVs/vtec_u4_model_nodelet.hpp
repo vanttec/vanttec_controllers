@@ -1,3 +1,13 @@
+/** ----------------------------------------------------------------------------
+ * @file: vtec_u4_model_nodelet.hpp
+ * @date: August 30, 2022
+ * @author: Sebastian Mtz
+ * @email: sebas.martp@gmail.com
+ * 
+ * @brief: VTec U4 model nodelet. Does not currently work.
+ * -----------------------------------------------------------------------------
+**/
+
 #ifndef __VTEC_U4_MODEL_NODELET_H__
 #define __VTEC_U4_MODEL_NODELET_H__
 

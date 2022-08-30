@@ -1,3 +1,14 @@
+/** ----------------------------------------------------------------------------
+ * @file: vtec_u4_model_nodelet.cpp
+ * @date: August 30, 2022
+ * @author: Sebastian Mtz
+ * @email: sebas.martp@gmail.com
+ * 
+ * @brief: VTec U4 model nodelet. Does not currently work. For some reason the
+ *         dynamic_cast of the current file can not be compiled.
+ * -----------------------------------------------------------------------------
+**/
+
 #include <pluginlib/class_list_macros.h>
 #include "vtec_u4_model_nodelet.hpp"
 
