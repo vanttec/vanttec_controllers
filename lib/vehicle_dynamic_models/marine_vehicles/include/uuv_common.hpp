@@ -13,7 +13,7 @@
 #ifndef __UUV_COMMON_H__
 #define __UUV_COMMON_H__
 
-#include <vanttec_uuv/GuidanceWaypoints.h>
+#include <vanttec_msgs/GuidanceWaypoints.h>
 #include <cmath>
 #include <eigen3/Eigen/Dense>
 
@@ -36,7 +36,7 @@ namespace uuv_common
     static const float g = 9.81;
     
     /* Helper functions */
-    vanttec_uuv::GuidanceWaypoints GenerateCircle(float _radius, float _x_center, float _y_center, float _z_center, float _angle_offset);
+    vanttec_msgs::GuidanceWaypoints GenerateCircle(float _radius, float _x_center, float _y_center, float _z_center, float _angle_offset);
     // Eigen::MatrixXf                CalculateTransformation(double phi, double theta, double psi);
     Eigen::MatrixXf CalculateRotation(double phi, double theta, double psi);
 }

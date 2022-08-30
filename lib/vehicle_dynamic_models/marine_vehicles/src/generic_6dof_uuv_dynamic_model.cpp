@@ -228,7 +228,7 @@ void Generic6DOFUUVDynamicModel::CalculateDamping()
 
 }
 
-void Generic6DOFUUVDynamicModel::ThrustCallback(const vanttec_uuv::ThrustControl& _thrust)
+void Generic6DOFUUVDynamicModel::ThrustCallback(const vanttec_msgs::ThrustControl& _thrust)
 {
     tau << _thrust.tau_x,
            _thrust.tau_y,

@@ -85,7 +85,7 @@ void GuidanceController::OnCurrentPositionReception(const geometry_msgs::Pose& _
     this->current_positions_ned.orientation.z   = _pose.orientation.z;
 }
 
-void GuidanceController::OnWaypointReception(const vanttec_uuv::GuidanceWaypoints& _waypoints)
+void GuidanceController::OnWaypointReception(const vanttec_msgs::GuidanceWaypoints& _waypoints)
 {
     /* Waypoints update (and therefore, guidance law triggering) can only be done when the guidance
     node is not executing any other type of action/law; only acceptable input is an emergency stop */
@@ -140,7 +140,7 @@ void GuidanceController::OnEmergencyStop(const std_msgs::Empty& _msg)
     this->asmc_state_machine.state_machine = ASMC_LAW_STANDBY;
 }
 
-void GuidanceController::OnMasterStatus(const vanttec_uuv::MasterStatus& _status)
+void GuidanceController::OnMasterStatus(const vanttec_msgs::MasterStatus& _status)
 {
     /* Store the current status */
     this->uuv_status = _status;

@@ -22,7 +22,7 @@ TfBroadcaster::TfBroadcaster(const std::string& _parent, const std::string& _chi
 
 TfBroadcaster::~TfBroadcaster(){}
 
-void TfBroadcaster::BroadcastTransform(const vanttec_uuv::EtaPose& _pose)
+void TfBroadcaster::BroadcastTransform(const vanttec_msgs::EtaPose& _pose)
 {    
     geometry_msgs::TransformStamped transformStamped;
     

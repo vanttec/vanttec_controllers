@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     ros::Rate           cycle_rate(int(1 / SAMPLE_TIME_S));
     WaypointPublisher   waypoint_publisher;
     
-    ros::Publisher  uuv_waypoints = nh.advertise<vanttec_uuv::GuidanceWaypoints>("/uuv_guidance/guidance_controller/waypoints", 1000);
+    ros::Publisher  uuv_waypoints = nh.advertise<vanttec_msgs::GuidanceWaypoints>("/uuv_guidance/guidance_controller/waypoints", 1000);
     ros::Publisher  uuv_path = nh.advertise<nav_msgs::Path>("/uuv_planning/motion_planning/desired_path", 1000);
 
     ros::Subscriber trajectory_select = nh.subscribe("/uuv_planning/motion_planning/desired_trajectory",

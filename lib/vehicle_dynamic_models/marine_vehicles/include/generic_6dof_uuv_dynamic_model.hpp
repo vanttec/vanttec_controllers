@@ -14,8 +14,8 @@
 #ifndef __GENERIC_6DOF_UUV_DYNAMIC_MODEL__
 #define __GENERIC_6DOF_UUV_DYNAMIC_MODEL__
 
-#include "vanttec_uuv/ThrustControl.h"
-#include "vanttec_uuv/EtaPose.h"
+#include "vanttec_msgs/ThrustControl.h"
+#include "vanttec_msgs/EtaPose.h"
 #include "uuv_common.hpp"
 
 #include <geometry_msgs/Accel.h>
@@ -124,7 +124,7 @@ class Generic6DOFUUVDynamicModel
         Eigen::VectorXf f;
         Eigen::MatrixXf g;
         
-        vanttec_uuv::EtaPose    eta_pose;
+        vanttec_msgs::EtaPose    eta_pose;
         geometry_msgs::Twist    velocities;
         geometry_msgs::Accel    accelerations;
 
@@ -134,7 +134,7 @@ class Generic6DOFUUVDynamicModel
         void CalculateTransformation();
         virtual void CalculateCoriolis();
         virtual void CalculateDamping();
-        void ThrustCallback(const vanttec_uuv::ThrustControl& _thrust);
+        void ThrustCallback(const vanttec_msgs::ThrustControl& _thrust);
         void CalculateStates();
         friend class VTecU4DynamicModel;
 };

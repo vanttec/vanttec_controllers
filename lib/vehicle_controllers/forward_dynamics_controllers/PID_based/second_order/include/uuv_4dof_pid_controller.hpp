@@ -15,7 +15,7 @@
 
 #include "pid_controller.hpp"
 #include "vtec_u3_parameters.hpp"
-#include "vanttec_uuv/ThrustControl.h"
+#include "vanttec_msgs/ThrustControl.h"
 
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Twist.h>
@@ -30,7 +30,7 @@ class UUV4DOFController
         geometry_msgs::Pose         local_pose;
         geometry_msgs::Twist        local_twist;
         
-        vanttec_uuv::ThrustControl  thrust;
+        vanttec_msgs::ThrustControl  thrust;
 
         float yaw_psi_angle;
 

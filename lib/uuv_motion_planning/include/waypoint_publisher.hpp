@@ -12,7 +12,7 @@
 #define __WAYPOINT_PUBLISHER_H__
 
 #include <uuv_common.hpp>
-#include <vanttec_uuv/GuidanceWaypoints.h>
+#include <vanttec_msgs/GuidanceWaypoints.h>
 
 #include <geometry_msgs/PoseStamped.h>
 #include <std_msgs/UInt8.h>
@@ -27,7 +27,7 @@ class WaypointPublisher
         uint8_t path_publish_flag;
         float   circle_radius;
 
-        vanttec_uuv::GuidanceWaypoints  waypoints;
+        vanttec_msgs::GuidanceWaypoints  waypoints;
         nav_msgs::Path                  path;
 
         WaypointPublisher();

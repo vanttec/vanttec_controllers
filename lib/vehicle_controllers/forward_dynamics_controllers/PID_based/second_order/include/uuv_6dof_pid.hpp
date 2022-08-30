@@ -12,8 +12,8 @@
 #define __UUV_6DOF_PID_H__
 
 #include "pid_controller.hpp"
-#include "vanttec_uuv/ThrustControl.h"
-#include "vanttec_uuv/SystemDynamics.h"
+#include "vanttec_msgs/ThrustControl.h"
+#include "vanttec_msgs/SystemDynamics.h"
 
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Twist.h>
@@ -33,7 +33,7 @@ class UUV6DOFPIDController
         Eigen::VectorXf f;
         Eigen::MatrixXf g;
         Eigen::VectorXf ref_dot_dot;
-        vanttec_uuv::ThrustControl  thrust;
+        vanttec_msgs::ThrustControl  thrust;
 
         PIDController PID_x;
         PIDController PID_y;
@@ -46,9 +46,9 @@ class UUV6DOFPIDController
         ~UUV6DOFPIDController();
 
         void CalculateManipulations();
-        void UpdateDynamics(const vanttec_uuv::SystemDynamics& _non_linear_functions);
-        void UpdateSetPoints(const vanttec_uuv::EtaPose& _set_points);
-        void UpdatePose(const vanttec_uuv::EtaPose& _current);
+        void UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions);
+        void UpdateSetPoints(const vanttec_msgs::EtaPose& _set_points);
+        void UpdatePose(const vanttec_msgs::EtaPose& _current);
 };
 
 #endif

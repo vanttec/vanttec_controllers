@@ -21,8 +21,8 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Twist.h>
 
-#include <vanttec_uuv/GuidanceWaypoints.h>
-#include <vanttec_uuv/MasterStatus.h>
+#include <vanttec_msgs/GuidanceWaypoints.h>
+#include <vanttec_msgs/MasterStatus.h>
 
 #include "asmc_guidance_4dof.hpp"
 
@@ -108,16 +108,16 @@ class GuidanceController
         
         geometry_msgs::Pose                 current_positions_ned;
         geometry_msgs::Twist                desired_setpoints;
-        vanttec_uuv::GuidanceWaypoints      current_waypoint_list;
-        vanttec_uuv::MasterStatus           uuv_status;
+        vanttec_msgs::GuidanceWaypoints      current_waypoint_list;
+        vanttec_msgs::MasterStatus           uuv_status;
 
         GuidanceController(const float SAMPLE_TIME_S);
         ~GuidanceController();
         
         void OnCurrentPositionReception(const geometry_msgs::Pose& _pose);
-        void OnWaypointReception(const vanttec_uuv::GuidanceWaypoints& _waypoints);
+        void OnWaypointReception(const vanttec_msgs::GuidanceWaypoints& _waypoints);
         void OnEmergencyStop(const std_msgs::Empty& _msg);
-        void OnMasterStatus(const vanttec_uuv::MasterStatus& _status);
+        void OnMasterStatus(const vanttec_msgs::MasterStatus& _status);
         void UpdateStateMachines();
 
     private:

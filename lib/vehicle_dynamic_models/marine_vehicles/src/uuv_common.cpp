@@ -14,9 +14,9 @@
 
 namespace uuv_common
 {
-    vanttec_uuv::GuidanceWaypoints GenerateCircle(float _radius, float _x_center, float _y_center, float _z_center, float _angle_offset)
+    vanttec_msgs::GuidanceWaypoints GenerateCircle(float _radius, float _x_center, float _y_center, float _z_center, float _angle_offset)
     {
-        vanttec_uuv::GuidanceWaypoints _waypoints;
+        vanttec_msgs::GuidanceWaypoints _waypoints;
         
         float angle = _angle_offset;
         uint8_t counter = 0;

@@ -1,27 +1,26 @@
 /** ----------------------------------------------------------------------------
- * @file: uuv_control_node.cpp
- * @date: July 30, 2020
- * @author: Pedro Sanchez
- * @email: pedro.sc.97@gmail.com
+ * @file: 6dof_vtec_u4_pid_test.cpp
+ * @date: August 13, 2022
+ * @author: Sebastian Mtz
+ * @email: sebas.martp@gmail.com
  * 
- * @brief: ROS control node for the UUV. Uses uuv_control library.
+ * @brief: test file for a 6DOF PID controller for the VTec U4.
  * -----------------------------------------------------------------------------
- **/
+**/
 
 #include "uuv_6dof_pid.hpp"
 #include "vtec_u4_6dof_dynamic_model.hpp"
-#include "vanttec_uuv/EtaPose.h"
+#include "vanttec_msgs/EtaPose.h"
 
 #include <ros/ros.h>
 #include <stdio.h>
+#include <gtest/gtest.h>
 
 const float SAMPLE_TIME_S = 0.01;
 
-int main(int argc, char **argv)
+// Declare a test
+TEST(ControlSuite, regulationObjective)
 {
-    ros::init(argc, argv, "uuv_control_node");
-    ros::NodeHandle nh;
-    
     ros::Rate           cycle_rate(int(1 / SAMPLE_TIME_S));
     float k_p[6] = {8, 5, 7, 60, 40, 80};
     float k_i[6] = {0, 0, 0, 0, 0.01, 0.01};
@@ -30,7 +29,7 @@ int main(int argc, char **argv)
 
     UUV6DOFPIDController   system_controller(SAMPLE_TIME_S, k_p, k_i, k_d, types);
     
-    ros::Publisher  uuv_thrust      = nh.advertise<vanttec_uuv::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
+    ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
     ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_simulation/dynamic_model/non_linear_functions", 10, 
                                                     &UUV6DOFPIDController::UpdateDynamics,
                                                     &system_controller);
@@ -67,6 +66,14 @@ int main(int argc, char **argv)
         /* Slee for 10ms */
         cycle_rate.sleep();
     }
+}
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    ros::init(argc, argv, "6dof_vtec_u4_pid_test");
+    ros::NodeHandle nh;
     
-    return 0;
+      
+    return RUN_ALL_TESTS();
 }

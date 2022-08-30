@@ -84,7 +84,7 @@ void UUV_6DOF_ASMC::SetTauLimits(const float* MAX_TAU){
 }
 
 
-void UUV_6DOF_ASMC::UpdateSetPoints(const vanttec_uuv::EtaPose& q_d)//, const vanttec_uuv::EtaPose& q_dot_d)
+void UUV_6DOF_ASMC::UpdateSetPoints(const vanttec_msgs::EtaPose& q_d)//, const vanttec_msgs::EtaPose& q_dot_d)
 {
     ASMC_x.UpdateSetPoint(q_d.x, 0.0);        //, q_dot_d.x, 0.0);
     ASMC_y.UpdateSetPoint(q_d.y, 0.0);        //, q_dot_d.y, 0.0);
@@ -94,7 +94,7 @@ void UUV_6DOF_ASMC::UpdateSetPoints(const vanttec_uuv::EtaPose& q_d)//, const va
     ASMC_psi.UpdateSetPoint(q_d.psi, 0.0);        //, q_dot_d.psi);
 }
 
-void UUV_6DOF_ASMC::UpdatePose(const vanttec_uuv::EtaPose& q)//, const vanttec_uuv::EtaPose& q_dot)
+void UUV_6DOF_ASMC::UpdatePose(const vanttec_msgs::EtaPose& q)//, const vanttec_msgs::EtaPose& q_dot)
 {
     ASMC_x.CalculateAuxControl(q.x, 0.0);     //, q_dot.x);
     ASMC_y.CalculateAuxControl(q.y, 0.0);     //, q_dot.y);
@@ -134,7 +134,7 @@ void UUV_6DOF_ASMC::CalculateManipulation()
     }
 }
 
-void UUV_6DOF_ASMC::UpdateDynamics(const vanttec_uuv::SystemDynamics& _non_linear_functions)
+void UUV_6DOF_ASMC::UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions)
 {
     uint8_t stride =  (uint8_t) _non_linear_functions.g.layout.dim[0].stride;
     uint8_t offset =  (uint8_t) _non_linear_functions.g.layout.data_offset;

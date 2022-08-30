@@ -23,7 +23,7 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Path.h>
-#include "vanttec_uuv/EtaPose.h"
+#include "vanttec_msgs/EtaPose.h"
 
 class TfBroadcaster
 {
@@ -38,7 +38,7 @@ class TfBroadcaster
         TfBroadcaster(const std::string& _parent, const std::string& _child);
         ~TfBroadcaster();
 
-        void BroadcastTransform(const vanttec_uuv::EtaPose& msg);
+        void BroadcastTransform(const vanttec_msgs::EtaPose& msg);
 };
 
 #endif

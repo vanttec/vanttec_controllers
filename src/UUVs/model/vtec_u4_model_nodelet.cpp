@@ -1,42 +1,26 @@
-/** ----------------------------------------------------------------------------
- * @file: uuv_simulation_node.cpp
- * @date: April 10, 2022
- * @author: Sebas Martinez
- * @email: sebas.martp@gmail.com
- * @author: Pedro Sanchez
- * @email: pedro.sc.97@gmail.com
- * 
- * @brief: ROS simulation node for the UUV. Uses uuv_simulation library.
- * https://answers.ros.org/question/190920/how-can-i-subscribe-to-a-topic-using-a-parent-class-function-as-the-callback/
- * @todo: Check if the nonlinear functions publishing section should be here or in
- * the VTecU4DynamicModel class.
- * -----------------------------------------------------------------------------
- **/
+#include <pluginlib/class_list_macros.h>
+#include "vtec_u4_model_nodelet.hpp"
 
-#include "generic_6dof_uuv_dynamic_model.hpp"
-#include "vtec_u4_6dof_dynamic_model.hpp"
-#include "vanttec_uuv/EtaPose.h"
-#include "vanttec_uuv/SystemDynamics.h"
-#include <std_msgs/MultiArrayDimension.h>
+// watch the capitalization carefully
+PLUGINLIB_EXPORT_CLASS(VTecU4ModelNodelet, nodelet::Nodelet)
 
-#include <ros/ros.h>
-#include <stdio.h>
+VTecU4ModelNodelet::VTecU4ModelNodelet(){}
+VTecU4ModelNodelet::~VTecU4ModelNodelet(){}
 
-static const float SAMPLE_TIME_S = 0.01;
-
-int main(int argc, char **argv)
+void VTecU4ModelNodelet::onInit()
 {
-    ros::init(argc, argv, "uuv_simulation_node");
-    ros::NodeHandle nh;
+    static const float SAMPLE_TIME_S = 0.01;
+    NODELET_DEBUG("Initializing VTec U4 model control nodelet...");
+    ros::NodeHandle nh = getNodeHandle();
         
     ros::Rate               cycle_rate(int(1 / SAMPLE_TIME_S));
     VTecU4DynamicModel      uuv_model(SAMPLE_TIME_S);
-    vanttec_uuv::SystemDynamics  uuv_functions;
+    vanttec_msgs::SystemDynamics  uuv_functions;
     
     ros::Publisher  uuv_accel     = nh.advertise<geometry_msgs::Vector3>("/vectornav/ins_3d/ins_acc", 1000);
     ros::Publisher  uuv_vel       = nh.advertise<geometry_msgs::Twist>("/uuv_simulation/dynamic_model/vel", 1000);
-    ros::Publisher  uuv_eta_pose  = nh.advertise<vanttec_uuv::EtaPose>("/uuv_simulation/dynamic_model/eta_pose", 1000);
-    ros::Publisher  uuv_dynamics  = nh.advertise<vanttec_uuv::SystemDynamics>("/uuv_dynamics/non_linear_functions", 10);
+    ros::Publisher  uuv_eta_pose  = nh.advertise<vanttec_msgs::EtaPose>("/uuv_simulation/dynamic_model/eta_pose", 1000);
+    ros::Publisher  uuv_dynamics  = nh.advertise<vanttec_msgs::SystemDynamics>("/uuv_dynamics/non_linear_functions", 10);
 
     ros::Subscriber uuv_thrust_input = nh.subscribe("/uuv_control/uuv_control_node/thrust", 
                                                     10, 
@@ -80,6 +64,4 @@ int main(int argc, char **argv)
         /* Sleep for 10ms */
         cycle_rate.sleep();
     }
-
-    return 0;
 }

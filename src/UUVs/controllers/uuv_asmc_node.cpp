@@ -10,7 +10,7 @@
 
 #include "uuv_6dof_asmc.hpp"
 #include "vtec_u4_6dof_dynamic_model.hpp"
-#include "vanttec_uuv/EtaPose.h"
+#include "vanttec_msgs/EtaPose.h"
 
 #include <ros/ros.h>
 #include <stdio.h>
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     UUV_6DOF_ASMC   system_controller(SAMPLE_TIME_S, lambda, K2, K_alpha, K_min, mu);
     system_controller.SetTauLimits(MAX_TAU);
     
-    ros::Publisher  uuv_thrust      = nh.advertise<vanttec_uuv::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
+    ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
     ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_dynamics/non_linear_functions", 10, 
                                                     &UUV_6DOF_ASMC::UpdateDynamics,
                                                     &system_controller);

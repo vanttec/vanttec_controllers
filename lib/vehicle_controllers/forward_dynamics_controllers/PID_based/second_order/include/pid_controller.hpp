@@ -14,7 +14,7 @@
 #define __PID_CONTROLLER_H__
 
 #include "uuv_common.hpp"
-#include "vanttec_uuv/EtaPose.h"
+#include "vanttec_msgs/EtaPose.h"
 #include <std_msgs/Float32.h>
 #include <cmath>
 

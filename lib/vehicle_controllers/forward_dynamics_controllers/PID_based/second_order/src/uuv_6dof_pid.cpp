@@ -68,7 +68,7 @@ UUV6DOFPIDController::UUV6DOFPIDController(const float &_sample_time_s, const fl
 UUV6DOFPIDController::~UUV6DOFPIDController(){};
 
 
-void UUV6DOFPIDController::UpdateSetPoints(const vanttec_uuv::EtaPose& _set_points)
+void UUV6DOFPIDController::UpdateSetPoints(const vanttec_msgs::EtaPose& _set_points)
 {
     PID_x.UpdateSetPoint(_set_points.x);
     PID_y.UpdateSetPoint(_set_points.y);
@@ -78,7 +78,7 @@ void UUV6DOFPIDController::UpdateSetPoints(const vanttec_uuv::EtaPose& _set_poin
     PID_psi.UpdateSetPoint(_set_points.psi);
 }
 
-void UUV6DOFPIDController::UpdatePose(const vanttec_uuv::EtaPose& _current)
+void UUV6DOFPIDController::UpdatePose(const vanttec_msgs::EtaPose& _current)
 {
     PID_x.CalculateManipulation(_current.x);
     PID_y.CalculateManipulation(_current.y);
@@ -116,7 +116,7 @@ void UUV6DOFPIDController::CalculateManipulations()
     }
 }
 
-void UUV6DOFPIDController::UpdateDynamics(const vanttec_uuv::SystemDynamics& _non_linear_functions)
+void UUV6DOFPIDController::UpdateDynamics(const vanttec_msgs::SystemDynamics& _non_linear_functions)
 {
     uint8_t stride =  (uint8_t) _non_linear_functions.g.layout.dim[0].stride;
     uint8_t offset =  (uint8_t) _non_linear_functions.g.layout.data_offset;
