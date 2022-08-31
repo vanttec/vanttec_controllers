@@ -1,6 +1,8 @@
 <launch>
 
-    <node name="vtec_u4_simulation_node" pkg="vanttec_controllers" type="vtec_u4_simulation_node"/>
+    <!-- Choose if inertial or non-inertial model is desired -->
+    <!-- <node name="vtec_u4_simulation_node" pkg="vanttec_controllers" type="vtec_u4_simulation_node"/> -->
+    <node name="vtec_u4_simulation_node" pkg="vanttec_controllers" type="inertial_vtec_u4_simulation_node"/>
 
     <node name="vtec_u4_asmc_node" pkg="vanttec_controllers" type="vtec_u4_asmc_node">
         <rosparam file="$(find vanttec_controllers)/config/VTec_U4_ASMC_Gains.yaml"/>

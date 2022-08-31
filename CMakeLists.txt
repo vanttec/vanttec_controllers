@@ -159,30 +159,31 @@ add_executable(vtec_u4_simulation_node
     lib/dynamic_models/marine_vehicles/src/generic_6dof_uuv_dynamic_model.cpp)
 target_link_libraries(vtec_u4_simulation_node ${catkin_LIBRARIES})
 
+add_executable(inertial_vtec_u4_simulation_node
+    src/UUVs/model/in_vtec_u4_simulation_node.cpp
+    lib/dynamic_models/marine_vehicles/src/vtec_u4_in_6dof_dynamic_model.cpp
+    lib/dynamic_models/marine_vehicles/src/generic_in_6dof_uuv_dynamic_model.cpp
+    lib/common_lib/src/common.cpp)
+target_link_libraries(inertial_vtec_u4_simulation_node ${catkin_LIBRARIES})
+
 add_executable(vtec_u4_pid_node
-    src/UUVs/controllers/vtec_u4_pid_control_node.cpp
+    src/UUVs/controllers/first_order/vtec_u4_pid_control_node.cpp
     lib/controllers/feedback_linearization/PID_based/second_order/src/6dof_pid.cpp
     lib/controllers/feedback_linearization/PID_based/second_order/src/pid.cpp
-    lib/dynamic_models/marine_vehicles/src/vtec_u4_6dof_dynamic_model.cpp
-    lib/dynamic_models/marine_vehicles/src/generic_6dof_uuv_dynamic_model.cpp
     lib/common_lib/src/common.cpp)
 target_link_libraries(vtec_u4_pid_node ${catkin_LIBRARIES})
 
 add_executable(vtec_u4_asmc_node
-    src/UUVs/controllers/vtec_u4_asmc_node.cpp
+    src/UUVs/controllers/second_order/vtec_u4_asmc_node.cpp
     lib/controllers/feedback_linearization/SMC_based/ASMC/second_order/src/6dof_asmc.cpp
     lib/controllers/feedback_linearization/SMC_based/ASMC/second_order/src/asmc.cpp
-    lib/dynamic_models/marine_vehicles/src/vtec_u4_6dof_dynamic_model.cpp
-    lib/dynamic_models/marine_vehicles/src/generic_6dof_uuv_dynamic_model.cpp
     lib/common_lib/src/common.cpp)
 target_link_libraries(vtec_u4_asmc_node ${catkin_LIBRARIES})
 
 add_executable(vtec_u4_antsmc_node
-    src/UUVs/controllers/vtec_u4_antsmc_node.cpp
+    src/UUVs/controllers/second_order/vtec_u4_antsmc_node.cpp
     lib/controllers/feedback_linearization/SMC_based/ANTSMC/second_order/src/6dof_antsmc.cpp
     lib/controllers/feedback_linearization/SMC_based/ANTSMC/second_order/src/antsmc.cpp
-    lib/dynamic_models/marine_vehicles/src/vtec_u4_6dof_dynamic_model.cpp
-    lib/dynamic_models/marine_vehicles/src/generic_6dof_uuv_dynamic_model.cpp
     lib/common_lib/src/common.cpp)
 target_link_libraries(vtec_u4_antsmc_node ${catkin_LIBRARIES})
 

@@ -1,10 +1,10 @@
 /** ----------------------------------------------------------------------------
- * @file: generic_6dof_uuv_model.hpp
- * @date: March 20, 2022
+ * @file: generic_in_6dof_uuv_model.hpp
+ * @date: August 31, 2022
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Description of a generic 6dof UUV model in the non-inertial frame with
+ * @brief: Description of a generic 6dof UUV model in the inertial frame with
            Euler Angles.
    @todo: Modify matrices for the true general case of non-diagonal matrices.
           Include ALL terms. Also, include offset vector in the case the origin
@@ -12,8 +12,8 @@
  * -----------------------------------------------------------------------------
  **/
  
-#ifndef __GENERIC_6DOF_UUV_DYNAMIC_MODEL__
-#define __GENERIC_6DOF_UUV_DYNAMIC_MODEL__
+#ifndef __GENERIC_IN_6DOF_UUV_DYNAMIC_MODEL__
+#define __GENERIC_IN_6DOF_UUV_DYNAMIC_MODEL__
 
 #include "vanttec_msgs/ThrustControl.h"
 #include "vanttec_msgs/EtaPose.h"
@@ -24,7 +24,7 @@
 #include <eigen3/Eigen/Dense>
 #include <math.h>
 
-class Generic6DOFUUVDynamicModel
+class GenericIn6DOFUUVDynamicModel
 {
     private:
         float _sample_time_s;
@@ -34,12 +34,18 @@ class Generic6DOFUUVDynamicModel
         Eigen::MatrixXf J;
         Eigen::Matrix3f R;
         Eigen::Matrix3f T;
+        Eigen::MatrixXf J_dot;
+        Eigen::Matrix3f R_dot;
+        Eigen::Matrix3f T_dot;
+        Eigen::MatrixXf J_inv;
 
         /* System states */
 
         Eigen::VectorXf eta;            // x, y, z, phi, theta, psi
         Eigen::VectorXf eta_dot;
         Eigen::VectorXf eta_dot_prev;
+        Eigen::VectorXf eta_dot_dot;
+        Eigen::VectorXf eta_dot_dot_prev;
         Eigen::VectorXf nu;             // u, v, w, p, q, r
         Eigen::VectorXf nu_dot;
         Eigen::VectorXf nu_dot_prev;
@@ -129,15 +135,16 @@ class Generic6DOFUUVDynamicModel
         geometry_msgs::Twist    velocities;
         geometry_msgs::Accel    accelerations;
 
-        Generic6DOFUUVDynamicModel(float sample_time_s);
-        ~Generic6DOFUUVDynamicModel();
+        GenericIn6DOFUUVDynamicModel(float sample_time_s);
+        ~GenericIn6DOFUUVDynamicModel();
 
         void CalculateTransformation();
         virtual void CalculateCoriolis();
         virtual void CalculateDamping();
         void ThrustCallback(const vanttec_msgs::ThrustControl& _thrust);
         void CalculateStates();
-        friend class VTecU4DynamicModel;
+
+        friend class VTecU4InDynamicModel;
 };
 
 #endif

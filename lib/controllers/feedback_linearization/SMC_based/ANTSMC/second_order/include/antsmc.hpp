@@ -49,7 +49,7 @@ class ANTSMC
         DOFControllerType_E _controller_type;
     public:
         // Constructor
-        ANTSMC(const float sample_time_s, const float alpha, const float beta, const float K2, const float K_alpha, const float K_min, const float K_min_init, const float mu, const DOFControllerType_E type);
+        ANTSMC(const float sample_time_s, const float alpha, const float beta, const float K2, const float K_alpha, const float K_min, const float K1_init, const float mu, const DOFControllerType_E type);
 
         // Destructor
         ~ANTSMC();

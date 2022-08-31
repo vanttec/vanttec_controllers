@@ -4,10 +4,6 @@
     <!-- <node name="vtec_u4_simulation_node" pkg="vanttec_controllers" type="vtec_u4_simulation_node"/> -->
     <node name="vtec_u4_simulation_node" pkg="vanttec_controllers" type="inertial_vtec_u4_simulation_node"/>
 
-    <node name="vtec_u4_antsmc_node" pkg="vanttec_controllers" type="vtec_u4_antsmc_node">
-        <rosparam file="$(find vanttec_controllers)/config/VTec_U4_ANTSMC_Gains.yaml"/>
-    </node>
-
     <param name="robot_description" textfile="$(find vanttec_controllers)/models/vtec_u3.urdf" />
 
     <node name="tf2_broadcaster_node" pkg="vanttec_controllers" type="tf2_broadcaster_node">

@@ -10,17 +10,17 @@
 
 #include "6dof_antsmc.hpp"
 
-ANTSMC6DOF::ANTSMC6DOF(const float sample_time_s, const float alpha[6], const float beta[6], const float K2[6], const float K_alpha[6], const float K_min[6], const float K_min_init[6], const float mu[6])
-                    : ANTSMC_x(sample_time_s, alpha[0], beta[0], K2[0], K_alpha[0], K_min[0], K_min_init[0], mu[0], LINEAR_DOF)
-                    , ANTSMC_y(sample_time_s, alpha[1], beta[1], K2[1], K_alpha[1], K_min[1], K_min_init[1], mu[1], LINEAR_DOF)
-                    , ANTSMC_z(sample_time_s, alpha[2], beta[2], K2[2], K_alpha[2], K_min[2], K_min_init[2], mu[2], LINEAR_DOF)
-                    , ANTSMC_phi(sample_time_s, alpha[3], beta[3], K2[3], K_alpha[3], K_min[3], K_min_init[3], mu[3], ANGULAR_DOF)
-                    , ANTSMC_theta(sample_time_s, alpha[4], beta[4], K2[4], K_alpha[4], K_min[4], K_min_init[4], mu[4], ANGULAR_DOF)
-                    , ANTSMC_psi(sample_time_s, alpha[5], beta[5], K2[5], K_alpha[5], K_min[5], K_min_init[5], mu[5], ANGULAR_DOF)
+ANTSMC6DOF::ANTSMC6DOF(const float sample_time_s, const float alpha[6], const float beta[6], const float K2[6], const float K_alpha[6], const float K_min[6], const float K1_init[6], const float mu[6])
+                    : ANTSMC_x(sample_time_s, alpha[0], beta[0], K2[0], K_alpha[0], K_min[0], K1_init[0], mu[0], LINEAR_DOF)
+                    , ANTSMC_y(sample_time_s, alpha[1], beta[1], K2[1], K_alpha[1], K_min[1], K1_init[1], mu[1], LINEAR_DOF)
+                    , ANTSMC_z(sample_time_s, alpha[2], beta[2], K2[2], K_alpha[2], K_min[2], K1_init[2], mu[2], LINEAR_DOF)
+                    , ANTSMC_phi(sample_time_s, alpha[3], beta[3], K2[3], K_alpha[3], K_min[3], K1_init[3], mu[3], ANGULAR_DOF)
+                    , ANTSMC_theta(sample_time_s, alpha[4], beta[4], K2[4], K_alpha[4], K_min[4], K1_init[4], mu[4], ANGULAR_DOF)
+                    , ANTSMC_psi(sample_time_s, alpha[5], beta[5], K2[5], K_alpha[5], K_min[5], K1_init[5], mu[5], ANGULAR_DOF)
 {
-    ROS_INFO("2");
     u.resize(6,1);              // Control
     ua.resize(6,1);             // Auxiliary Control
+    delta.resize(6,1);
     f.resize(6,1);
     g.resize(6,6);
     q_dot_dot.resize(6,1);

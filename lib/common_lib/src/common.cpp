@@ -80,4 +80,18 @@ namespace common
 
     //     return J;
     // }
+    Eigen::Matrix3f Skew(Eigen::Vector3f vect)
+    {
+        Eigen::Matrix3f skew;
+        skew << 0,       -vect(3),  vect(2),
+                vect(3),  0,       -vect(1),
+                -vect(2), vect(1), 0;
+        
+        return skew;
+    }
+
+    float Sec(float angle)
+    {
+        return 1/std::cos(angle);
+    }
 }

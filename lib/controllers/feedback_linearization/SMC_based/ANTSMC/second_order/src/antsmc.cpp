@@ -10,7 +10,7 @@
 
 #include "antsmc.hpp"
 
-ANTSMC::ANTSMC(const float sample_time_s, const float alpha, const float beta, const float K2, const float K_alpha, const float K_min, const float K_min_init, const float mu, const DOFControllerType_E type)
+ANTSMC::ANTSMC(const float sample_time_s, const float alpha, const float beta, const float K2, const float K_alpha, const float K_min, const float K1_init, const float mu, const DOFControllerType_E type)
 {
     _sample_time_s = sample_time_s;
     _q_d = 0.0;
@@ -30,11 +30,10 @@ ANTSMC::ANTSMC(const float sample_time_s, const float alpha, const float beta, c
     _delta = 0.0;
 
     // Gains
-    _K1 = 0.0;
+    _K1 = K1_init;
     _K2 = K2;
     _dot_K1 = 0.0;
     _prev_dot_K1 = 0.0;
-    _K_min = K_min_init;
 
     // Adaptive law
     _K_min = K_min;
@@ -109,6 +108,6 @@ void ANTSMC::CalculateAuxControl(float q, float q_dot)
     
     _dot_K1 = _K1 > _K_min ?  _K_alpha*sign(fabs(_s) - _mu) : _K_min;
     _K1 += (_dot_K1 + _prev_dot_K1) / 2 * _sample_time_s;
-    _ua = -_K1*sign(fabs(_s) - _mu) - _K2*_s;
+    _ua = -_K1*sig(_s, 0.5) - _K2*_s;
 
 }

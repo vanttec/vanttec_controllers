@@ -9,7 +9,6 @@
  **/
 
 #include "6dof_asmc.hpp"
-#include "vtec_u4_6dof_dynamic_model.hpp"
 #include "vanttec_msgs/EtaPose.h"
 
 #include <ros/ros.h>
@@ -56,16 +55,16 @@ int main(int argc, char **argv)
     ASMC6DOF   system_controller(SAMPLE_TIME_S, lambda, K2, K_alpha, K1_init, K_min, mu);
     system_controller.SetMaxThrust(MAX_TAU);
     
-    ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
-    ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_simulation/dynamic_model/non_linear_functions", 10, 
+    ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1);
+    ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_simulation/dynamic_model/non_linear_functions", 1, 
                                                     &ASMC6DOF::UpdateDynamics,
                                                     &system_controller);
 
-    ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose", 10,
+    ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose", 1,
                                                     &ASMC6DOF::UpdatePose,
                                                     &system_controller);
 
-    ros::Subscriber uuv_set_point    = nh.subscribe("/uuv_control/uuv_control_node/set_point", 10,
+    ros::Subscriber uuv_set_point    = nh.subscribe("/uuv_control/uuv_control_node/set_point", 1,
                                                     &ASMC6DOF::UpdateSetPoints,
                                                     &system_controller); 
 

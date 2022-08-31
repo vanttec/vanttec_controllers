@@ -39,6 +39,10 @@ namespace common
     vanttec_msgs::GuidanceWaypoints GenerateCircle(float _radius, float _x_center, float _y_center, float _z_center, float _angle_offset);
     // Eigen::MatrixXf                CalculateTransformation(double phi, double theta, double psi);
     Eigen::MatrixXf CalculateRotation(double phi, double theta, double psi);
+
+    Eigen::Matrix3f Skew(Eigen::Vector3f vect);
+
+    float Sec(float angle);
 }
 
 #endif

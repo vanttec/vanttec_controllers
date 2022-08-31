@@ -57,6 +57,9 @@ class ASMC
         void UpdateSetPoint(const float q_d, const float q_dot_d);
         void CalculateAuxControl(float q, float q_dot);
 
+        float sign(const float e);
+        float sig(const float e, const float a);
+        
         friend class ASMC6DOF;
 };
 
