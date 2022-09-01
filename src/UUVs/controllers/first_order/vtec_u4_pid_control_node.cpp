@@ -27,6 +27,11 @@ int main(int argc, char **argv)
     std::vector<float> g_i;
     std::vector<float> g_d;
 
+    vanttec_msgs::EtaPose q_d;
+
+    double t_init;
+    double t_cur;
+
     nh.getParam("k_p", g_p);
     nh.getParam("k_i", g_i);
     nh.getParam("k_d", g_d);
@@ -55,14 +60,24 @@ int main(int argc, char **argv)
                                                     &PID6DOF::UpdateSetPoints,
                                                     &system_controller); 
 
-    int counter = 0;
+    t_init = ros::Time::now().toSec();
     
     while(ros::ok())
     {
         /* Run Queued Callbacks */ 
         ros::spinOnce();
+        t_cur = t_init - ros::Time::now().toSec();
+
+        /* Update Trajectory */
+        q_d.x = 2*std::sin(t_cur/4) + 0.5;
+        q_d.y = 2*std::cos(t_cur/4);
+        q_d.z = 2*std::cos(t_cur/80 + 0.5);
+        q_d.phi = 0.0;
+        q_d.theta = 0.0;
+        q_d.psi = 0.0;
 
         /* Update Parameters with new info */ 
+        system_controller.UpdateSetPoints(q_d);
         system_controller.CalculateManipulations();
        
         /* Publish Odometry */

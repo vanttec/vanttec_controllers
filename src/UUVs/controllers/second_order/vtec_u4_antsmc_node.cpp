@@ -31,6 +31,11 @@ int main(int argc, char **argv)
     std::vector<float> K_min_v;
     std::vector<float> mu_v;
 
+    vanttec_msgs::EtaPose q_d;
+
+    double t_init;
+    double t_cur;
+
     // Sliding surface params
     nh.getParam("alpha", alpha_v);
     nh.getParam("beta", beta_v);
@@ -55,9 +60,7 @@ int main(int argc, char **argv)
     float* K_min = &K_min_v[0];
     float* mu = &mu_v[0];
 
-    ROS_INFO("1");
     ANTSMC6DOF   system_controller(SAMPLE_TIME_S, alpha, beta, K2, K_alpha, K_min, K1_init, mu);
-    ROS_INFO("2");
     system_controller.SetMaxThrust(MAX_TAU);
     
     ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1);
@@ -73,10 +76,23 @@ int main(int argc, char **argv)
                                                     &ANTSMC6DOF::UpdateSetPoints,
                                                     &system_controller); 
 
+    t_init = ros::Time::now().toSec();
+
     while(ros::ok())
     {
+        t_cur = ros::Time::now().toSec() - t_init;
         /* Run Queued Callbacks */ 
         ros::spinOnce();
+
+        /* Update Trajectory */
+        // q_d.x = 2*std::sin(t_cur/4) + 0.5;
+        // q_d.y = 2*std::cos(t_cur/4);
+        // q_d.z = 2*std::cos(t_cur/80 + 0.5);
+        // q_d.phi = 0.0;
+        // q_d.theta = 0.0;
+        // q_d.psi = 0.0;
+
+        // system_controller.UpdateSetPoints(q_d);
         /* Update Parameters with new info */ 
         system_controller.CalculateManipulation();
        
