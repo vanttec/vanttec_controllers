@@ -11,35 +11,35 @@
 
 #include "asmc_guidance.hpp"
 
-ASMC_GUIDANCE::ASMC_GUIDANCE(double _sample_time_s, const double _Ka,  const double _K2, const double _Kalpha, const double _Kmin, const double _miu, const DOFControllerType_E _type)
-                            :ASMC(_sample_time_s,_K2,_Kalpha,_Kmin,_miu,_type)
+ASMC_GUIDANCE::ASMC_GUIDANCE(double sample_time_, const double _Ka,  const double K2_, const double _Kalpha, const double _Kmin, const double _miu, const DOFControllerType_E _type)
+                            :ASMC(sample_time_,K2_,_Kalpha,_Kmin,_miu,_type)
 {
     Ka = _Ka;
     error_i = 0;
-    U = 0;
+    u_ = 0;
     Uax = 0;
     desired_dot_error = 0;
 }
 
 ASMC_GUIDANCE::~ASMC_GUIDANCE(){}
 
-void ASMC_GUIDANCE::Reset()
+void ASMC_GUIDANCE::reset()
 {
     error1 = 0.0;
-    prev_error_1 = 0.0;
+    prev_error_1_ = 0.0;
     error2 = 0.0;
-    prev_error_2 = 0.0;
+    prev_error_2_ = 0.0;
     error_i = 0.0;
     prev_error_i = 0.0;
     Uax = 0.0;
 }
 
-void ASMC_GUIDANCE::Manipulation(double _current)
+void ASMC_GUIDANCE::manipulation_(double _current)
 {
     double sign = 0.0;
-    prev_error_1 = error1;
-    prev_error_2 = error2;
-    prev_dot_K1 = dot_K1;
+    prev_error_1_ = error1;
+    prev_error_2_ = error2;
+    prevdot_K1_ = dotK1_;
 
     error1 = set_point - _current_pos;
     error2 = 0.0       - _current_vel;
@@ -64,7 +64,7 @@ void ASMC_GUIDANCE::Manipulation(double _current)
     {
         sign = 0;
     }
-    dot_K1 = K1>K_min ?  K_alpha*sign:K_min;
-    K1 += (dot_K1+prev_dot_K1)/2*sample_time_s;
-    ua = -K1*sign - K2*s;
+    dotK1_ = K1>K_min ?  K_alpha*common::sign:K_min;
+    K1 += (dotK1_+prevdot_K1_)/2*sample_time_;
+    ua = -K1*common::sign - K2*s;
 }

@@ -26,13 +26,13 @@ class ASMC_GUIDANCE : public ASMC
         double Uax;
 
         // Constructor
-        ASMC_GUIDANCE(double _sample_time_s, const double _Ka, const double _K2, const double _Kalpha, const double _Kmin, const double _miu, const DOFControllerType_E _type);
+        ASMC_GUIDANCE(double sample_time_, const double _Ka, const double K2_, const double _Kalpha, const double _Kmin, const double _miu, const DOFControllerType_E _type);
 
         // Destructor
         ~ASMC_GUIDANCE();
 
-        void Reset();
-        void Manipulation(double _current);
+        void reset();
+        void manipulation_(double _current);
 };
 
 #endif

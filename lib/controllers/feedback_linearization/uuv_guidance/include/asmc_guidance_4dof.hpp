@@ -28,12 +28,12 @@ class ASMC_GUIDANCE_4DOF
         ASMC_GUIDANCE asmc_guidance_yaw;
 
         // Constructor
-        ASMC_GUIDANCE_4DOF(double _sample_time_s, const double _Ka,  const double _K2, const double _Kalpha, const double _Kmin, const double _miu);
+        ASMC_GUIDANCE_4DOF(double sample_time_, const double _Ka,  const double K2_, const double _Kalpha, const double _Kmin, const double _miu);
 
         // Destructor
         ~ASMC_GUIDANCE_4DOF();
 
-        void CalculateManipulation(const geometry_msgs::Pose& _pose);
+        void calculateManipulation(const geometry_msgs::Pose& _pose);
         void SetSetpoints(const float set_points[4]);
 };
 

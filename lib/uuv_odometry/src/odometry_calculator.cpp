@@ -4,16 +4,16 @@
  * @author: Pedro Sanchez
  * @email: pedro.sc.97@gmail.com
  * 
- * @brief: Odometry calculator class. Used to get velocities and positions 
+ * @brief: Odometry calculator class. Used to get velocities_ and positions 
  *         from the IMU.
  * -----------------------------------------------------------------------------
  * */
 
 #include "odometry_calculator.hpp"
 
-OdometryCalculator::OdometryCalculator(float _sample_time)
+OdometryCalculator::OdometryCalculator(float sample_time_)
 {
-    this->sample_time_s = _sample_time;
+    this->sample_time = sample_time_;
 
     this->linear_acceleration.x = 0;
     this->linear_acceleration.y = 0;
@@ -37,7 +37,7 @@ OdometryCalculator::OdometryCalculator(float _sample_time)
 
     /* Output Init */
 
-    /* Accelerations */
+    /* accelerations_ */
     this->accel.linear.x = 0;
     this->accel.linear.y = 0;
     this->accel.linear.z = 0;
@@ -45,7 +45,7 @@ OdometryCalculator::OdometryCalculator(float _sample_time)
     this->accel.angular.x = 0;
     this->accel.angular.x = 0;
 
-    /* Velocities */
+    /* velocities_ */
     this->prev_linear_velocity.x = 0;;
     this->prev_linear_velocity.y = 0;;
     this->prev_linear_velocity.z = 0;;
@@ -99,17 +99,17 @@ void OdometryCalculator::AngularPositionCallback(const geometry_msgs::Vector3& _
     this->angular_position.z = _a_pos.z;
 }
 
-void OdometryCalculator::UpdateParameters()
+void OdometryCalculator::updateParameters()
 {
-    /* Accelerations */
+    /* accelerations_ */
     this->accel.linear.x = this->linear_acceleration.x;
     this->accel.linear.y = this->linear_acceleration.y;
     this->accel.linear.z = this->linear_acceleration.z;
-    this->accel.angular.x = OdometryCalculator::Derivative(this->prev_angular_rate.x, this->angular_rate.x, this->sample_time_s);
-    this->accel.angular.x = OdometryCalculator::Derivative(this->prev_angular_rate.y, this->angular_rate.y, this->sample_time_s);
-    this->accel.angular.x = OdometryCalculator::Derivative(this->prev_angular_rate.z, this->angular_rate.z, this->sample_time_s);
+    this->accel.angular.x = OdometryCalculator::Derivative(this->prev_angular_rate.x, this->angular_rate.x, this->sample_time);
+    this->accel.angular.x = OdometryCalculator::Derivative(this->prev_angular_rate.y, this->angular_rate.y, this->sample_time);
+    this->accel.angular.x = OdometryCalculator::Derivative(this->prev_angular_rate.z, this->angular_rate.z, this->sample_time);
 
-    /* Velocities */
+    /* velocities_ */
     this->prev_linear_velocity.x = this->twist.linear.x;
     this->prev_linear_velocity.y = this->twist.linear.y;
     this->prev_linear_velocity.z = this->twist.linear.z;
@@ -117,15 +117,15 @@ void OdometryCalculator::UpdateParameters()
     this->twist.linear.x = OdometryCalculator::Integral(this->prev_linear_acceleration.x, 
                                                         this->accel.linear.x, 
                                                         this->twist.linear.x, 
-                                                        this->sample_time_s);
+                                                        this->sample_time);
     this->twist.linear.y = OdometryCalculator::Integral(this->prev_linear_acceleration.y, 
                                                         this->accel.linear.y, 
                                                         this->twist.linear.y, 
-                                                        this->sample_time_s);
+                                                        this->sample_time);
     this->twist.linear.z = OdometryCalculator::Integral(this->prev_linear_acceleration.z, 
                                                         this->accel.linear.z, 
                                                         this->twist.linear.z, 
-                                                        this->sample_time_s);
+                                                        this->sample_time);
     this->twist.angular.x = this->angular_rate.x;
     this->twist.angular.y = this->angular_rate.y;
     this->twist.angular.z = this->angular_rate.z;
@@ -134,15 +134,15 @@ void OdometryCalculator::UpdateParameters()
     this->pose.position.x = OdometryCalculator::Integral(this->prev_linear_velocity.x, 
                                                          this->twist.linear.x, 
                                                          this->pose.position.x, 
-                                                         this->sample_time_s);
+                                                         this->sample_time);
     this->pose.position.y = OdometryCalculator::Integral(this->prev_linear_velocity.y, 
                                                          this->twist.linear.y, 
                                                          this->pose.position.y, 
-                                                         this->sample_time_s);
+                                                         this->sample_time);
     this->pose.position.z = OdometryCalculator::Integral(this->prev_linear_velocity.z, 
                                                          this->twist.linear.z, 
                                                          this->pose.position.z, 
-                                                         this->sample_time_s);
+                                                         this->sample_time);
 
     this->pose.orientation.x = this->angular_position.x;
     this->pose.orientation.y = this->angular_position.y;

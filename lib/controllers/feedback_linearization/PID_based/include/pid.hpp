@@ -21,27 +21,27 @@
 class PID
 {
     public:
-        float sample_time_s;
+        float sample_time_;
         
-        float set_point;
-        float manipulation;
-        float error;
-        float prev_error;
+        float set_point_;
+        float manipulation_;
+        float error_;
+        float prev_error_;
 
-        float k_p;
-        float k_i;
-        float k_d;
+        float k_p_;
+        float k_i_;
+        float k_d_;
         
-        // float f_x;
-        // float g_x;
+        // float f_x_;
+        // float g_x_;
 
-        DOFControllerType_E controller_type;
+        DOFControllerType_E controller_type_;
         
-        PID(const float _sample_time_s, const float _k_p, const float _k_i, const float _k_d, const DOFControllerType_E _type);
+        PID(const float& sample_time, const float& _k_p, const float& _k_i, const float& _k_d, const DOFControllerType_E& _type);
         ~PID();
         
-        void UpdateSetPoint(const float& _set_point);
-        void CalculateManipulation(const float _current_value);
+        void updateSetPoint(const float& set_point);
+        void calculateManipulation(const float& _current_value);
 };
 
 #endif

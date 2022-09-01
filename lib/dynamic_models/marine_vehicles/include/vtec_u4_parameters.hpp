@@ -38,9 +38,9 @@ static const float Izz             = 1.43389;
 static const float X_u_dot         = 16.8374;
 static const float Y_v_dot         = 20.2748;
 static const float Z_w_dot         = 35.3180;
-static const float K_p_dot         = 0.2165;
-static const float M_q_dot         = 0.6869;
-static const float N_r_dot         = 0.6157;
+static const float K_p_dot_         = 0.2165;
+static const float M_q_dot_         = 0.6869;
+static const float N_r_dot_         = 0.6157;
 
 /* Damping Parameters */
 
@@ -63,22 +63,22 @@ static const float N_rr            = -2.2897;
 
 /* Distance from origin to center of buoyancy  */
 
-static const float rb_x            = 0;
-static const float rb_y            = 0;
-static const float rb_z            = -0.10726;
+static const float rb_x_            = 0;
+static const float rb_y_            = 0;
+static const float rb_z_            = -0.10726;
 
 /* Thruster configuration parameters */
 
-static const float beta            = 0.349066;
+static const float beta_            = 0.349066;
 static const float var_epsilon     = 0.261799;
 static const float alpha           = 1.325054;
 static const float delta           = 0.43301619;
 static const float gamma           = 1.8326;
-static const float rh_x            = 0.1867;
-static const float rh_y            = 0.2347;
-static const float rh_z            = 0.0175;
+static const float rh_x_            = 0.1867;
+static const float rh_y_            = 0.2347;
+static const float rh_z_            = 0.0175;
 static const float rv_x            = 0;
-static const float rv_y            = 0.2384;
+static const float rv_y_            = 0.2384;
 static const float rv_z            = 0;
 
 /* BlueRobotics Thrust Limits */

@@ -30,7 +30,7 @@ static const float Iyz             = -0.0037;
 static const float Izx             = -0.0574;
 static const float Izy             = -0.0037;
 static const float Izz             = 0.6488;
-static const float thruster_theta  = 3.14159 / 2;
+static const float thruster_theta_  = 3.14159 / 2;
 static const float b               = 0.585;
 static const float l               = 0.382;
 static const float weight          = 13.37 * 9.81;
@@ -41,9 +41,9 @@ static const float buoyancy        = 1000 * 9.81 * 0.00886;
 static const float X_u_dot         = -11.5066;
 static const float Y_v_dot         = -8.9651;
 static const float Z_w_dot         = -9.1344;
-static const float K_p_dot         = -0.1851;
-static const float M_q_dot         = -0.2810;
-static const float N_r_dot         = -0.3475;
+static const float K_p_dot_         = -0.1851;
+static const float M_q_dot_         = -0.2810;
+static const float N_r_dot_         = -0.3475;
 
 /* Damping Parameters */
 

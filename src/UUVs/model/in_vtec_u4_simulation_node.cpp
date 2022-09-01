@@ -35,12 +35,12 @@ int main(int argc, char **argv)
     
     ros::Publisher  uuv_accel     = nh.advertise<geometry_msgs::Vector3>("/vectornav/ins_3d/ins_acc", 10);
     ros::Publisher  uuv_vel       = nh.advertise<geometry_msgs::Twist>("/uuv_simulation/dynamic_model/vel", 10);
-    ros::Publisher  uuv_eta_pose  = nh.advertise<vanttec_msgs::EtaPose>("/uuv_simulation/dynamic_model/eta_pose", 10);
+    ros::Publisher  uuv_eta_pose_  = nh.advertise<vanttec_msgs::EtaPose>("/uuv_simulation/dynamic_model/eta_pose_", 10);
     ros::Publisher  uuv_dynamics  = nh.advertise<vanttec_msgs::SystemDynamics>("/uuv_simulation/dynamic_model/non_linear_functions", 10);
 
     ros::Subscriber uuv_thrust_input = nh.subscribe("/uuv_control/uuv_control_node/thrust", 
                                                     10, 
-                                                    &GenericIn6DOFUUVDynamicModel::ThrustCallback,
+                                                    &GenericIn6DOFUUVDynamicModel::thrustCallbacK,
                                                     dynamic_cast<GenericIn6DOFUUVDynamicModel*> (&uuv_model));
             
     uuv_functions.g.layout.dim.push_back(std_msgs::MultiArrayDimension());
@@ -57,23 +57,23 @@ int main(int argc, char **argv)
         /* Run Queued Callbacks */
         ros::spinOnce();
 
-        /* Calculate Model States */
-        uuv_model.CalculateStates();
+        /* calculate Model States */
+        uuv_model.calculateStates();
 
         /* Publish Odometry */
-        uuv_accel.publish(uuv_model.accelerations);
-        uuv_vel.publish(uuv_model.velocities);
-        uuv_eta_pose.publish(uuv_model.eta_pose);
+        uuv_accel.publish(uuv_model.accelerations_);
+        uuv_vel.publish(uuv_model.velocities_);
+        uuv_eta_pose_.publish(uuv_model.eta_pose_);
         
         /* Publish nonlinear functions */
 
-        uuv_functions.f = {uuv_model.f(0), uuv_model.f(1), uuv_model.f(2), uuv_model.f(3), uuv_model.f(4), uuv_model.f(5)};
-        uuv_functions.g.data = { uuv_model.g(0,0), uuv_model.g(0,1), uuv_model.g(0,2), uuv_model.g(0,3), uuv_model.g(0,4), uuv_model.g(0,5),
-                                 uuv_model.g(1,0), uuv_model.g(1,1), uuv_model.g(1,2), uuv_model.g(1,3), uuv_model.g(1,4), uuv_model.g(1,5),
-                                 uuv_model.g(2,0), uuv_model.g(2,1), uuv_model.g(2,2), uuv_model.g(2,3), uuv_model.g(2,4), uuv_model.g(2,5),
-                                 uuv_model.g(3,0), uuv_model.g(3,1), uuv_model.g(3,2), uuv_model.g(3,3), uuv_model.g(3,4), uuv_model.g(3,5),
-                                 uuv_model.g(4,0), uuv_model.g(4,1), uuv_model.g(4,2), uuv_model.g(4,3), uuv_model.g(4,4), uuv_model.g(4,5),
-                                 uuv_model.g(5,0), uuv_model.g(5,1), uuv_model.g(5,2), uuv_model.g(5,3), uuv_model.g(5,4), uuv_model.g(5,5) };
+        uuv_functions.f = {uuv_model.f_(0), uuv_model.f_(1), uuv_model.f_(2), uuv_model.f_(3), uuv_model.f_(4), uuv_model.f_(5)};
+        uuv_functions.g.data = { uuv_model.g_(0,0), uuv_model.g_(0,1), uuv_model.g_(0,2), uuv_model.g_(0,3), uuv_model.g_(0,4), uuv_model.g_(0,5),
+                                 uuv_model.g_(1,0), uuv_model.g_(1,1), uuv_model.g_(1,2), uuv_model.g_(1,3), uuv_model.g_(1,4), uuv_model.g_(1,5),
+                                 uuv_model.g_(2,0), uuv_model.g_(2,1), uuv_model.g_(2,2), uuv_model.g_(2,3), uuv_model.g_(2,4), uuv_model.g_(2,5),
+                                 uuv_model.g_(3,0), uuv_model.g_(3,1), uuv_model.g_(3,2), uuv_model.g_(3,3), uuv_model.g_(3,4), uuv_model.g_(3,5),
+                                 uuv_model.g_(4,0), uuv_model.g_(4,1), uuv_model.g_(4,2), uuv_model.g_(4,3), uuv_model.g_(4,4), uuv_model.g_(4,5),
+                                 uuv_model.g_(5,0), uuv_model.g_(5,1), uuv_model.g_(5,2), uuv_model.g_(5,3), uuv_model.g_(5,4), uuv_model.g_(5,5) };
         
         uuv_dynamics.publish(uuv_functions);
 

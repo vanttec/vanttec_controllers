@@ -119,9 +119,9 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
     lib/common_lib/include
-    lib/controllers/feedback_linearization/PID_based/second_order/include
-    lib/controllers/feedback_linearization/SMC_based/ASMC/second_order/include
-    lib/controllers/feedback_linearization/SMC_based/ANTSMC/second_order/include
+    lib/controllers/feedback_linearization/PID_based/include
+    lib/controllers/feedback_linearization/SMC_based/ASMC/include
+    lib/controllers/feedback_linearization/SMC_based/ANTSMC/include
     lib/dynamic_models/marine_vehicles/include
     lib/simulation/include
     include/UUVs
@@ -168,22 +168,22 @@ target_link_libraries(inertial_vtec_u4_simulation_node ${catkin_LIBRARIES})
 
 add_executable(vtec_u4_pid_node
     src/UUVs/controllers/first_order/vtec_u4_pid_control_node.cpp
-    lib/controllers/feedback_linearization/PID_based/second_order/src/6dof_pid.cpp
-    lib/controllers/feedback_linearization/PID_based/second_order/src/pid.cpp
+    lib/controllers/feedback_linearization/PID_based/src/6dof_pid.cpp
+    lib/controllers/feedback_linearization/PID_based/src/pid.cpp
     lib/common_lib/src/common.cpp)
 target_link_libraries(vtec_u4_pid_node ${catkin_LIBRARIES})
 
 add_executable(vtec_u4_asmc_node
     src/UUVs/controllers/second_order/vtec_u4_asmc_node.cpp
-    lib/controllers/feedback_linearization/SMC_based/ASMC/second_order/src/6dof_asmc.cpp
-    lib/controllers/feedback_linearization/SMC_based/ASMC/second_order/src/asmc.cpp
+    lib/controllers/feedback_linearization/SMC_based/ASMC/src/6dof_asmc.cpp
+    lib/controllers/feedback_linearization/SMC_based/ASMC/src/asmc.cpp
     lib/common_lib/src/common.cpp)
 target_link_libraries(vtec_u4_asmc_node ${catkin_LIBRARIES})
 
 add_executable(vtec_u4_antsmc_node
     src/UUVs/controllers/second_order/vtec_u4_antsmc_node.cpp
-    lib/controllers/feedback_linearization/SMC_based/ANTSMC/second_order/src/6dof_antsmc.cpp
-    lib/controllers/feedback_linearization/SMC_based/ANTSMC/second_order/src/antsmc.cpp
+    lib/controllers/feedback_linearization/SMC_based/ANTSMC/src/6dof_antsmc.cpp
+    lib/controllers/feedback_linearization/SMC_based/ANTSMC/src/antsmc.cpp
     lib/common_lib/src/common.cpp)
 target_link_libraries(vtec_u4_antsmc_node ${catkin_LIBRARIES})
 

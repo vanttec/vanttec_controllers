@@ -52,8 +52,8 @@ int main(int argc, char **argv)
         /* Run Queued Callbacks */ 
         ros::spinOnce();
 
-        /* Update Parameters with new info */ 
-        guidance_controller.UpdateStateMachines();
+        /* update Parameters with new info */ 
+        guidance_controller.updateStateMachines();
 
         /* Publish Odometry */ 
         if (guidance_controller.uuv_status.status == 1)

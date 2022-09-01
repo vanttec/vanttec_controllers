@@ -47,7 +47,7 @@ int main(int argc, char **argv)
         {
             uuv_path.publish(waypoint_publisher.path);
             uuv_waypoints.publish(waypoint_publisher.waypoints);
-            waypoint_publisher.path_publish_flag = 1;
+            waypoint_publisher.path_publish_flag_ = 1;
         }
         
         /* Slee for 10ms */

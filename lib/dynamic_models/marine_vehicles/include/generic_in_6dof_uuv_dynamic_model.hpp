@@ -8,7 +8,7 @@
            Euler Angles.
    @todo: Modify matrices for the true general case of non-diagonal matrices.
           Include ALL terms. Also, include offset vector in the case the origin
-          is no the COM.
+          is no the COM_.
  * -----------------------------------------------------------------------------
  **/
  
@@ -22,127 +22,127 @@
 #include <geometry_msgs/Accel.h>
 #include <geometry_msgs/Twist.h>
 #include <eigen3/Eigen/Dense>
-#include <math.h>
+#include <cmath>
 
 class GenericIn6DOFUUVDynamicModel
 {
     private:
-        float _sample_time_s;
+        float sample_time_;
 
         /* Transformation matrix */
 
-        Eigen::MatrixXf J;
-        Eigen::Matrix3f R;
-        Eigen::Matrix3f T;
-        Eigen::MatrixXf J_dot;
-        Eigen::Matrix3f R_dot;
-        Eigen::Matrix3f T_dot;
-        Eigen::MatrixXf J_inv;
+        Eigen::MatrixXf J_;
+        Eigen::Matrix3f R_;
+        Eigen::Matrix3f T_;
+        Eigen::MatrixXf J_dot_;
+        Eigen::Matrix3f R_dot_;
+        Eigen::Matrix3f T_dot_;
+        Eigen::MatrixXf J_inv_;
 
         /* System states */
 
-        Eigen::VectorXf eta;            // x, y, z, phi, theta, psi
-        Eigen::VectorXf eta_dot;
-        Eigen::VectorXf eta_dot_prev;
-        Eigen::VectorXf eta_dot_dot;
-        Eigen::VectorXf eta_dot_dot_prev;
-        Eigen::VectorXf nu;             // u, v, w, p, q, r
-        Eigen::VectorXf nu_dot;
-        Eigen::VectorXf nu_dot_prev;
-        // Eigen::VectorXf f;
-        // Eigen::MatrixXf g;
+        Eigen::VectorXf eta_;            // x, y, z, phi, theta_, psi
+        Eigen::VectorXf eta_dot_;
+        Eigen::VectorXf eta_dot_prev_;
+        Eigen::VectorXf eta_dot_dot_;
+        Eigen::VectorXf eta_dot_dot_prev_;
+        Eigen::VectorXf nu_;             // u, v, w, p, q, r
+        Eigen::VectorXf nu_dot_;
+        Eigen::VectorXf nu_dot_prev_;
+        // Eigen::VectorXf f_;
+        // Eigen::MatrixXf g_;
 
         /* System matrices */
         
-        Eigen::MatrixXf M;
-        Eigen::MatrixXf M_rb;
-        Eigen::MatrixXf M_a;
-        Eigen::MatrixXf C;
-        Eigen::MatrixXf C_rb;
-        Eigen::MatrixXf C_a;
-        Eigen::MatrixXf D;
-        Eigen::MatrixXf D_lin;
-        Eigen::MatrixXf D_qua;
-        Eigen::VectorXf g_eta;
+        Eigen::MatrixXf M_;
+        Eigen::MatrixXf M_rb_;
+        Eigen::MatrixXf M_a_;
+        Eigen::MatrixXf C_;
+        Eigen::MatrixXf C_rb_;
+        Eigen::MatrixXf C_a_;
+        Eigen::MatrixXf D_;
+        Eigen::MatrixXf D_lin_;
+        Eigen::MatrixXf D_qua_;
+        Eigen::VectorXf g_eta_;
 
         /* Physical Parameters */
 
-        float m;
-        float W;
-        float volume;
-        float B;
-        float Ixx;
-        float Ixy;
-        float Ixz;
-        float Iyx;
-        float Iyy;
-        float Iyz;
-        float Izx;
-        float Izy;
-        float Izz;
+        float m_;
+        float W_;
+        float volume_;
+        float B_;
+        float Ixx_;
+        float Ixy_;
+        float Ixz_;
+        float Iyx_;
+        float Iyy_;
+        float Iyz_;
+        float Izx_;
+        float Izy_;
+        float Izz_;
 
         /* Added Mass Parameters */
 
-        float X_u_dot;
-        float Y_v_dot;
-        float Z_w_dot;
-        float K_p_dot;
-        float M_q_dot;
-        float N_r_dot;
+        float X_u_dot_;
+        float Y_v_dot_;
+        float Z_w_dot_;
+        float K_p_dot_;
+        float M_q_dot_;
+        float N_r_dot_;
 
         /* Damping Parameters */
 
-        float X_u;
-        float Y_v;
-        float Z_w;
-        float K_p;
-        float M_q;    
-        float N_r;
+        float X_u_;
+        float Y_v_;
+        float Z_w_;
+        float K_p_;
+        float M_q_;    
+        float N_r_;
 
-        float X_uu;
-        float Y_vv;
-        float Z_ww;
-        float K_pp;
-        float M_qq;
-        float N_rr;
+        float X_uu_;
+        float Y_vv_;
+        float Z_ww_;
+        float K_pp_;
+        float M_qq_;
+        float N_rr_;
 
         /* Distance from origin to center of mass */
         // They are the same
 
         /* Distance from origin to center of buoyancy  */
 
-        float rb_x;
-        float rb_y;
-        float rb_z;
+        float rb_x_;
+        float rb_y_;
+        float rb_z_;
 
         /* Input forces vector */
 
-        Eigen::VectorXf tau;
-        Eigen::VectorXf u;
+        Eigen::VectorXf tau_;
+        Eigen::VectorXf u_;
 
-        float MAX_FORCE_X;
-        float MAX_FORCE_Y;
-        float MAX_FORCE_Z;
-        float MAX_TORQUE_K;
-        float MAX_TORQUE_M;
-        float MAX_TORQUE_N;
+        float MAX_FORCE_X_;
+        float MAX_FORCE_Y_;
+        float MAX_FORCE_Z_;
+        float MAX_TORQUE_K_;
+        float MAX_TORQUE_M_;
+        float MAX_TORQUE_N_;
 
     public:
-        Eigen::VectorXf f;
-        Eigen::MatrixXf g;
+        Eigen::VectorXf f_;
+        Eigen::MatrixXf g_;
         
-        vanttec_msgs::EtaPose    eta_pose;
-        geometry_msgs::Twist    velocities;
-        geometry_msgs::Accel    accelerations;
+        vanttec_msgs::EtaPose   eta_pose_;
+        geometry_msgs::Twist    velocities_;
+        geometry_msgs::Accel    accelerations_;
 
-        GenericIn6DOFUUVDynamicModel(float sample_time_s);
+        GenericIn6DOFUUVDynamicModel(const float& sample_time);
         ~GenericIn6DOFUUVDynamicModel();
 
-        void CalculateTransformation();
-        virtual void CalculateCoriolis();
-        virtual void CalculateDamping();
-        void ThrustCallback(const vanttec_msgs::ThrustControl& _thrust);
-        void CalculateStates();
+        void calculateTransformation();
+        void calculateCoriolis();
+        void calculateDamping();
+        void thrustCallbacK(const vanttec_msgs::ThrustControl& thrust);
+        void calculateStates();
 
         friend class VTecU4InDynamicModel;
 };

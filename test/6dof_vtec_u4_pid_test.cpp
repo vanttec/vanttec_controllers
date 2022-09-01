@@ -31,20 +31,20 @@ TEST(ControlSuite, regulationObjective)
     
     ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1000);
     ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_simulation/dynamic_model/non_linear_functions", 10, 
-                                                    &SixDOFPID::UpdateDynamics,
+                                                    &SixDOFPID::updateDynamics,
                                                     &system_controller);
 
-    ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose", 10,
-                                                    &SixDOFPID::UpdatePose,
+    ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose_", 10,
+                                                    &SixDOFPID::updatePose,
                                                     &system_controller);
 
     // ros::Subscriber uuv_twist       = nh.subscribe("/uuv_simulation/dynamic_model/vel", 
     //                                                 10,
-    //                                                 &SixDOFPID::UpdateTwist,
+    //                                                 &SixDOFPID::updateTwist,
     //                                                 &system_controller);
 
     ros::Subscriber uuv_set_point    = nh.subscribe("/uuv_control/uuv_control_node/set_point", 10,
-                                                    &SixDOFPID::UpdateSetPoints,
+                                                    &SixDOFPID::updateSetPoints,
                                                     &system_controller); 
 
     int counter = 0;
@@ -54,14 +54,14 @@ TEST(ControlSuite, regulationObjective)
         /* Run Queued Callbacks */ 
         ros::spinOnce();
 
-        /* Update Parameters with new info */ 
-        system_controller.CalculateManipulations();
+        /* update Parameters with new info */ 
+        system_controller.calculateManipulations();
        
         /* Publish Odometry */
         // Current way: if no functions arrive through the subscriber, the last computed thrusts are published.
         // An option could be to use ros::topic::waitForMessage to publish once the nonlinear functioncs arrive, in order to
         // avoid publishing garbage.
-        uuv_thrust.publish(system_controller.thrust);
+        uuv_thrust.publish(system_controller.thrust_);
 
         /* Slee for 10ms */
         cycle_rate.sleep();

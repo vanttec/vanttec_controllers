@@ -44,8 +44,8 @@ int main(int argc, char **argv)
         /* Run Queued Callbacks */
         ros::spinOnce();
 
-        /* Update Parameters with new info */
-        odom_calc.UpdateParameters();
+        /* update Parameters with new info */
+        odom_calc.updateParameters();
 
         /* Publish Odometry */
         uuv_pose.publish(odom_calc.pose);

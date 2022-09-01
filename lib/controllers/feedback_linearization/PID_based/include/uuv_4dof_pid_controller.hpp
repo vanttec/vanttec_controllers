@@ -42,28 +42,28 @@ class UUV4DOFController
         Eigen::Vector4f f_x;
         Eigen::Vector4f g_x;
 
-        UUV4DOFController(float _sample_time_s, const float _kpid_u[3], const float _kpid_v[3], const float _kpid_z[3], const float _kpid_psi[3]);
+        UUV4DOFController(float sample_time_, const float _kpid_u[3], const float _kpid_v[3], const float _kpid_z[3], const float _kpid_psi[3]);
         ~UUV4DOFController();
 
-        void UpdatePose(const geometry_msgs::Pose& _pose);
-        void UpdateTwist(const geometry_msgs::Twist& _twist);
-        void UpdateSetPoints(const geometry_msgs::Twist& _set_points);
+        void updatePose(const geometry_msgs::Pose& _pose);
+        void updateTwist(const geometry_msgs::Twist& _twist);
+        void updateSetPoints(const geometry_msgs::Twist& _set_points);
         
-        void UpdateControlLaw();
-        void UpdateThrustOutput();
+        void updateControlLaw();
+        void updateThrustOutput();
 
-        void PublishAccel();
+        void publishAccel();
     
     private:
 
         Eigen::Vector4f upsilon;
-        Eigen::Matrix4f M_rb;
-        Eigen::Matrix4f M_a;
-        Eigen::Matrix4f C_rb;
-        Eigen::Matrix4f C_a;
-        Eigen::Matrix4f D_lin;
-        Eigen::Matrix4f D_qua;
-        Eigen::Vector4f G_eta;
+        Eigen::Matrix4f M_rb_;
+        Eigen::Matrix4f M_a_;
+        Eigen::Matrix4f C_rb_;
+        Eigen::Matrix4f C_a_;
+        Eigen::Matrix4f D_lin_;
+        Eigen::Matrix4f D_qua_;
+        Eigen::Vector4f G_eta_;
 
         ros::NodeHandle handle;
         ros::Publisher v_dot_pub = handle.advertise<geometry_msgs::Twist>("/uuv_accel",1000);

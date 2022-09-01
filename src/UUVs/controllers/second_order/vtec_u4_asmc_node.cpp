@@ -53,19 +53,19 @@ int main(int argc, char **argv)
     float* mu = &mu_v[0];
 
     ASMC6DOF   system_controller(SAMPLE_TIME_S, lambda, K2, K_alpha, K1_init, K_min, mu);
-    system_controller.SetMaxThrust(MAX_TAU);
+    system_controller.setMaxThrust(MAX_TAU);
     
     ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1);
     ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_simulation/dynamic_model/non_linear_functions", 1, 
-                                                    &ASMC6DOF::UpdateDynamics,
+                                                    &ASMC6DOF::updateDynamics,
                                                     &system_controller);
 
-    ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose", 1,
-                                                    &ASMC6DOF::UpdatePose,
+    ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose_", 1,
+                                                    &ASMC6DOF::updatePose,
                                                     &system_controller);
 
     ros::Subscriber uuv_set_point    = nh.subscribe("/uuv_control/uuv_control_node/set_point", 1,
-                                                    &ASMC6DOF::UpdateSetPoints,
+                                                    &ASMC6DOF::updateSetPoints,
                                                     &system_controller); 
 
     while(ros::ok())
@@ -73,14 +73,14 @@ int main(int argc, char **argv)
         /* Run Queued Callbacks */ 
         ros::spinOnce();
 
-        /* Update Parameters with new info */ 
-        system_controller.CalculateManipulation();
+        /* update Parameters with new info */ 
+        system_controller.calculateManipulation();
        
         /* Publish Odometry */
         // Current way: if no functions arrive through the subscriber, the last computed thrusts are published.
         // An option could be to use ros::topic::waitForMessage to publish once the nonlinear functioncs arrive, in order to
         // avoid publishing garbage.
-        uuv_thrust.publish(system_controller.thrust);
+        uuv_thrust.publish(system_controller.thrust_);
 
         /* Slee for 10ms */
         cycle_rate.sleep();

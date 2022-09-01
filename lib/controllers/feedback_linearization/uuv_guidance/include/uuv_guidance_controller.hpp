@@ -78,7 +78,7 @@ typedef struct OrbitLawStateMachine_S
     int                 current_waypoint;      
 } OrbitLawStateMachine_S;
 
-/***************** ASMC ******************/
+/***************** ASMC_ ******************/
 
 typedef enum ASMCLawStates_E
 {
@@ -118,7 +118,7 @@ class GuidanceController
         void OnWaypointReception(const vanttec_msgs::GuidanceWaypoints& _waypoints);
         void OnEmergencyStop(const std_msgs::Empty& _msg);
         void OnMasterStatus(const vanttec_msgs::MasterStatus& _status);
-        void UpdateStateMachines();
+        void updateStateMachines();
 
     private:
         ASMC_GUIDANCE_4DOF ASMC_Guidance;

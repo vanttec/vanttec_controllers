@@ -8,176 +8,176 @@
            Euler Angles.
    @todo: Modify matrices for the true general case of non-diagonal matrices.
           Include ALL terms. Also, include offset vector in the case the origin
-          is not the COM.
+          is not the COM_.
  * -----------------------------------------------------------------------------
  **/
 
 #include "generic_6dof_uuv_dynamic_model.hpp"
 
-Generic6DOFUUVDynamicModel::Generic6DOFUUVDynamicModel(float sample_time_s)
+Generic6DOFUUVDynamicModel::Generic6DOFUUVDynamicModel(const float& sample_time)
 {
-    _sample_time_s = sample_time_s;
+    sample_time_ = sample_time;
 
-    J.resize(6,6);
-    M.resize(6,6);
-    M_rb.resize(6,6);
-    M_a.resize(6,6);
-    C.resize(6,6);
-    C_rb.resize(6,6);
-    C_a.resize(6,6);
-    D.resize(6,6);
-    D_lin.resize(6,6);
-    D_qua.resize(6,6);
-    g.resize(6,6);
+    J_.resize(6,6);
+    M_.resize(6,6);
+    M_rb_.resize(6,6);
+    M_a_.resize(6,6);
+    C_.resize(6,6);
+    C_rb_.resize(6,6);
+    C_a_.resize(6,6);
+    D_.resize(6,6);
+    D_lin_.resize(6,6);
+    D_qua_.resize(6,6);
+    g_.resize(6,6);
 
-    eta.resize(6,1);            // x, y, z, phi, theta, psi
-    eta_dot.resize(6,1);
-    eta_dot_prev.resize(6,1);
-    nu.resize(6,1);             // u, v, w, p, q, r
-    nu_dot.resize(6,1);
-    nu_dot_prev.resize(6,1);
-    g_eta.resize(6,1);
-    tau.resize(6,1);
-    u.resize(6,1);
-    f.resize(6,1);
+    eta_.resize(6,1);            // x, y, z, phi, theta_, psi
+    eta_dot_.resize(6,1);
+    eta_dot_prev_.resize(6,1);
+    nu_.resize(6,1);             // u, v, w, p, q, r
+    nu_dot_.resize(6,1);
+    nu_dot_prev_.resize(6,1);
+    g_eta_.resize(6,1);
+    tau_.resize(6,1);
+    u_.resize(6,1);
+    f_.resize(6,1);
 
-    J = Eigen::MatrixXf::Zero(6, 6);
-    R = Eigen::Matrix3f::Zero(3,3);
-    T = Eigen::Matrix3f::Zero(3,3);
+    J_ = Eigen::MatrixXf::Zero(6, 6);
+    R_ = Eigen::Matrix3f::Zero(3,3);
+    T_ = Eigen::Matrix3f::Zero(3,3);
 
-    M = Eigen::MatrixXf::Zero(6, 6);
-    M_rb = Eigen::MatrixXf::Zero(6, 6);
-    M_a = Eigen::MatrixXf::Zero(6, 6);
-    C = Eigen::MatrixXf::Zero(6, 6);
-    C_rb = Eigen::MatrixXf::Zero(6, 6);
-    C_a = Eigen::MatrixXf::Zero(6, 6);
-    D = Eigen::MatrixXf::Zero(6, 6);
-    D_lin = Eigen::MatrixXf::Zero(6, 6);
-    D_qua = Eigen::MatrixXf::Zero(6, 6);
-    g_eta = Eigen::MatrixXf::Zero(6, 1);
+    M_ = Eigen::MatrixXf::Zero(6, 6);
+    M_rb_ = Eigen::MatrixXf::Zero(6, 6);
+    M_a_ = Eigen::MatrixXf::Zero(6, 6);
+    C_ = Eigen::MatrixXf::Zero(6, 6);
+    C_rb_ = Eigen::MatrixXf::Zero(6, 6);
+    C_a_ = Eigen::MatrixXf::Zero(6, 6);
+    D_ = Eigen::MatrixXf::Zero(6, 6);
+    D_lin_ = Eigen::MatrixXf::Zero(6, 6);
+    D_qua_ = Eigen::MatrixXf::Zero(6, 6);
+    g_eta_ = Eigen::MatrixXf::Zero(6, 1);
 
-    eta << 0,
+    eta_ << 0,
            0,
            0,
            0,
            0,
            0;
      
-    eta_dot << 0,
+    eta_dot_ << 0,
                0,
                0,
                0,
                0,
                0;
 
-    eta_dot_prev << 0,
+    eta_dot_prev_ << 0,
                     0,
                     0,
                     0,
                     0,
                     0;
     
-    nu << 0,
+    nu_ << 0,
           0,
           0,
           0,
           0,
           0;
     
-    nu_dot << 0,
+    nu_dot_ << 0,
               0,
               0,
               0,
               0,
               0;
     
-    nu_dot_prev << 0,
+    nu_dot_prev_ << 0,
                    0,
                    0,
                    0,
                    0,
                    0;
 
-    f << 0,
+    f_ << 0,
          0,
          0,
          0,
          0,
          0;
 
-    g = Eigen::MatrixXf::Zero(6, 6);
+    g_ = Eigen::MatrixXf::Zero(6, 6);
 
-    tau << 0,
+    tau_ << 0,
            0,
            0,
            0,
            0,
            0;
 
-    u << 0,
+    u_ << 0,
            0,
            0,
            0,
            0,
            0;
 
-    MAX_FORCE_X = 0.0;
-    MAX_FORCE_Y = 0.0;
-    MAX_FORCE_Z = 0.0;
-    MAX_TORQUE_K = 0.0;
-    MAX_TORQUE_M = 0.0;
-    MAX_TORQUE_N = 0.0;
+    MAX_FORCE_X_ = 0.0;
+    MAX_FORCE_Y_ = 0.0;
+    MAX_FORCE_Z_ = 0.0;
+    MAX_TORQUE_K_ = 0.0;
+    MAX_TORQUE_M_ = 0.0;
+    MAX_TORQUE_N_ = 0.0;
 
-    eta_pose.x = 0;
-    eta_pose.y = 0;
-    eta_pose.z = 0;
-    eta_pose.phi = 0;
-    eta_pose.theta = 0;
-    eta_pose.psi = 0;
+    eta_pose_.x = 0;
+    eta_pose_.y = 0;
+    eta_pose_.z = 0;
+    eta_pose_.phi = 0;
+    eta_pose_.theta = 0;
+    eta_pose_.psi = 0;
 
-    velocities.linear.x = 0;
-    velocities.linear.y = 0;
-    velocities.linear.z = 0;
-    velocities.angular.x = 0;
-    velocities.angular.y = 0;
-    velocities.angular.z = 0;
+    velocities_.linear.x = 0;
+    velocities_.linear.y = 0;
+    velocities_.linear.z = 0;
+    velocities_.angular.x = 0;
+    velocities_.angular.y = 0;
+    velocities_.angular.z = 0;
 
-    accelerations.linear.x = 0;
-    accelerations.linear.y = 0;
-    accelerations.linear.z = 0;
-    accelerations.angular.x = 0;
-    accelerations.angular.y = 0;
-    accelerations.angular.z = 0;
+    accelerations_.linear.x = 0;
+    accelerations_.linear.y = 0;
+    accelerations_.linear.z = 0;
+    accelerations_.angular.x = 0;
+    accelerations_.angular.y = 0;
+    accelerations_.angular.z = 0;
 }
 
 Generic6DOFUUVDynamicModel::~Generic6DOFUUVDynamicModel(){}
 
-void Generic6DOFUUVDynamicModel::CalculateTransformation()
+void Generic6DOFUUVDynamicModel::calculateTransformation()
 {
-    R <<    std::cos(eta(5))*std::cos(eta(4)),      -std::sin(eta(5))*std::cos(eta(3)) + std::cos(eta(5))*std::sin(eta(4))*std::sin(eta(3)),     std::sin(eta(5))*std::sin(eta(3)) + std::cos(eta(5))*std::cos(eta(3))*std::sin(eta(4)),
-            std::sin(eta(5))*std::cos(eta(4)),       std::cos(eta(5))*std::cos(eta(3)) + std::sin(eta(3))*std::sin(eta(4))*std::sin(eta(5)),    -std::cos(eta(5))*std::sin(eta(3)) + std::sin(eta(4))*std::sin(eta(5))*std::cos(eta(3)),
-           -std::sin(eta(4)),                        std::cos(eta(4))*std::sin(eta(3)),                                                          std::cos(eta(4))*std::cos(eta(3));
+    R_ <<   std::cos(eta_(5))*std::cos(eta_(4)),      -std::sin(eta_(5))*std::cos(eta_(3)) + std::cos(eta_(5))*std::sin(eta_(4))*std::sin(eta_(3)),     std::sin(eta_(5))*std::sin(eta_(3)) + std::cos(eta_(5))*std::cos(eta_(3))*std::sin(eta_(4)),
+            std::sin(eta_(5))*std::cos(eta_(4)),       std::cos(eta_(5))*std::cos(eta_(3)) + std::sin(eta_(3))*std::sin(eta_(4))*std::sin(eta_(5)),    -std::cos(eta_(5))*std::sin(eta_(3)) + std::sin(eta_(4))*std::sin(eta_(5))*std::cos(eta_(3)),
+           -std::sin(eta_(4)),                        std::cos(eta_(4))*std::sin(eta_(3)),                                                          std::cos(eta_(4))*std::cos(eta_(3));
 
-    T <<    1,     std::sin(eta(3))*std::tan(eta(4)),  std::cos(eta(3))*std::tan(eta(4)),
-            0,     std::cos(eta(3)),                  -std::sin(eta(3)),
-            0,     std::sin(eta(3))/std::cos(eta(4)),  std::cos(eta(3))/std::cos(eta(4));
+    T_ <<   1,     std::sin(eta_(3))*std::tan(eta_(4)),  std::cos(eta_(3))*std::tan(eta_(4)),
+            0,     std::cos(eta_(3)),                  -std::sin(eta_(3)),
+            0,     std::sin(eta_(3))/std::cos(eta_(4)),  std::cos(eta_(3))/std::cos(eta_(4));
 
-    J << R,                              Eigen::Matrix3f::Zero(3, 3),
-         Eigen::Matrix3f::Zero(3, 3),    T;
+    J_ << R_,                            Eigen::Matrix3f::Zero(3, 3),
+          Eigen::Matrix3f::Zero(3, 3),    T_;
 }
 
-void Generic6DOFUUVDynamicModel::CalculateCoriolis()
+void Generic6DOFUUVDynamicModel::calculateCoriolis()
 {
     /* Rigid Body Coriolis Matrix */
 
-    float m_u = m  * nu(0);
-    float m_v = m  * nu(1);
-    float m_w = m  * nu(2);
-    float ixx_p = Ixx * nu(3);
-    float iyy_q = Iyy * nu(4);
-    float izz_r = Izz * nu(5);
+    float m_u = m_ * nu_(0);
+    float m_v = m_ * nu_(1);
+    float m_w = m_ * nu_(2);
+    float ixx_p = Ixx_ * nu_(3);
+    float iyy_q = Iyy_ * nu_(4);
+    float izz_r = Izz_ * nu_(5);
     
-    C_rb << 0,   0,   0,   0,    m_w,    -m_v,
+    C_rb_ << 0,   0,   0,   0,    m_w,    -m_v,
             0,   0,   0,   -m_w,  0,     m_u,
             0,   0,   0,   m_v,   -m_u,   0,
             0,   m_w,  -m_v, 0,    -izz_r, iyy_q,
@@ -186,147 +186,147 @@ void Generic6DOFUUVDynamicModel::CalculateCoriolis()
 
     /* Hydrodynamic Added Mass Coriolis Matrix */
 
-    float a1 = X_u_dot * nu(0);
-    float a2 = Y_v_dot * nu(1);
-    float a3 = Z_w_dot * nu(2);
-    float a4 = K_p_dot * nu(3);
-    float a5 = M_q_dot * nu(4);
-    float a6 = N_r_dot * nu(5);
+    float a1 = X_u_dot_ * nu_(0);
+    float a2 = Y_v_dot_ * nu_(1);
+    float a3 = Z_w_dot_ * nu_(2);
+    float a4 = K_p_dot_ * nu_(3);
+    float a5 = M_q_dot_ * nu_(4);
+    float a6 = N_r_dot_ * nu_(5);
     
-    C_a << 0,     0,    0,    0,  -a3,  a2,
+    C_a_ << 0,     0,    0,    0,  -a3,  a2,
            0,     0,    0,   a3,   0,  -a1,
            0,     0,    0,  -a2,  a1,   0,
            0,   -a3,  a2,   0,  -a6,  a5,
            a3,   0,  -a1,  a6,   0,  -a4,
            -a2,  a1,   0,  -a5,   a4,  0;
     
-    C = C_rb + C_a;
+    C_= C_rb_ + C_a_;
     // std::cout << "C:" << C << std::endl;
 
 }
 
-void Generic6DOFUUVDynamicModel::CalculateDamping()
+void Generic6DOFUUVDynamicModel::calculateDamping()
 {    
     /* Hydrodynamic Damping */
 
-    D_lin << -(X_u), 0,      0,    0,   0,    0,
-                0,   -(Y_v), 0,    0,   0,    0,
-                0,   0,    -(Z_w), 0,   0,    0,
-                0,   0,      0, -K_p,   0,    0,
-                0,   0,      0,    0, -M_q,   0,
-                0,   0,      0,    0,   0, -(N_r);
+    D_lin_ << -(X_u_), 0,      0,    0,   0,    0,
+                0,   -(Y_v_), 0,    0,   0,    0,
+                0,   0,    -(Z_w_), 0,   0,    0,
+                0,   0,      0, K_p_,   0,    0,
+                0,   0,      0,    0, M_q_,   0,
+                0,   0,      0,    0,   0, -(N_r_);
 
-    D_qua << -(X_uu * fabs(nu(0))), 0, 0, 0, 0, 0,
-             0, -(Y_vv * fabs(nu(1))), 0, 0, 0, 0,
-             0, 0, -(Z_ww * fabs(nu(2))), 0, 0, 0,
-             0, 0, 0, -(K_pp * fabs(nu(3))), 0, 0,
-             0, 0, 0, 0, -(M_qq * fabs(nu(4))), 0,
-             0, 0, 0, 0, 0, -(N_rr * fabs(nu(5)));
+    D_qua_ << -(X_uu_ * std::fabs(nu_(0))), 0, 0, 0, 0, 0,
+             0, -(Y_vv_ * std::fabs(nu_(1))), 0, 0, 0, 0,
+             0, 0, -(Z_ww_ * std::fabs(nu_(2))), 0, 0, 0,
+             0, 0, 0, -(K_pp_ * std::fabs(nu_(3))), 0, 0,
+             0, 0, 0, 0, -(M_qq_ * std::fabs(nu_(4))), 0,
+             0, 0, 0, 0, 0, -(N_rr_ * std::fabs(nu_(5)));
     
-    D = D_lin + D_qua;
+    D_= D_lin_ + D_qua_;
     // std::cout << "D:" << D << std::endl;
 
 }
 
-void Generic6DOFUUVDynamicModel::ThrustCallback(const vanttec_msgs::ThrustControl& _thrust)
+void Generic6DOFUUVDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
 {
-    tau << _thrust.tau_x,
-           _thrust.tau_y,
-           _thrust.tau_z,
-           _thrust.tau_phi,
-           _thrust.tau_theta,
-           _thrust.tau_psi;
+    tau_ << thrust.tau_x,
+            thrust.tau_y,
+            thrust.tau_z,
+            thrust.tau_phi,
+            thrust.tau_theta,
+            thrust.tau_psi;
 }
 
-void Generic6DOFUUVDynamicModel::CalculateStates()
+void Generic6DOFUUVDynamicModel::calculateStates()
 {
-    CalculateTransformation();
-    nu_dot_prev = nu_dot;
-    eta_dot_prev = eta_dot;
+    calculateTransformation();
+    nu_dot_prev_ = nu_dot_;
+    eta_dot_prev_ = eta_dot_;
 
     /* Rigid Body Mass Matrix */
 
-    M_rb << m, 0, 0, 0, 0, 0,
-            0, m, 0, 0, 0, 0,
-            0, 0, m, 0, 0, 0,
-            0, 0, 0, Ixx, 0, 0,
-            0, 0, 0, 0, Iyy, 0,
-            0, 0, 0, 0, 0, Izz;
+    M_rb_ << m_, 0, 0, 0, 0, 0,
+            0, m_, 0, 0, 0, 0,
+            0, 0, m_, 0, 0, 0,
+            0, 0, 0, Ixx_, 0, 0,
+            0, 0, 0, 0, Iyy_, 0,
+            0, 0, 0, 0, 0, Izz_;
 
     /* Hydrodynamic Added Mass Matrix */
 
-    M_a << X_u_dot, 0, 0, 0, 0, 0,
-           0, Y_v_dot, 0, 0, 0, 0,
-           0, 0, Z_w_dot, 0, 0, 0,
-           0, 0, 0, K_p_dot, 0, 0,
-           0, 0, 0, 0, M_q_dot, 0,
-           0, 0, 0, 0, 0, N_r_dot;
+    M_a_ << X_u_dot_, 0, 0, 0, 0, 0,
+           0, Y_v_dot_, 0, 0, 0, 0,
+           0, 0, Z_w_dot_, 0, 0, 0,
+           0, 0, 0, K_p_dot_, 0, 0,
+           0, 0, 0, 0, M_q_dot_, 0,
+           0, 0, 0, 0, 0, N_r_dot_;
 
-    M = M_rb + M_a;
+    M_ = M_rb_ + M_a_;
     // std::cout << "M:" << M << std::endl;
-    CalculateCoriolis();
+    calculateCoriolis();
 
-    CalculateDamping();
+    calculateDamping();
 
     /* Restoring Forces */
     
-    g_eta <<  (W - B)*sin(eta(4)),
-              -(W - B)*cos(eta(4))*sin(eta(3)),
-              -(W - B)*cos(eta(4))*cos(eta(3)),
-              rb_y*B*cos(eta(4))*cos(eta(4)) - rb_z*B*cos(eta(4))*sin(eta(4)),
-              -rb_z*B*sin(eta(4)) - rb_x*B*cos(eta(4))*cos(eta(4)),
-              rb_x*cos(eta(4))*sin(eta(4)) + rb_y*B*sin(eta(4));
+    g_eta_ <<  (W_ - B_)*sin(eta_(4)),
+              -(W_ - B_)*cos(eta_(4))*sin(eta_(3)),
+              -(W_ - B_)*cos(eta_(4))*cos(eta_(3)),
+              rb_y_*B_*cos(eta_(4))*cos(eta_(4)) - rb_z_*B_*cos(eta_(4))*sin(eta_(4)),
+              -rb_z_*B_*sin(eta_(4)) - rb_x_*B_*cos(eta_(4))*cos(eta_(4)),
+              rb_x_*cos(eta_(4))*sin(eta_(4)) + rb_y_*B_*sin(eta_(4));
 
     /* 6 DoF State Calculation */
 
-    g = M.inverse();
-    f = -M.inverse() * ((C * nu) + (D * nu) + g_eta);
-    // std::cout << "f:" << f << std::endl;
+    g_ = M_.inverse();
+    f_ = -M_.inverse() * ((C_ * nu_) + (D_ * nu_) + g_eta_);
+    // std::cout << "f:" << f_ << std::endl;
     // std::cout << "g:" << g << std::endl;
 
-    u = tau;
-    nu_dot = f + g*u;
-    // nu_dot =  M.inverse() * (tau - (C * nu) - (D * nu) - g_eta);
+    u_ = tau_;
+    nu_dot_ = f_ + g_*u_;
+    // nu_dot_ =  M_.inverse() * (tau - (C_ * nu_) - (D_ * nu_) - g_eta_);
 
-    /* Integrating Acceleration to get Velocities */
+    /* Integrating Acceleration to get velocities_ */
 
-    Eigen::VectorXf nu_dot_sum = nu_dot + nu_dot_prev;
-    nu = (nu_dot_sum / 2 * _sample_time_s) + nu;
+    Eigen::VectorXf nu_dot_sum = nu_dot_ + nu_dot_prev_;
+    nu_ = (nu_dot_sum / 2 * sample_time_) + nu_;
 
-    /* Integrating Velocities to get Position */
+    /* Integrating velocities_ to get Position */
 
-    eta_dot = J * nu;
+    eta_dot_ = J_ * nu_;
 
-    Eigen::VectorXf eta_dot_sum = eta_dot + eta_dot_prev;
-    eta = (eta_dot_sum / 2 * _sample_time_s) + eta;
+    Eigen::VectorXf eta_dot_sum_ = eta_dot_ + eta_dot_prev_;
+    eta_ = (eta_dot_sum_ / 2 * sample_time_) + eta_;
 
-    if (fabs(eta(3)) > M_PI)
+    if (std::fabs(eta_(3)) > M_PI)
     {
-        eta(3) = (eta(3) / fabs(eta(3))) * (fabs(eta(3)) - 2 * M_PI);
+        eta_(3) = (eta_(3) / std::fabs(eta_(3))) * (std::fabs(eta_(3)) - 2 * M_PI);
     }
-    if (fabs(eta(4)) > M_PI)
+    if (std::fabs(eta_(4)) > M_PI)
     {
-        eta(4) = (eta(4) / fabs(eta(4))) * (fabs(eta(4)) - 2 * M_PI);
+        eta_(4) = (eta_(4) / std::fabs(eta_(4))) * (std::fabs(eta_(4)) - 2 * M_PI);
     }
-    if (fabs(eta(5)) > M_PI)
+    if (std::fabs(eta_(5)) > M_PI)
     {
-        eta(5) = (eta(5) / fabs(eta(5))) * (fabs(eta(5)) - 2 * M_PI);
+        eta_(5) = (eta_(5) / std::fabs(eta_(5))) * (std::fabs(eta_(5)) - 2 * M_PI);
     }
 
     /* Transform Euler Angles to Quaternions : 3-2-1 convention */
-    // double psi = eta(3);  // yaw
-    // double eta(4) = 0.0;         // pitch
-    // double eta(4) = 0.0;           // roll
+    // double psi = eta_(3);  // yaw
+    // double eta_(4) = 0.0;         // pitch
+    // double eta_(4) = 0.0;           // roll
 
-    // double C_11 = cos(eta(4))*cos(Theta(2));
-    // double C_12 = cos(eta(4))*sin(Theta(2));
-    // double C_13 = -sin(eta(4));
-    // double C_21 = sin(eta(4))*sin(eta(4))*cos(Theta(2))-cos(eta(4))*sin(Theta(2));
-    // double C_22 = sin(eta(4))*sin(eta(4))*sin(Theta(2))+cos(eta(4))*cos(Theta(2));
-    // double C_23 = sin(eta(4))*cos(eta(4));
-    // double C_31 = cos(eta(4))*sin(eta(4))*cos(Theta(2))+sin(eta(4))*sin(Theta(2));
-    // double C_32 = cos(eta(4))*sin(eta(4))*sin(Theta(2))-sin(eta(4))*cos(Theta(2));
-    // double C_33 = cos(eta(4))*cos(eta(4));
+    // double C_11 = cos(eta_(4))*cos(Theta_(2));
+    // double C_12 = cos(eta_(4))*sin(Theta_(2));
+    // double C_13 = -sin(eta_(4));
+    // double C_21 = sin(eta_(4))*sin(eta_(4))*cos(Theta_(2))-cos(eta_(4))*sin(Theta_(2));
+    // double C_22 = sin(eta_(4))*sin(eta_(4))*sin(Theta_(2))+cos(eta_(4))*cos(Theta_(2));
+    // double C_23 = sin(eta_(4))*cos(eta_(4));
+    // double C_31 = cos(eta_(4))*sin(eta_(4))*cos(Theta_(2))+sin(eta_(4))*sin(Theta_(2));
+    // double C_32 = cos(eta_(4))*sin(eta_(4))*sin(Theta_(2))-sin(eta_(4))*cos(Theta_(2));
+    // double C_33 = cos(eta_(4))*cos(eta_(4));
     // double trace = C_11+C_22+C_33;
     
     // C_rot <<  C_11, C_12, C_13,
@@ -377,28 +377,28 @@ void Generic6DOFUUVDynamicModel::CalculateStates()
     // std::cout << quat[3] << std::endl;
     // std::cout << quat[0] << std::endl;
     // std::cout << "Yaw:" <<std::endl;
-    // std::cout << eta(3) << std::endl;
+    // std::cout << eta_(3) << std::endl;
 
-    /* Update ROS Messages */
+    /* update ROS Messages */
 
-    accelerations.linear.x = nu_dot(0);
-    accelerations.linear.y = nu_dot(1);
-    accelerations.linear.z = nu_dot(2);
-    accelerations.angular.x = nu_dot(0);
-    accelerations.angular.y = nu_dot(1);
-    accelerations.angular.z = nu_dot(2);
+    accelerations_.linear.x = nu_dot_(0);
+    accelerations_.linear.y = nu_dot_(1);
+    accelerations_.linear.z = nu_dot_(2);
+    accelerations_.angular.x = nu_dot_(0);
+    accelerations_.angular.y = nu_dot_(1);
+    accelerations_.angular.z = nu_dot_(2);
 
-    velocities.linear.x = nu(0);
-    velocities.linear.y = nu(1);
-    velocities.linear.z = nu(2);
-    velocities.angular.x = nu(3);
-    velocities.angular.y = nu(4);
-    velocities.angular.z = nu(5);
+    velocities_.linear.x = nu_(0);
+    velocities_.linear.y = nu_(1);
+    velocities_.linear.z = nu_(2);
+    velocities_.angular.x = nu_(3);
+    velocities_.angular.y = nu_(4);
+    velocities_.angular.z = nu_(5);
     
-    eta_pose.x = eta(0);
-    eta_pose.y = eta(1);
-    eta_pose.z = eta(2);
-    eta_pose.phi = eta(3);
-    eta_pose.theta = eta(4);
-    eta_pose.psi = eta(5);
+    eta_pose_.x = eta_(0);
+    eta_pose_.y = eta_(1);
+    eta_pose_.z = eta_(2);
+    eta_pose_.phi = eta_(3);
+    eta_pose_.theta = eta_(4);
+    eta_pose_.psi = eta_(5);
 }

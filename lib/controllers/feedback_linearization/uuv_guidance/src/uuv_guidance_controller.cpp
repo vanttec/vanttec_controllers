@@ -29,29 +29,29 @@ GuidanceController::GuidanceController(const float SAMPLE_TIME_S) : ASMC_Guidanc
 
     /* ASMC Parameter Init */
     this->asmc_state_machine.current_waypoint = 0;
-    this->asmc_guidance_position_error_threshold = 0.1;
-    this->asmc_guidance_radial_error_threshold = 0.02;
+    this->asmc_guidance_position_error_thresholD_= 0.1;
+    this->asmc_guidance_radial_error_thresholD_= 0.02;
     this->asmc_guidance_euclidean_distance = 0;
     this->asmc_guidance_radial_distance = 0;
     this->asmc_guidance_speed_gain = 100;
 
     /* LOS Parameter Init */
     this->los_state_machine.current_waypoint = 0;
-    this->los_depth_error_threshold = 0.01;
+    this->los_depth_error_thresholD_= 0.01;
     this->los_lookahead_distance = 0.9; // Lookahead distance corresponds to 2 times the length of the UUV
-    this->los_min_speed = 0;
-    this->los_max_speed = 0.9;
-    this->los_position_error_threshold = 0.4;
+    this->los_min_speeD_= 0;
+    this->los_max_speeD_= 0.9;
+    this->los_position_error_thresholD_= 0.4;
     this->los_euclidean_distance = 0;
     this->los_speed_gain = 100;
 
     /* Orbit Parameter Init */
     this->orbit_state_machine.current_waypoint = 0;
-    this->orbit_depth_error_threshold = 0.01;
+    this->orbit_depth_error_thresholD_= 0.01;
     this->orbit_lookahead_distance = 0.9; // Lookahead distance corresponds to 2 times the length of the UUV
-    this->orbit_min_speed = 0;
-    this->orbit_max_speed = 0.9;
-    this->orbit_position_error_threshold = 0.4;
+    this->orbit_min_speeD_= 0;
+    this->orbit_max_speeD_= 0.9;
+    this->orbit_position_error_thresholD_= 0.4;
     this->orbit_euclidean_distance = 0;
     this->orbit_speed_gain = 100;
 
@@ -122,7 +122,7 @@ void GuidanceController::OnWaypointReception(const vanttec_msgs::GuidanceWaypoin
     this->orbit_state_machine.current_waypoint = 0;
     this->asmc_state_machine.current_waypoint = 0;
 
-    /* Update the current guidance law selection and the internal waypoint list */
+    /* update the current guidance law selection and the internal waypoint list */
     this->current_guidance_law = (GuidanceLaws_E) _waypoints.guidance_law;
     this->current_waypoint_list = _waypoints;
 
@@ -134,7 +134,7 @@ void GuidanceController::OnEmergencyStop(const std_msgs::Empty& _msg)
     this->desired_set_points.linear.x = 0;
     this->desired_set_points.linear.y = 0;
 
-    /* Reset the guidance law and the state machines */
+    /* reset the guidance law and the state machines */
     this->current_guidance_law = NONE;
     this->los_state_machine.state_machine = LOS_LAW_STANDBY;
     this->asmc_state_machine.state_machine = ASMC_LAW_STANDBY;
@@ -147,7 +147,7 @@ void GuidanceController::OnMasterStatus(const vanttec_msgs::MasterStatus& _statu
 }
 
 
-void GuidanceController::UpdateStateMachines()
+void GuidanceController::updateStateMachines()
 {
     /* Enter a specific state machine according to the selected guidance law. */
     switch(this->current_guidance_law)
@@ -180,7 +180,7 @@ void GuidanceController::UpdateStateMachines()
                     std::cout << set_points[3] << std::endl;
 
                     ASMC_Guidance.SetSetpoints(set_points);
-                    ASMC_Guidance.CalculateManipulation(current_positions_ned);
+                    ASMC_Guidance.calculateManipulation(current_positions_ned);
 
                     this->desired_set_points.linear.x = ASMC_Guidance.U(0);
                     this->desired_set_points.linear.y = ASMC_Guidance.U(1);
@@ -223,7 +223,7 @@ void GuidanceController::UpdateStateMachines()
         /* Line-Of-Sight Guidance Law
            Strategy:
                 - Navigate to the specified waypoint depth so that 2D LOS can be used.
-                - Compute the desired speed and heading according to the LOS algorithm.
+                - Compute the desired speed and heading according to the LOS algorithM_.
                 - When we are in the vicinity of the target waypoint (i.e. euclidean distance < threshold), stop.
                 - If there are more waypoints, continue with the next. If not, return to standby.
         */
@@ -290,11 +290,11 @@ void GuidanceController::UpdateStateMachines()
                         cross_track_error = - (x_uuv - x_k) * std::sin(alpha_k) + (y_uuv - y_k) * std::cos(alpha_k);
                     }
 
-                    float desired_heading = alpha_k + std::atan(-(cross_track_error/this->los_lookahead_distance));
+                    float desired_heading_ = alpha_k + std::atan(-(cross_track_error/this->los_lookahead_distance));
 
                     /*if (abs(desired_heading) > PI)
                     {
-                        desired_heading = (desired_heading/abs(desired_heading)) * (abs(desired_heading) - 2 * PI);
+                        desired_heading_ = (desired_heading/abs(desired_heading)) * (abs(desired_heading) - 2 * PI);
                     }*/
 
                     float desired_velocity = (this->los_max_speed - this->los_min_speed) *
@@ -399,7 +399,7 @@ void GuidanceController::UpdateStateMachines()
                         cross_track_error = - (x_uuv - x_k) * std::sin(alpha_k) + (y_uuv - y_k) * std::cos(alpha_k);
                     }
 
-                    float desired_heading = alpha_k + std::atan(-(cross_track_error/this->los_lookahead_distance));
+                    float desired_heading_ = alpha_k + std::atan(-(cross_track_error/this->los_lookahead_distance));
 
                     float desired_velocity = (this->orbit_max_speed - this->orbit_min_speed) *
                                              (1 - (std::abs(along_track_distance) / std::sqrt(std::pow(along_track_distance, 2) + this->orbit_speed_gain)));

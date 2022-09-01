@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 
     // Sliding surface params
     nh.getParam("alpha", alpha_v);
-    nh.getParam("beta", beta_v);
+    nh.getParam("beta_", beta_v);
 
     // K2 gains
     nh.getParam("K2", K2_v);
@@ -53,27 +53,27 @@ int main(int argc, char **argv)
     float MAX_TAU[6] = {127, 34, 118, 28, 9.6, 36.6};
 
     float* alpha = &alpha_v[0];
-    float* beta = &beta_v[0];
+    float* beta_ = &beta_v[0];
     float* K2 = &K2_v[0];
     float* K_alpha = &K_alpha_v[0];
     float* K1_init = &K1_init_v[0];
     float* K_min = &K_min_v[0];
     float* mu = &mu_v[0];
 
-    ANTSMC6DOF   system_controller(SAMPLE_TIME_S, alpha, beta, K2, K_alpha, K_min, K1_init, mu);
-    system_controller.SetMaxThrust(MAX_TAU);
+    ANTSMC6DOF   system_controller(SAMPLE_TIME_S, alpha, beta_, K2, K_alpha, K_min, K1_init, mu);
+    system_controller.setMaxThrust(MAX_TAU);
     
     ros::Publisher  uuv_thrust      = nh.advertise<vanttec_msgs::ThrustControl>("/uuv_control/uuv_control_node/thrust", 1);
     ros::Subscriber uuv_dynamics    = nh.subscribe("/uuv_simulation/dynamic_model/non_linear_functions", 1, 
-                                                    &ANTSMC6DOF::UpdateDynamics,
+                                                    &ANTSMC6DOF::updateDynamics,
                                                     &system_controller);
 
-    ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose", 1,
-                                                    &ANTSMC6DOF::UpdatePose,
+    ros::Subscriber uuv_pose        = nh.subscribe("/uuv_simulation/dynamic_model/eta_pose_", 1,
+                                                    &ANTSMC6DOF::updatePose,
                                                     &system_controller);
 
     ros::Subscriber uuv_set_point    = nh.subscribe("/uuv_control/uuv_control_node/set_point", 1,
-                                                    &ANTSMC6DOF::UpdateSetPoints,
+                                                    &ANTSMC6DOF::updateSetPoints,
                                                     &system_controller); 
 
     t_init = ros::Time::now().toSec();
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
         /* Run Queued Callbacks */ 
         ros::spinOnce();
 
-        /* Update Trajectory */
+        /* update Trajectory */
         // q_d.x = 2*std::sin(t_cur/4) + 0.5;
         // q_d.y = 2*std::cos(t_cur/4);
         // q_d.z = 2*std::cos(t_cur/80 + 0.5);
@@ -92,15 +92,15 @@ int main(int argc, char **argv)
         // q_d.theta = 0.0;
         // q_d.psi = 0.0;
 
-        // system_controller.UpdateSetPoints(q_d);
-        /* Update Parameters with new info */ 
-        system_controller.CalculateManipulation();
+        // system_controller.updateSetPoints(q_d);
+        /* update Parameters with new info */ 
+        system_controller.calculateManipulation();
        
         /* Publish Odometry */
         // Current way: if no functions arrive through the subscriber, the last computed thrusts are published.
         // An option could be to use ros::topic::waitForMessage to publish once the nonlinear functioncs arrive, in order to
         // avoid publishing garbage.
-        uuv_thrust.publish(system_controller.thrust);
+        uuv_thrust.publish(system_controller.thrust_);
 
         /* Slee for 10ms */
         cycle_rate.sleep();

@@ -4,7 +4,7 @@
  * @author: Pedro Sanchez
  * @email: pedro.sc.97@gmail.com
  * 
- * @brief: Odometry calculator class. Used to get velocities and positions 
+ * @brief: Odometry calculator class. Used to get velocities_ and positions 
  *         from the IMU.
  * -----------------------------------------------------------------------------
  * */
@@ -36,16 +36,16 @@ class OdometryCalculator
         geometry_msgs::Accel    accel;
 
         /* Configuration */
-        float sample_time_s;
+        float sample_time_;
 
-        OdometryCalculator(float _sample_time);
+        OdometryCalculator(float sample_time_);
         ~OdometryCalculator();
         
         void AccelPubCallback(const geometry_msgs::Vector3& _accel);
         void AngularRateCallback(const geometry_msgs::Vector3& _a_rate);
         void AngularPositionCallback(const geometry_msgs::Vector3& _a_pos);
 
-        void UpdateParameters();
+        void updateParameters();
 
     private:
 
