@@ -6,7 +6,7 @@
  * @author: Sebastian Martinez
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Used to publish the current pose of the simulated UUV and correctly
+ * @brief: Used to publish the current pose of the simulated vehicle and correctly
  *         represent it in RViz.
  * https://github.com/ros-visualization/rviz/issues/597
  * -----------------------------------------------------------------------------
@@ -35,7 +35,7 @@ void TF2Broadcaster::BroadcastTransform(const vanttec_msgs::EtaPose& _pose)
     transformStamped.transform.translation.z    = -_pose.z;
 
     tf2::Quaternion q;
-    q.setRPY(_pose.phi, -_pose.theta, -_pose.psi);
+    q.setRPY(_pose.phi, _pose.theta, _pose.psi);
     q.normalize();
     transformStamped.transform.rotation.x = q.x();
     transformStamped.transform.rotation.y = q.y();

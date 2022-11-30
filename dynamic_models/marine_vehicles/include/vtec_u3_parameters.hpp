@@ -13,7 +13,7 @@
 
 /* Constants */
         
-static const float rho             = 1000;
+static const float water_rho             = 1000;
 static const float g               = 9.81;
 static const float pi              = 3.14159;
 

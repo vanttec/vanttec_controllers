@@ -117,7 +117,6 @@ void PID6DOF::calculateManipulations()
 
         u_ << g_.inverse()*(ref_dot_dot_ - f_ + ua_);
 
-
         // Saturate for maximum thrust in each degree of freedom
         if(std::fabs(u_(0)) > MAX_FORCE_X_)  u_(0) = u_(0) / std::fabs(u_(0)) * MAX_FORCE_X_;
         if(std::fabs(u_(1)) > MAX_FORCE_Y_)  u_(1) = u_(1) / std::fabs(u_(1)) * MAX_FORCE_Y_;

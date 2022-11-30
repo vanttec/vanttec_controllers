@@ -6,7 +6,7 @@
  * @author: Sebastian Martinez
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Used to publish the current pose of the simulated UUV and correctly
+ * @brief: Used to publish the current pose of the simulated vehicle and correctly
  *         represent it in RViz.
  * -----------------------------------------------------------------------------
  **/

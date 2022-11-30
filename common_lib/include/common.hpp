@@ -16,6 +16,7 @@
 #include <vanttec_msgs/GuidanceWaypoints.h>
 #include <cmath>
 #include <eigen3/Eigen/Dense>
+#include <ros/console.h>
 
 typedef enum Side_E
 {
@@ -32,7 +33,8 @@ typedef enum DOFControllerType_E
 namespace common
 {
     /* Helper constants */
-    static const float rho = 1000;
+    static const float water_rho = 1000;
+    static const float air_rho = 1.225;
     static const float g = 9.81;
     
     /* Helper functions */
