@@ -139,7 +139,7 @@ void CarDynamicModel::setForceInput(const vanttec_msgs::ThrustControl& thrust){
           0;
 }
 
-void CarDynamicModel::setSteeringInput(const std_msgs::Float32 delta){
+void CarDynamicModel::setSteeringInput(const std_msgs::Float32& delta){
     delta_ = delta.data;
     if(u_(0) < 0.1){
         delta_ = 0;

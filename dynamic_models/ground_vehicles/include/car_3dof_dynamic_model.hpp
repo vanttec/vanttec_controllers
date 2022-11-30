@@ -88,7 +88,7 @@ class CarDynamicModel {
         void calculateRotation();
         void calculateStates();
         void setForceInput(const vanttec_msgs::ThrustControl& thrust);
-        void setSteeringInput(const std_msgs::Float32 delta);
+        void setSteeringInput(const std_msgs::Float32& delta);
 };
 
 #endif
