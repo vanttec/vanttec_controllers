@@ -9,3 +9,5 @@ Control classes:
 
 TODO:
 - Refactor first and second order controllers
+- Check 6dof tf2 broadcaster. There may be something weird going on with the transform in yaw.
+    - Might be okay by now when testing car dynamic model.
