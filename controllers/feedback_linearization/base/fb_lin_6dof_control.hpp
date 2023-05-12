@@ -1,0 +1,40 @@
+/** ----------------------------------------------------------------------------
+ * @file: fb_lin_6dof_control.hpp
+ * @date: April 25, 2023
+ * @author: Sebas Mtz
+ * @email: sebas.martp@gmail.com
+ * 
+ * @brief: 6-DOF Feedback linearization class definition for any controller.
+ * -----------------------------------------------------------------------------
+ * */
+
+
+#ifndef __FBLIN__
+#define __FBLIN__
+
+#include <cmath>
+#include <eigen3/Eigen/Dense>
+
+#include "dynamic_models/base/fblin_6dof_model.hpp"
+
+class FBLin6DOF
+{
+    public:
+        Eigen::VectorXf f_x_;
+        Eigen::MatrixXf g_x_;
+
+        Eigen::VectorXf u_;
+        std::array<float,6> U_MAX_;
+        Eigen::VectorXf u_aux_;
+        Eigen::VectorXf u_n_;
+        Eigen::VectorXf chi2_dot_d_;
+
+        // u_ = g_x_^(-1)*(chi2_dot_d - f_x_ + u_n - u_aux)
+        
+        FBLin6DOF(const std::array<float,6>& U_MAX);
+        ~FBLin6DOF();
+
+        void updateControlSignal();
+};
+
+#endif
