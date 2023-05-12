@@ -70,43 +70,6 @@ void GenericIn6DOFUUVDynamicModel::setInitPose(const std::vector<float>& eta)
     eta_(5) = eta[5];
 }
 
-// void GenericIn6DOFUUVDynamicModel::calculateTransformation()
-// {
-//     float phi = eta_(3);
-//     float theta = eta_(4);
-//     float psi = eta_(5);
-
-//     float phi_dot = eta_dot_(3);
-//     float theta_dot_ = eta_dot_(4);
-//     float psi_dot = eta_dot_(5);
-
-//     Eigen::Vector3f vect;
-//     vect << phi,
-//             theta,
-//             psi;
-
-//     R_ <<   std::cos(psi)*std::cos(theta),      -std::sin(psi)*std::cos(phi) + std::cos(psi)*std::sin(theta)*std::sin(phi),     std::sin(psi)*std::sin(phi) + std::cos(psi)*std::cos(phi)*std::sin(theta),
-//             std::sin(psi)*std::cos(theta),       std::cos(psi)*std::cos(phi) + std::sin(phi)*std::sin(theta)*std::sin(psi),    -std::cos(psi)*std::sin(phi) + std::sin(theta)*std::sin(psi)*std::cos(phi),
-//            -std::sin(theta),                     std::cos(theta)*std::sin(phi),                                                 std::cos(theta)*std::cos(phi);
-
-//     T_ <<   1,     std::sin(phi)*std::tan(theta),  std::cos(phi)*std::tan(theta),
-//             0,     std::cos(phi),                  -std::sin(phi),
-//             0,     std::sin(phi)/std::cos(theta),  std::cos(phi)/std::cos(theta);
-
-//     J_ << R_,                            Eigen::Matrix3f::Zero(3, 3),
-//           Eigen::Matrix3f::Zero(3, 3),   T_;
-
-//     R_dot_ = R_*utils::Skew(vect);
-//     T_dot_ << 0,         std::sin(phi)*utils::secant(theta)*utils::secant(theta)*theta_dot_ + std::cos(phi)*std::tan(theta)*phi_dot,                   std::cos(phi)*utils::secant(theta)*utils::secant(theta)*theta_dot_ - std::sin(phi)*std::tan(theta)*phi_dot,
-//               0,        -std::sin(phi)*phi_dot,                                                                                                  -std::cos(phi)*phi_dot,
-//               0,         (std::cos(theta)*std::cos(phi)*phi_dot + std::sin(phi)*std::sin(theta)*theta_dot_)/(std::cos(theta)*std::cos(theta)),    (-std::cos(theta)*std::sin(phi)*phi_dot + std::cos(phi)*std::sin(theta)*theta_dot_)/(std::cos(theta)*std::cos(theta));
-
-//     J_dot_ << R_dot_,                             Eigen::Matrix3f::Zero(3, 3),
-//               Eigen::Matrix3f::Zero(3, 3),        T_dot_;
-
-//     J_inv_ = J_.inverse();
-// }
-
 void GenericIn6DOFUUVDynamicModel::calculateCoriolis()
 {
     Eigen::MatrixXf aux = J_inv_*eta_dot_;
@@ -171,15 +134,15 @@ void GenericIn6DOFUUVDynamicModel::calculateDamping()
 
 }
 
-// void GenericIn6DOFUUVDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
-// {
-//     u_ << thrust.u_x,
-//             thrust.u_y,
-//             thrust.u_z,
-//             thrust.u_phi,
-//             thrust.u_theta,
-//             thrust.u_psi;
-// }
+void GenericIn6DOFUUVDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
+{
+    u_ << thrust.tau_x,
+            thrust.tau_y,
+            thrust.tau_z,
+            thrust.tau_phi,
+            thrust.tau_theta,
+            thrust.tau_psi;
+}
 
 void GenericIn6DOFUUVDynamicModel::calculateStates()
 {

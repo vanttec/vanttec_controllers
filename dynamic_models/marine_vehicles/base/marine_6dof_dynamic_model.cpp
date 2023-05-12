@@ -63,20 +63,6 @@ void Generic6DOFUUVDynamicModel::setInitPose(const std::vector<float>& eta){
     eta_(5) = eta[5];
 }
 
-// void Generic6DOFUUVDynamicModel::calculateTransformation()
-// {
-//     R_ <<   std::cos(eta_(5))*std::cos(eta_(4)),      -std::sin(eta_(5))*std::cos(eta_(3)) + std::cos(eta_(5))*std::sin(eta_(4))*std::sin(eta_(3)),     std::sin(eta_(5))*std::sin(eta_(3)) + std::cos(eta_(5))*std::cos(eta_(3))*std::sin(eta_(4)),
-//             std::sin(eta_(5))*std::cos(eta_(4)),       std::cos(eta_(5))*std::cos(eta_(3)) + std::sin(eta_(3))*std::sin(eta_(4))*std::sin(eta_(5)),    -std::cos(eta_(5))*std::sin(eta_(3)) + std::sin(eta_(4))*std::sin(eta_(5))*std::cos(eta_(3)),
-//            -std::sin(eta_(4)),                        std::cos(eta_(4))*std::sin(eta_(3)),                                                          std::cos(eta_(4))*std::cos(eta_(3));
-
-//     T_ <<   1,     std::sin(eta_(3))*std::tan(eta_(4)),  std::cos(eta_(3))*std::tan(eta_(4)),
-//             0,     std::cos(eta_(3)),                  -std::sin(eta_(3)),
-//             0,     std::sin(eta_(3))/std::cos(eta_(4)),  std::cos(eta_(3))/std::cos(eta_(4));
-
-//     J_ << R_,                            Eigen::Matrix3f::Zero(3, 3),
-//           Eigen::Matrix3f::Zero(3, 3),    T_;
-// }
-
 void Generic6DOFUUVDynamicModel::calculateCoriolis()
 {
     /* Rigid Body Coriolis Matrix */
@@ -138,15 +124,15 @@ void Generic6DOFUUVDynamicModel::calculateDamping()
     // std::cout << "D:" << D_ << std::endl;
 }
 
-// void Generic6DOFUUVDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
-// {
-//     u_ << thrust.u_x,
-//             thrust.u_y,
-//             thrust.u_z,
-//             thrust.u_phi,
-//             thrust.u_theta,
-//             thrust.u_psi;
-// }
+void Generic6DOFUUVDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
+{
+    u_ << thrust.tau_x,
+            thrust.tau_y,
+            thrust.tau_z,
+            thrust.tau_phi,
+            thrust.tau_theta,
+            thrust.tau_psi;
+}
 
 void Generic6DOFUUVDynamicModel::calculateStates()
 {

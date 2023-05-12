@@ -133,7 +133,7 @@ class Generic6DOFUUVDynamicModel
         // void calculateTransformation();
         void calculateCoriolis();
         void calculateDamping();
-        // void thrustCallbacK(const vanttec_msgs::ThrustControl& thrust);
+        void thrustCallbacK(const vanttec_msgs::ThrustControl& thrust);
         void calculateStates();
         friend class VTecU4DynamicModel;
 };
