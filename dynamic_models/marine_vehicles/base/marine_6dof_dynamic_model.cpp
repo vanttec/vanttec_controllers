@@ -14,7 +14,7 @@
 
 #include "dynamic_models/marine_vehicles/base/marine_6dof_dynamic_model.hpp"
 
-Generic6DOFUUVDynamicModel::Generic6DOFUUVDynamicModel(float sample_time)
+Marine6DOFDynamicModel::Marine6DOFDynamicModel(float sample_time)
 {
     sample_time_ = sample_time;
 
@@ -52,9 +52,9 @@ Generic6DOFUUVDynamicModel::Generic6DOFUUVDynamicModel(float sample_time)
     MAX_TORQUE_N_ = 0.0;
 }
 
-Generic6DOFUUVDynamicModel::~Generic6DOFUUVDynamicModel(){}
+Marine6DOFDynamicModel::~Marine6DOFDynamicModel(){}
 
-void Generic6DOFUUVDynamicModel::setInitPose(const std::vector<float>& eta){
+void Marine6DOFDynamicModel::setInitPose(const std::vector<float>& eta){
     eta_(0) = eta[0];
     eta_(1) = eta[1];
     eta_(2) = eta[2];
@@ -63,7 +63,7 @@ void Generic6DOFUUVDynamicModel::setInitPose(const std::vector<float>& eta){
     eta_(5) = eta[5];
 }
 
-void Generic6DOFUUVDynamicModel::calculateCoriolis()
+void Marine6DOFDynamicModel::calculateCoriolis()
 {
     /* Rigid Body Coriolis Matrix */
 
@@ -102,7 +102,7 @@ void Generic6DOFUUVDynamicModel::calculateCoriolis()
 
 }
 
-void Generic6DOFUUVDynamicModel::calculateDamping()
+void Marine6DOFDynamicModel::calculateDamping()
 {    
     /* Hydrodynamic Damping */
 
@@ -124,7 +124,7 @@ void Generic6DOFUUVDynamicModel::calculateDamping()
     // std::cout << "D:" << D_ << std::endl;
 }
 
-void Generic6DOFUUVDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
+void Marine6DOFDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
 {
     u_ << thrust.tau_x,
             thrust.tau_y,
@@ -134,7 +134,7 @@ void Generic6DOFUUVDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustContro
             thrust.tau_psi;
 }
 
-void Generic6DOFUUVDynamicModel::calculateStates()
+void Marine6DOFDynamicModel::calculateStates()
 {
     utils::calculate6DOFTransformation(R_, T_, J_, eta_);
     nu_dot_prev_ = nu_dot_;

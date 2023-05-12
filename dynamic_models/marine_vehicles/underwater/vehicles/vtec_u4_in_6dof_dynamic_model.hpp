@@ -14,7 +14,7 @@
 
 #include "dynamic_models/marine_vehicles/base/marine_6dof_in_dynamic_model.hpp"
 
-class VTecU4InDynamicModel : public GenericIn6DOFUUVDynamicModel
+class VTecU4InDynamicModel : public Marine6DOFInDynamicModel
 {
     public:
         VTecU4InDynamicModel(float sample_time);

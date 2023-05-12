@@ -12,8 +12,8 @@
  * -----------------------------------------------------------------------------
  **/
  
-#ifndef __GENERIC_IN_6DOF_UUV_DYNAMIC_MODEL__
-#define __GENERIC_IN_6DOF_UUV_DYNAMIC_MODEL__
+#ifndef __MARINE_IN_6DOF_DYNAMIC_MODEL__
+#define __MARINE_IN_6DOF_DYNAMIC_MODEL__
 
 #include <cmath>
 #include <eigen3/Eigen/Dense>
@@ -24,7 +24,7 @@
 #include "vanttec_msgs/ThrustControl.h"
 #include "vanttec_msgs/EtaPose.h"
 
-class GenericIn6DOFUUVDynamicModel
+class Marine6DOFInDynamicModel
 {
     private:
         float sample_time_;
@@ -132,8 +132,8 @@ class GenericIn6DOFUUVDynamicModel
         geometry_msgs::Twist    velocities_;
         geometry_msgs::Accel    accelerations_;
 
-        GenericIn6DOFUUVDynamicModel(float sample_time);
-        ~GenericIn6DOFUUVDynamicModel();
+        Marine6DOFInDynamicModel(float sample_time);
+        ~Marine6DOFInDynamicModel();
 
         void setInitPose(const std::vector<float>& eta);
         // void calculateTransformation();

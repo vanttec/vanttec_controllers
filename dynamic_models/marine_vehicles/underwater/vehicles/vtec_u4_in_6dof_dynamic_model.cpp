@@ -11,7 +11,7 @@
 
 #include "dynamic_models/marine_vehicles/underwater/vehicles/vtec_u4_in_6dof_dynamic_model.hpp"
 
-VTecU4InDynamicModel::VTecU4InDynamicModel(float sample_time) : GenericIn6DOFUUVDynamicModel(sample_time)
+VTecU4InDynamicModel::VTecU4InDynamicModel(float sample_time) : Marine6DOFInDynamicModel(sample_time)
 {
     /* Physical Parameters */
 

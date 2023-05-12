@@ -10,7 +10,7 @@
 
 #include "dynamic_models/marine_vehicles/underwater/vehicles/vtec_u4_6dof_dynamic_model.hpp"
 
-VTecU4DynamicModel::VTecU4DynamicModel(float sample_time) : Generic6DOFUUVDynamicModel(sample_time)
+VTecU4DynamicModel::VTecU4DynamicModel(float sample_time) : Marine6DOFDynamicModel(sample_time)
 {
     /* Physical Parameters */
 
