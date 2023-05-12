@@ -28,21 +28,12 @@ class Generic6DOFUUVDynamicModel
 {
     private:
         float sample_time_;
-        
+
         /* Transformation matrix */
 
         Eigen::MatrixXf J_;
         Eigen::Matrix3f R_;
         Eigen::Matrix3f T_;
-
-        /* System states */
-
-        Eigen::VectorXf eta_;            // x, y, z, phi, theta_, psi
-        Eigen::VectorXf eta_dot_;
-        Eigen::VectorXf eta_dot_prev_;
-        Eigen::VectorXf nu_;             // u, v, w, p, q, r
-        Eigen::VectorXf nu_dot_;
-        Eigen::VectorXf nu_dot_prev_;
 
         /* System matrices */
         
@@ -107,11 +98,6 @@ class Generic6DOFUUVDynamicModel
         float rb_y_;
         float rb_z_;
 
-        /* Input forces vector */
-
-        Eigen::VectorXf tau_;
-        Eigen::VectorXf u_;
-
         float MAX_FORCE_X_;
         float MAX_FORCE_Y_;
         float MAX_FORCE_Z_;
@@ -120,6 +106,21 @@ class Generic6DOFUUVDynamicModel
         float MAX_TORQUE_N_;
 
     public:
+        /* Input forces vector */
+        Eigen::VectorXf u_;
+
+        /* Non-linear functions */
+        Eigen::VectorXf f_x_;
+        Eigen::MatrixXf g_x_;
+        
+        /* System states */
+
+        Eigen::VectorXf eta_;            // x, y, z, phi, theta_, psi
+        Eigen::VectorXf eta_dot_;
+        Eigen::VectorXf eta_dot_prev_;
+        Eigen::VectorXf nu_;             // u, v, w, p, q, r
+        Eigen::VectorXf nu_dot_;
+        Eigen::VectorXf nu_dot_prev_;
         
         vanttec_msgs::EtaPose   eta_pose_;
         geometry_msgs::Twist    velocities_;
@@ -132,7 +133,7 @@ class Generic6DOFUUVDynamicModel
         // void calculateTransformation();
         void calculateCoriolis();
         void calculateDamping();
-        void thrustCallbacK(const vanttec_msgs::ThrustControl& thrust);
+        // void thrustCallbacK(const vanttec_msgs::ThrustControl& thrust);
         void calculateStates();
         friend class VTecU4DynamicModel;
 };

@@ -96,5 +96,5 @@ void VTecU4DynamicModel::updateThrust()
          rh_x_*c_gamma - rh_z_*c_delta,       rh_x_*c_gamma - rh_z_*c_delta,    rh_x_*c_gamma + rh_z_*c_delta,     rh_x_*c_gamma + rh_z_*c_delta,    0,   0,
          -(rh_x_*c_alpha + rh_y_*c_delta),    rh_x_*c_alpha + rh_y_*c_delta,    rh_x_*c_alpha + rh_y_*c_delta,    -(rh_x_*c_alpha + rh_y_*c_delta),   0,   0;
 
-    Thrust_ << (L_.completeOrthogonalDecomposition().pseudoInverse())*tau_;
+    Thrust_ << (L_.completeOrthogonalDecomposition().pseudoInverse())*u_;
 }

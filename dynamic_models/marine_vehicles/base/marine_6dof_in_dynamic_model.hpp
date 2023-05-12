@@ -39,17 +39,6 @@ class GenericIn6DOFUUVDynamicModel
         Eigen::Matrix3f T_dot_;
         Eigen::MatrixXf J_inv_;
 
-        /* System states */
-
-        Eigen::VectorXf eta_;            // x, y, z, phi, theta_, psi
-        Eigen::VectorXf eta_dot_;
-        Eigen::VectorXf eta_dot_prev_;
-        Eigen::VectorXf eta_dot_dot_;
-        Eigen::VectorXf eta_dot_dot_prev_;
-        Eigen::VectorXf nu_;             // u, v, w, p, q, r
-        Eigen::VectorXf nu_dot_;
-        Eigen::VectorXf nu_dot_prev_;
-
         /* System matrices */
         
         Eigen::MatrixXf M_;
@@ -113,9 +102,6 @@ class GenericIn6DOFUUVDynamicModel
         float rb_y_;
         float rb_z_;
 
-        /* Input forces vector */
-        Eigen::VectorXf u_;
-
         float MAX_FORCE_X_;
         float MAX_FORCE_Y_;
         float MAX_FORCE_Z_;
@@ -125,7 +111,22 @@ class GenericIn6DOFUUVDynamicModel
 
     public:
         /* Input forces vector */
-        Eigen::VectorXf tau_;
+        Eigen::VectorXf u_;
+    
+        /* Non-linear functions */
+        Eigen::VectorXf f_x_;
+        Eigen::MatrixXf g_x_;
+
+        /* System states */
+
+        Eigen::VectorXf eta_;            // x, y, z, phi, theta_, psi
+        Eigen::VectorXf eta_dot_;
+        Eigen::VectorXf eta_dot_prev_;
+        Eigen::VectorXf eta_dot_dot_;
+        Eigen::VectorXf eta_dot_dot_prev_;
+        Eigen::VectorXf nu_;             // u, v, w, p, q, r
+        Eigen::VectorXf nu_dot_;
+        Eigen::VectorXf nu_dot_prev_;
 
         vanttec_msgs::EtaPose   eta_pose_;
         geometry_msgs::Twist    velocities_;

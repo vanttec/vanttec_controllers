@@ -17,21 +17,13 @@
 Generic6DOFUUVDynamicModel::Generic6DOFUUVDynamicModel(float sample_time)
 {
     sample_time_ = sample_time;
-    
-    M_.resize(6,6);
-    M_rb_.resize(6,6);
-    M_a_.resize(6,6);
-    C_.resize(6,6);
-    C_rb_.resize(6,6);
-    C_a_.resize(6,6);
-    D_.resize(6,6);
-    D_lin_.resize(6,6);
-    D_qua_.resize(6,6);
-    g_.resize(6,6);
 
     J_ = Eigen::MatrixXf::Zero(6, 6);
     R_ = Eigen::Matrix3f::Zero(3,3);
     T_ = Eigen::Matrix3f::Zero(3,3);
+
+    f_x_ = Eigen::MatrixXf::Zero(6,1);
+    g_x_ = Eigen::MatrixXf::Zero(6,6);
 
     eta_ = Eigen::MatrixXf::Zero(6,1);            // x, y, z, phi, theta, psi
     eta_dot_ = Eigen::MatrixXf::Zero(6,1);
@@ -39,8 +31,6 @@ Generic6DOFUUVDynamicModel::Generic6DOFUUVDynamicModel(float sample_time)
     nu_ = Eigen::MatrixXf::Zero(6,1);             // u, v, w, p, q, r
     nu_dot_ = Eigen::MatrixXf::Zero(6,1);
     nu_dot_prev_ = Eigen::MatrixXf::Zero(6,1);
-    g_eta_.resize(6,1);
-    tau_.resize(6,1);
 
     M_ = Eigen::MatrixXf::Zero(6, 6);
     M_rb_ = Eigen::MatrixXf::Zero(6, 6);
@@ -52,7 +42,6 @@ Generic6DOFUUVDynamicModel::Generic6DOFUUVDynamicModel(float sample_time)
     D_lin_ = Eigen::MatrixXf::Zero(6, 6);
     D_qua_ = Eigen::MatrixXf::Zero(6, 6);
     g_eta_ = Eigen::MatrixXf::Zero(6, 1);
-    tau_ = Eigen::MatrixXf::Zero(6, 1);
     u_ = Eigen::MatrixXf::Zero(6, 1);
 
     MAX_FORCE_X_ = 0.0;
@@ -61,27 +50,6 @@ Generic6DOFUUVDynamicModel::Generic6DOFUUVDynamicModel(float sample_time)
     MAX_TORQUE_K_ = 0.0;
     MAX_TORQUE_M_ = 0.0;
     MAX_TORQUE_N_ = 0.0;
-
-    eta_pose_.x = 0;
-    eta_pose_.y = 0;
-    eta_pose_.z = 0;
-    eta_pose_.phi = 0;
-    eta_pose_.theta = 0;
-    eta_pose_.psi = 0;
-
-    velocities_.linear.x = 0;
-    velocities_.linear.y = 0;
-    velocities_.linear.z = 0;
-    velocities_.angular.x = 0;
-    velocities_.angular.y = 0;
-    velocities_.angular.z = 0;
-
-    accelerations_.linear.x = 0;
-    accelerations_.linear.y = 0;
-    accelerations_.linear.z = 0;
-    accelerations_.angular.x = 0;
-    accelerations_.angular.y = 0;
-    accelerations_.angular.z = 0;
 }
 
 Generic6DOFUUVDynamicModel::~Generic6DOFUUVDynamicModel(){}
@@ -170,15 +138,15 @@ void Generic6DOFUUVDynamicModel::calculateDamping()
     // std::cout << "D:" << D_ << std::endl;
 }
 
-void Generic6DOFUUVDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
-{
-    tau_ << thrust.tau_x,
-            thrust.tau_y,
-            thrust.tau_z,
-            thrust.tau_phi,
-            thrust.tau_theta,
-            thrust.tau_psi;
-}
+// void Generic6DOFUUVDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
+// {
+//     u_ << thrust.u_x,
+//             thrust.u_y,
+//             thrust.u_z,
+//             thrust.u_phi,
+//             thrust.u_theta,
+//             thrust.u_psi;
+// }
 
 void Generic6DOFUUVDynamicModel::calculateStates()
 {
@@ -226,7 +194,6 @@ void Generic6DOFUUVDynamicModel::calculateStates()
     // std::cout << "f:" << f_ << std::endl;
     // std::cout << "g:" << g << std::endl;
 
-    u_ = tau_;
     nu_dot_ = f_x_ + g_x_*u_;
     // nu_dot_ =  M_.inverse() * (tau - (C_ * nu_) - (D_ * nu_) - g_eta_);
 

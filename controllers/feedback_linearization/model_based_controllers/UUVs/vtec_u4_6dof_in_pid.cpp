@@ -47,5 +47,5 @@ void VTEC_U4_6DOF_PID::calculateControlSignals()
 
 void VTEC_U4_6DOF_PID::updateControlSignals()
 {
-    VTecU4InDynamicModel::tau_ = PID6DOF::u_;
+    VTecU4InDynamicModel::u_ = PID6DOF::u_;
 }
