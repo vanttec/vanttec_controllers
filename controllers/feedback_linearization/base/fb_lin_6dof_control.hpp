@@ -12,14 +12,15 @@
 #ifndef __FBLIN__
 #define __FBLIN__
 
+#include <iostream>
 #include <cmath>
 #include <eigen3/Eigen/Dense>
 
 class FBLin6DOF
 {
     public:
-        Eigen::VectorXf *f_x_;
-        Eigen::MatrixXf *g_x_;
+        Eigen::VectorXf f_x_;
+        Eigen::MatrixXf g_x_;
 
         Eigen::VectorXf u_;
         std::array<float,6> U_MAX_;

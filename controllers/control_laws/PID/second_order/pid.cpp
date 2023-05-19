@@ -51,8 +51,8 @@ void PID::calculateManipulation(float chi1, float chi2)
 
     error_i = ((error_ + prev_error_) / 2 * sample_time_) + error_;
 
-    std::cout << "e1 = " << error_ << std::endl;
-    std::cout << "e2 = " << error_d_ << std::endl;
+    // std::cout << "e1 = " << error_ << std::endl;
+    // std::cout << "e2 = " << error_d_ << std::endl;
 
     u  = -(k_p_ * error_ + k_i_ * error_i + k_d_ * error_d_);  // that "-" comes from fback lin theory:
                                                                // u_  = (1 / g_x) * (-f_x + k_p_ * error_

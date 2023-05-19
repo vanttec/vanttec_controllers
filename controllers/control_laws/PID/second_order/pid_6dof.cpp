@@ -20,7 +20,7 @@ PID6DOF::PID6DOF(float sample_time, const std::vector<float>& k_p, const std::ve
                  PID_theta_(sample_time, k_p[4], k_i[4], k_d[4], u_max[4], type[4]),
                  PID_psi_  (sample_time, k_p[5], k_i[5], k_d[5], u_max[5], type[5])
 {
-    u_ = Eigen::MatrixXf::Zero(6,1);;
+    u_ = Eigen::MatrixXf::Zero(6,1);
 }
 
 PID6DOF::~PID6DOF(){};

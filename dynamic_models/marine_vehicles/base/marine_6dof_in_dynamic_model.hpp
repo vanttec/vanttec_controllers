@@ -111,7 +111,7 @@ class Marine6DOFInDynamicModel
 
     public:
         /* Input forces vector */
-        Eigen::VectorXf *u_;
+        Eigen::VectorXf u_;
     
         /* Non-linear functions */
         Eigen::VectorXf f_x_;

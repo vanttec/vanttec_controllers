@@ -1,5 +1,5 @@
 /** ----------------------------------------------------------------------------
- * @file: 6dof_tf2_broadcaster.hpp
+ * @file: tf2_6dof_broadcaster.hpp
  * @date: April 10, 2022
  * @author: Pedro Sanchez
  * @email: pedro.sc.97@gmail.com
@@ -11,8 +11,8 @@
  * -----------------------------------------------------------------------------
  **/
 
-#ifndef __6DOF_TF2_BROADCASTER_H__
-#define __6DOF_TF2_BROADCASTER_H__
+#ifndef __TF2_6DOF_BROADCASTER_H__
+#define __TF2_6DOF_BROADCASTER_H__
 
 #include <math.h>
 #include <ros/ros.h>

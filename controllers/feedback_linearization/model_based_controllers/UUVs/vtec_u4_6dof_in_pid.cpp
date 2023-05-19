@@ -20,8 +20,8 @@ VTEC_U4_6DOF_PID::~VTEC_U4_6DOF_PID(){}
 
 void VTEC_U4_6DOF_PID::updateNonLinearFunctions()
 {
-    *PID6DOFLin::f_x_ = VTecU4InDynamicModel::f_x_;
-    *PID6DOFLin::g_x_ = VTecU4InDynamicModel::g_x_;
+    PID6DOFLin::f_x_ = VTecU4InDynamicModel::f_x_;
+    PID6DOFLin::g_x_ = VTecU4InDynamicModel::g_x_;
 }
 
 void VTEC_U4_6DOF_PID::calculateControlSignals()
@@ -47,7 +47,7 @@ void VTEC_U4_6DOF_PID::calculateControlSignals()
 
 void VTEC_U4_6DOF_PID::updateControlSignals()
 {
-    *VTecU4InDynamicModel::u_ = PID6DOFLin::u_;
+    VTecU4InDynamicModel::u_ = PID6DOFLin::u_;
 }
 
 size_t idx = 0;
@@ -63,32 +63,35 @@ void VTEC_U4_6DOF_PID::updateTrajectoryReference(const vanttec_msgs::Trajectory&
 
 void VTEC_U4_6DOF_PID::updateCurrentReference()
 {
-    geometry_msgs::Accel accel = reference_.accel.at(idx);
-    geometry_msgs::Twist vel   = reference_.vel.at(idx);
-    vanttec_msgs::EtaPose pose = reference_.eta_pose.at(idx);
+    if(reference_.execution_time != 0)
+    {
+        geometry_msgs::Accel accel = reference_.accel.at(idx);
+        geometry_msgs::Twist vel   = reference_.vel.at(idx);
+        vanttec_msgs::EtaPose pose = reference_.eta_pose.at(idx);
 
-    std::array<float,6> chi1_d = {(float) pose.x,
-                                  (float) pose.y,
-                                  (float) pose.z,
-                                  (float) pose.phi,
-                                  (float) pose.theta,
-                                  (float) pose.psi};
+        std::array<float,6> chi1_d = {(float) pose.x,
+                                    (float) pose.y,
+                                    (float) pose.z,
+                                    (float) pose.phi,
+                                    (float) pose.theta,
+                                    (float) pose.psi};
 
-    std::array<float,6> chi2_d = {(float) vel.linear.x,
-                                  (float) vel.linear.y,
-                                  (float) vel.linear.z,
-                                  (float) vel.angular.x,
-                                  (float) vel.angular.y,
-                                  (float) vel.angular.z};
+        std::array<float,6> chi2_d = {(float) vel.linear.x,
+                                    (float) vel.linear.y,
+                                    (float) vel.linear.z,
+                                    (float) vel.angular.x,
+                                    (float) vel.angular.y,
+                                    (float) vel.angular.z};
 
-    std::array<float,6> chi2_dot_d = {(float) accel.linear.x,
-                                      (float) accel.linear.y,
-                                      (float) accel.linear.z,
-                                      (float) accel.angular.x,
-                                      (float) accel.angular.y,
-                                      (float) accel.angular.z};
+        std::array<float,6> chi2_dot_d = {(float) accel.linear.x,
+                                        (float) accel.linear.y,
+                                        (float) accel.linear.z,
+                                        (float) accel.angular.x,
+                                        (float) accel.angular.y,
+                                        (float) accel.angular.z};
 
-    updateReferences(chi1_d, chi2_d, chi2_dot_d);
+        updateReferences(chi1_d, chi2_d, chi2_dot_d);
 
-    idx++;
+        idx++;
+    }
 }

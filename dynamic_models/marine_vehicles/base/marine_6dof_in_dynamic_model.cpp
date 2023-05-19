@@ -48,7 +48,7 @@ Marine6DOFInDynamicModel::Marine6DOFInDynamicModel(float sample_time)
     D_lin_ = Eigen::MatrixXf::Zero(6, 6);
     D_qua_ = Eigen::MatrixXf::Zero(6, 6);
     g_eta_ = Eigen::MatrixXf::Zero(6, 1);
-    *u_ = Eigen::MatrixXf::Zero(6, 1);
+    u_ = Eigen::MatrixXf::Zero(6, 1);
 
     MAX_FORCE_X_ = 0.0;
     MAX_FORCE_Y_ = 0.0;
@@ -136,7 +136,7 @@ void Marine6DOFInDynamicModel::calculateDamping()
 
 void Marine6DOFInDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
 {
-    *u_ <<  thrust.tau_x,
+    u_ <<  thrust.tau_x,
             thrust.tau_y,
             thrust.tau_z,
             thrust.tau_phi,
@@ -195,7 +195,7 @@ void Marine6DOFInDynamicModel::calculateStates()
     // std::cout << "f:" << f_x_ << std::endl;
     // std::cout << "g:" << g_x_ << std::endl;
 
-    eta_dot_dot_ = f_x_ + g_x_*(*u_);
+    eta_dot_dot_ = f_x_ + g_x_*u_;
 
     nu_ = J_inv_*eta_dot_;
     nu_dot_ = J_inv_*(eta_dot_dot_ - J_dot_*J_inv_*eta_dot_);
