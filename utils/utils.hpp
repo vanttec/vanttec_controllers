@@ -16,7 +16,6 @@
 #include <cmath>
 #include <eigen3/Eigen/Dense>
 #include <ros/console.h>
-#include <vanttec_msgs/GuidanceWaypoints.h>
 
 typedef enum DOFControllerType_E
 {
@@ -32,7 +31,7 @@ namespace utils
     static const float g = 9.81;
     
     /* Helper functions */
-    vanttec_msgs::GuidanceWaypoints GenerateCircle(float _radius, float _x_center, float _y_center, float _z_center, float _angle_offset);
+    // vanttec_msgs::GuidanceWaypoints GenerateCircle(float _radius, float _x_center, float _y_center, float _z_center, float _angle_offset);
     void calculateRotation(Eigen::Matrix3f& R, double phi, double theta, double psi);
     void calculate6DOFTransformation(Eigen::Matrix3f& R, Eigen::Matrix3f& T, Eigen::MatrixXf& J, const Eigen::VectorXf& eta);
     void calculate6DOFDifferentialTransform(Eigen::Matrix3f& R, Eigen::MatrixXf& J,  Eigen::MatrixXf& J_inv,

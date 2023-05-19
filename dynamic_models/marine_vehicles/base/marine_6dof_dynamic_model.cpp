@@ -42,7 +42,7 @@ Marine6DOFDynamicModel::Marine6DOFDynamicModel(float sample_time)
     D_lin_ = Eigen::MatrixXf::Zero(6, 6);
     D_qua_ = Eigen::MatrixXf::Zero(6, 6);
     g_eta_ = Eigen::MatrixXf::Zero(6, 1);
-    u_ = Eigen::MatrixXf::Zero(6, 1);
+    *u_ = Eigen::MatrixXf::Zero(6, 1);
 
     MAX_FORCE_X_ = 0.0;
     MAX_FORCE_Y_ = 0.0;
@@ -126,7 +126,7 @@ void Marine6DOFDynamicModel::calculateDamping()
 
 void Marine6DOFDynamicModel::thrustCallbacK(const vanttec_msgs::ThrustControl& thrust)
 {
-    u_ << thrust.tau_x,
+    *u_ <<  thrust.tau_x,
             thrust.tau_y,
             thrust.tau_z,
             thrust.tau_phi,
@@ -180,7 +180,7 @@ void Marine6DOFDynamicModel::calculateStates()
     // std::cout << "f:" << f_ << std::endl;
     // std::cout << "g:" << g << std::endl;
 
-    nu_dot_ = f_x_ + g_x_*u_;
+    nu_dot_ = f_x_ + g_x_*(*u_);
     // nu_dot_ =  M_.inverse() * (tau - (C_ * nu_) - (D_ * nu_) - g_eta_);
 
     /* Integrating Acceleration to get velocities_ */

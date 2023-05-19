@@ -15,13 +15,11 @@
 #include <cmath>
 #include <eigen3/Eigen/Dense>
 
-#include "dynamic_models/base/fblin_6dof_model.hpp"
-
 class FBLin6DOF
 {
     public:
-        Eigen::VectorXf f_x_;
-        Eigen::MatrixXf g_x_;
+        Eigen::VectorXf *f_x_;
+        Eigen::MatrixXf *g_x_;
 
         Eigen::VectorXf u_;
         std::array<float,6> U_MAX_;
@@ -31,7 +29,7 @@ class FBLin6DOF
 
         // u_ = g_x_^(-1)*(chi2_dot_d - f_x_ + u_n - u_aux)
         
-        FBLin6DOF(const std::array<float,6>& U_MAX);
+        FBLin6DOF(const std::array<float,6>& u_max);
         ~FBLin6DOF();
 
         void updateControlSignal();

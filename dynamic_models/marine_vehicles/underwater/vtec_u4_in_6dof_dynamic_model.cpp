@@ -9,7 +9,7 @@
  * -----------------------------------------------------------------------------
  **/
 
-#include "dynamic_models/marine_vehicles/underwater/vehicles/vtec_u4_in_6dof_dynamic_model.hpp"
+#include "dynamic_models/marine_vehicles/underwater/vtec_u4_in_6dof_dynamic_model.hpp"
 
 VTecU4InDynamicModel::VTecU4InDynamicModel(float sample_time) : Marine6DOFInDynamicModel(sample_time)
 {
@@ -97,5 +97,5 @@ void VTecU4InDynamicModel::updateThrust()
          rh_x_*c_gamma - rh_z_*c_delta,       rh_x_*c_gamma - rh_z_*c_delta,    rh_x_*c_gamma + rh_z_*c_delta,     rh_x_*c_gamma + rh_z_*c_delta,    0,   0,
          -(rh_x_*c_alpha + rh_y_*c_delta),    rh_x_*c_alpha + rh_y_*c_delta,    rh_x_*c_alpha + rh_y_*c_delta,    -(rh_x_*c_alpha + rh_y_*c_delta),   0,   0;
 
-    Thrust_ << (L_.completeOrthogonalDecomposition().pseudoInverse())*u_;
+    Thrust_ << (L_.completeOrthogonalDecomposition().pseudoInverse())*(*u_);
 }

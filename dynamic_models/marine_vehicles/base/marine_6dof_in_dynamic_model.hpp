@@ -111,7 +111,7 @@ class Marine6DOFInDynamicModel
 
     public:
         /* Input forces vector */
-        Eigen::VectorXf u_;
+        Eigen::VectorXf *u_;
     
         /* Non-linear functions */
         Eigen::VectorXf f_x_;
@@ -136,7 +136,6 @@ class Marine6DOFInDynamicModel
         ~Marine6DOFInDynamicModel();
 
         void setInitPose(const std::vector<float>& eta);
-        // void calculateTransformation();
         void calculateCoriolis();
         void calculateDamping();
         void thrustCallbacK(const vanttec_msgs::ThrustControl& thrust);
