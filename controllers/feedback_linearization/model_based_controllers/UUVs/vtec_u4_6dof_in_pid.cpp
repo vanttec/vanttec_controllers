@@ -35,12 +35,12 @@ void VTEC_U4_6DOF_PID::calculateControlSignals()
     chi1[4] = eta_(4);
     chi1[5] = eta_(5);
 
-    chi1[0] = eta_dot_(0);
-    chi1[1] = eta_dot_(1);
-    chi1[2] = eta_dot_(2);
-    chi1[3] = eta_dot_(3);
-    chi1[4] = eta_dot_(4);
-    chi1[5] = eta_dot_(5);
+    chi2[0] = eta_dot_(0);
+    chi2[1] = eta_dot_(1);
+    chi2[2] = eta_dot_(2);
+    chi2[3] = eta_dot_(3);
+    chi2[4] = eta_dot_(4);
+    chi2[5] = eta_dot_(5);
 
     calculateManipulations(chi1, chi2);
 }
@@ -51,6 +51,7 @@ void VTEC_U4_6DOF_PID::updateControlSignals()
 }
 
 size_t idx = 0;
+size_t len = 0;
 
 void VTEC_U4_6DOF_PID::updateTrajectoryReference(const vanttec_msgs::Trajectory& trajectory)
 {
@@ -58,12 +59,13 @@ void VTEC_U4_6DOF_PID::updateTrajectoryReference(const vanttec_msgs::Trajectory&
     {                                                           // two trajectories are different, but works for now
         reference_ = trajectory;
         idx = 0;
+        len = reference_.jerk.size();   // jerk, accel, vel and pose arrays should be the same size
     }
 }
 
 void VTEC_U4_6DOF_PID::updateCurrentReference()
 {
-    if(reference_.execution_time != 0)
+    if(reference_.execution_time != 0 && idx < len)
     {
         geometry_msgs::Accel accel = reference_.accel.at(idx);
         geometry_msgs::Twist vel   = reference_.vel.at(idx);
