@@ -1,11 +1,11 @@
 /** ----------------------------------------------------------------------------
- * @file: el_rasho.cpp
- * @date: November 29, 2022
+ * @file: vtec_sdc1.cpp
+ * @date: August 10, 2023
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * @author: Montserrat Cruz
  * 
- * @brief: Description of 3-DOF car model in the non-inertial frame with
+ * @brief: Description of 3-DOF VTec Self-Driving Car model in the non-inertial frame with
            Euler Angles for Applied Robotics class (con Montserrat). 
            The nonlinear bycicle model was used.
            This model works for low speed movement and considers no
@@ -13,9 +13,9 @@
  * -----------------------------------------------------------------------------
  **/
 
-#include "el_rasho.hpp"
+#include "vtec_sdc1.hpp"
 
-Cafe::Cafe(const float sample_time) : CarDynamicModel(sample_time){
+VTecSDC1::VTecSDC1(const float sample_time) : CarDynamicModel(sample_time){
 
     /* Vehicle physical parameters */
     m_ = 1120;   
@@ -34,4 +34,4 @@ Cafe::Cafe(const float sample_time) : CarDynamicModel(sample_time){
     alpha_r_ = 0.0;
 }
 
-Cafe::~Cafe(){}
+VTecSDC1::~VTecSDC1(){}

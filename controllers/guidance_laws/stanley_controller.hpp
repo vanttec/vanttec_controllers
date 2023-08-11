@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <ros/console.h>
-#include "vanttec_msgs/EtaPose.h"
+#include "sdv_msgs/msg/eta_pose.hpp"
 
 class StanleyController
 {
@@ -29,7 +29,7 @@ class StanleyController
         vanttec_msgs::EtaPose vehicle_pose_;
 
         StanleyController(float delta_max, float k, float k_soft);
-        ~StanleyController();
+        virtual ~StanleyController();
 
         void calculateCrosstrackError(float x0, float y0, float x1, float y1);
         void setHeading(const vanttec_msgs::EtaPose& pose);

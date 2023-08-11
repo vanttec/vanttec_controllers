@@ -145,3 +145,20 @@ void CarDynamicModel::setSteeringInput(const std_msgs::Float32& delta){
         delta_ = 0;
     }
 }
+
+// void CarDynamicModel::manualControl(const sdv_msgs::msg::VehicleControl &manual)
+// {
+    
+//     //RCLCPP_WARN(node_->get_logger(), "Could not create directory!");
+//     F_throttle_ = (manual.throttle==1) ? F_throttle_+10 : F_throttle_;
+//     F_throttle_ = (manual.brake==1) ? F_throttle_-10 : F_throttle_;
+//     F_throttle_ = (F_throttle_>=Cm_) ? Cm_ : F_throttle_;
+//     F_throttle_ = (F_throttle_<=0) ? 0 : F_throttle_;
+//     u_ << F_throttle_,
+//         0,
+//         0;
+//     delta_ = manual.steer;
+//     if (u_(0) < 0.1)
+//     { 
+//         delta_ = 0;
+//     }

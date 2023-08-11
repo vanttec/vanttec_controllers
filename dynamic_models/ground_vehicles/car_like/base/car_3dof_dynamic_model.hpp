@@ -18,12 +18,12 @@
 #ifndef __CAR_DYNAMIC_MODEL__
 #define __CAR_DYNAMIC_MODEL__
 
-#include "vanttec_msgs/ThrustControl.h"
-#include "vanttec_msgs/EtaPose.h"
+#include "sdv_msgs/msg/thrust_control.hpp"
+#include "sdv_msgs/msg/eta_pose.hpp"
 #include "utils/utils.hpp"
-#include <geometry_msgs/Accel.h>
-#include <geometry_msgs/Twist.h>
-#include <std_msgs/Float32.h>
+#include "geometry_msgs/msg/accel.hpp"
+#include "geometry_msgs/msg/twist.hpp"
+#include "std_msgs/msg/float32.hpp"
 #include <eigen3/Eigen/Dense>
 
 class CarDynamicModel {
@@ -71,11 +71,12 @@ class CarDynamicModel {
         float D_;           // Throttle command
         float delta_;       // Steering angle
 
+    public:
+
         /* Constructor and destructor */
         CarDynamicModel(const float sample_time);
-        ~CarDynamicModel();
-        
-    public:
+        virtual ~CarDynamicModel();
+
         Eigen::Vector3f f_;
         Eigen::Matrix3f g_;
         Eigen::Vector3f u_;
@@ -89,6 +90,7 @@ class CarDynamicModel {
         void calculateStates();
         void setForceInput(const vanttec_msgs::ThrustControl& thrust);
         void setSteeringInput(const std_msgs::Float32& delta);
+        // void manualControl(const sdv_msgs::msg::VehicleControl &manual);
 };
 
 #endif
