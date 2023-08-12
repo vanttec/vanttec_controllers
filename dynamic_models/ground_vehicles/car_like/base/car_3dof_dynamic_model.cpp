@@ -30,7 +30,7 @@ CarDynamicModel::CarDynamicModel(const float sample_time){
     F_grav_ = 0.0;      // Force due to gravity
     F_brake_ = 0.0;     // Braking force
     F_throttle_ = 0.0;  // Throttle force
-    F_drag_x_ = 0.0;      // Air drag force
+    F_drag_ = 0.0;      // Air drag force
     F_rr_ = 0.0;        // Rolling resistance force
     F_fy_ = 0.0;        // Frontal lateral force
     F_ry_ = 0.0;        // Rear lateral force
@@ -40,23 +40,35 @@ CarDynamicModel::CarDynamicModel(const float sample_time){
     D_ = 0.0;           // Throttle command
     delta_ = 0.0;       // Steering angle
 
-    g_x_ = Eigen::Matrix3f::Zero();   // x, y, psi
-    f_x_ = Eigen::Vector3f::Zero();
+    g_ = Eigen::Matrix3f::Zero();   // x, y, psi
+    f_ = Eigen::Vector3f::Zero();
     u_ = Eigen::Vector3f::Zero();
 }
 
 CarDynamicModel::~CarDynamicModel(){}
 
-void CarDynamicModel::calculateRotation(){
-    float psi = eta_(2);
-    R_ << std::cos(psi), std::sin(psi), 0,
-         -std::sin(psi), std::cos(psi), 0,
-          0,             0,             1;
+void CarDynamicModel::setInitPose(const std::vector<float>& eta)
+{
+    eta_(0) = eta[0];
+    eta_(1) = eta[1];
+    eta_(2) = eta[2];
+}
+
+void CarDynamicModel::setOffsets(float rr_offset, float t_offset)
+{
+    rr_offset_ = rr_offset;
+    t_offset_ = t_offset;
+}
+
+void CarDynamicModel::setMotorConstants(float Cm1, float Cm2)
+{
+    Cm1_ = Cm1;
+    Cm2_ = Cm2;
 }
 
 void CarDynamicModel::calculateStates(){
     
-    calculateRotation();
+    utils::calculate2DRotation(R_, eta_(2));
     
     float u = nu_(0);
     float v = nu_(1);
@@ -70,19 +82,26 @@ void CarDynamicModel::calculateStates(){
     // float u_dot_brake = std::min(0,); // Braking pedal model acceleration
 
     F_grav_ = m_*utils::g*std::sin(theta_);
-    F_drag_x_ = 0.5*utils::air_rho*A_*Cd_*std::pow(u,2);
+    F_drag_ = 0.5*utils::air_rho*A_*Cd_*std::pow(u,2);
     F_rr_ = m_*utils::g*fr_*cos(theta_);       /* I don't like this friction model.
                                                 Does not account when the vehicle is
-                                                at rest. Must find alternative. */
+                                                at rest. An alternative could be found
+                                                in the future */
+    
+    if(D_ > 0)
+        F_throttle_ = (Cm1_ - Cm2_*u)*D_ - t_offset_;
+    else {
+        F_rr_ -= rr_offset_;    // To compensate for model error
+        F_throttle_ = 0;
+    }
+
+    u_(0) = F_throttle_;// + F_brake_;
     
     // Next condition was set so the vehicle does not move backwards when
     // the throttle force is less than the resistance
-    if(u_(0) < F_rr_){
-        F_rr_ = 0;
-        u_(0) = 0;
-    }
+    if(F_rr_ >= u_(0)  && u < 0.01) u_(0) = F_rr_;
 
-    alpha_f_x_ = std::atan2(v + len_f_*r,u) - delta_;
+    alpha_f_ = std::atan2(v + len_f_*r,u) - delta_;
     alpha_r_ = std::atan2(v - len_r_*r,u);
     F_fy_ = -C_alpha_*alpha_f_;
     F_ry_ = -C_alpha_*alpha_r_;
@@ -103,7 +122,7 @@ void CarDynamicModel::calculateStates(){
     g_(0,0) = 1/m_;
 
     /* 3-DOF state calculation */
-    nu_dot_ = f_x_ + g_x_*u_;
+    nu_dot_ = f_ + g_*u_;
 
     /* Integrating acceleration to get velocities */
     nu_ += (nu_dot_prev_ + nu_dot_) / 2 * sample_time_;
@@ -133,13 +152,13 @@ void CarDynamicModel::calculateStates(){
     eta_pose_.psi = eta_(2);
 }
 
-void CarDynamicModel::setForceInput(const vanttec_msgs::ThrustControl& thrust){
+void CarDynamicModel::setForceInput(const sdv_msgs::msg::ThrustControl& thrust){
     u_ << thrust.tau_x,
           0,
           0;
 }
 
-void CarDynamicModel::setSteeringInput(const std_msgs::Float32& delta){
+void CarDynamicModel::setSteeringInput(const std_msgs::msg::Float32& delta){
     delta_ = delta.data;
     if(u_(0) < 0.1){
         delta_ = 0;

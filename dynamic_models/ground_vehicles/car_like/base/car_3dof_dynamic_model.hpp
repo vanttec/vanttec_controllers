@@ -58,6 +58,10 @@ class CarDynamicModel {
         float alpha_f_;     // Front tire velocity angle
         float alpha_r_;     // Rear tire velocity angle
 
+        /* Motor constants */
+        float Cm1_{0};
+        float Cm2_{0};
+
         /* Model forces */
         float F_grav_;      // Force due to gravity
         float F_brake_;     // Braking force
@@ -66,13 +70,13 @@ class CarDynamicModel {
         float F_rr_;        // Rolling resistance force
         float F_fy_;        // Frontal lateral force
         float F_ry_;        // Rear lateral force
+        float rr_offset_;
+        float t_offset_;
 
         /* Control inputs */
-        float B_;           // Steering command
+        float B_;           // Braking command
         float D_;           // Throttle command
         float delta_;       // Steering angle
-
-    public:
 
         /* Constructor and destructor */
         CarDynamicModel(const float sample_time);
@@ -81,17 +85,21 @@ class CarDynamicModel {
         Eigen::Vector3f f_;
         Eigen::Matrix3f g_;
         Eigen::Vector3f u_;
-        
-        vanttec_msgs::EtaPose   eta_pose_;
-        geometry_msgs::Twist    velocities_;
-        geometry_msgs::Accel    accelerations_;
 
         /* Class methods */
-        void calculateRotation();
+        void setInitPose(const std::vector<float>& eta);
+        void setOffsets(float rr_offset, float t_offset);
+        void setMotorConstants(float Cm1, float Cm2);
         void calculateStates();
-        void setForceInput(const vanttec_msgs::ThrustControl& thrust);
-        void setSteeringInput(const std_msgs::Float32& delta);
-        // void manualControl(const sdv_msgs::msg::VehicleControl &manual);
+        void setForceInput(const sdv_msgs::msg::ThrustControl& thrust);
+        void setSteeringInput(const std_msgs::msg::Float32& delta);
+        // void manualControl(const sdv_msgs::msg::msg::VehicleControl &manual);
+
+    public:
+        sdv_msgs::msg::EtaPose      eta_pose_;
+        geometry_msgs::msg::Twist   velocities_;
+        geometry_msgs::msg::Accel   accelerations_;
+
 };
 
 #endif

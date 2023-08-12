@@ -20,14 +20,17 @@
 #include "rclcpp/rclcpp.hpp"
 
 class VTecSDC1 : public CarDynamicModel {
-    public:
-        /* Control inputs */
-        float B_;           // Steering command
-        float D_;           // Throttle command
+    private:
+        float rr_offset_ {0};
+        float throttle_offset_ {0};
 
+    public:
         /* Constructor and destructor */
         VTecSDC1(const float sample_time);
         ~VTecSDC1();
+
+        void calculateModelParams();
+        void calculateDBSignals();
         
         /* Class methods */
         // void calculateControlInputs();

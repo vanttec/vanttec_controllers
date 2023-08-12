@@ -59,8 +59,8 @@ void PID::calculateManipulation(float chi1)
         u_ = u;
 }
 
-vod PID::saturateManipulation(float chi1)
+void PID::saturateManipulation(float chi1)
 {
-    calculateManipulation(float chi1);
+    calculateManipulation(chi1);
     u_ = std::fabs(u_) > U_MAX_ ? u_ / std::fabs(u_) * U_MAX_ : u_;
 }

@@ -12,7 +12,7 @@
 #define __STANLEY_CONTROLLER__
 
 #include <stdio.h>
-#include <ros/console.h>
+#include <cmath>
 #include "sdv_msgs/msg/eta_pose.hpp"
 
 class StanleyController
@@ -26,13 +26,13 @@ class StanleyController
         float e_;               // Crosstrack error
         float vel_;             // velocity vector norm
         float ak_;
-        vanttec_msgs::EtaPose vehicle_pose_;
+        sdv_msgs::msg::EtaPose vehicle_pose_;
 
         StanleyController(float delta_max, float k, float k_soft);
         virtual ~StanleyController();
 
         void calculateCrosstrackError(float x0, float y0, float x1, float y1);
-        void setHeading(const vanttec_msgs::EtaPose& pose);
+        void setHeading(const sdv_msgs::msg::EtaPose& pose);
         void calculateSteering(float vel);
 };
 

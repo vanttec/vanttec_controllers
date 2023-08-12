@@ -64,15 +64,15 @@ void StanleyController::calculateCrosstrackError(float x0, float y0, float x1, f
     // Crosstrack error in path frame
     e_ = -(x-xp)*std::sin(ak_) + (y-yp)*std::cos(ak_);
 
-    ROS_INFO_STREAM("xp = " << xp);
-    ROS_INFO_STREAM("yp = " << yp);
-    ROS_INFO_STREAM("x = " << x);
-    ROS_INFO_STREAM("y = " << y);
-    ROS_INFO_STREAM("Crosstrack error = " << e_);
-    ROS_INFO_STREAM("ak = " << ak_);
+    // ROS_INFO_STREAM("xp = " << xp);
+    // ROS_INFO_STREAM("yp = " << yp);
+    // ROS_INFO_STREAM("x = " << x);
+    // ROS_INFO_STREAM("y = " << y);
+    // ROS_INFO_STREAM("Crosstrack error = " << e_);
+    // ROS_INFO_STREAM("ak = " << ak_);
 }
 
-void StanleyController::setHeading(const vanttec_msgs::EtaPose& pose){
+void StanleyController::setHeading(const sdv_msgs::msg::EtaPose& pose){
     vehicle_pose_ = pose;
     psi_ = pose.psi;
 }
@@ -80,7 +80,7 @@ void StanleyController::setHeading(const vanttec_msgs::EtaPose& pose){
 void StanleyController::calculateSteering(float vel){
     vel_ = vel;
     delta_ = -((-ak_ + psi_) +std::atan2(k_*e_,k_soft_ + vel_));
-    ROS_INFO_STREAM("Delta = " << delta_);
+    // ROS_INFO_STREAM("Delta = " << delta_);
 
     if (delta_ >= DELTA_MAX_)
         delta_ = DELTA_MAX_;
