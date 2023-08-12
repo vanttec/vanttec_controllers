@@ -16,7 +16,7 @@
 #ifndef __VTEC_SDC1__
 #define __VTEC_SDC1__
 
-#include "../base/car_3dof_dynamic_model.hpp"
+#include "base/car_3dof_dynamic_model.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 class VTecSDC1 : public CarDynamicModel {

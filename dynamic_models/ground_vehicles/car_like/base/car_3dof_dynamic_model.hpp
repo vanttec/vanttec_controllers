@@ -18,13 +18,14 @@
 #ifndef __CAR_DYNAMIC_MODEL__
 #define __CAR_DYNAMIC_MODEL__
 
-#include "sdv_msgs/msg/thrust_control.hpp"
-#include "sdv_msgs/msg/eta_pose.hpp"
+#include <eigen3/Eigen/Dense>
 #include "utils/utils.hpp"
+
 #include "geometry_msgs/msg/accel.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "std_msgs/msg/float32.hpp"
-#include <eigen3/Eigen/Dense>
+#include "sdv_msgs/msg/thrust_control.hpp"
+#include "sdv_msgs/msg/eta_pose.hpp"
 
 class CarDynamicModel {
     protected:

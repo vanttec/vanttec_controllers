@@ -8,7 +8,7 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include "controllers/control_laws/PID/first_order/pid.hpp"
+#include "pid.hpp"
 
 PID::PID(float sample_time, float k_p, float k_i, float k_d, float u_max, const DOFControllerType_E& type)
 {

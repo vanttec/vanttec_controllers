@@ -10,7 +10,7 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include "utils/utils.hpp"
+#include "utils.hpp"
 
 namespace utils
 {

@@ -34,12 +34,12 @@ class TF2Broadcaster
         
         nav_msgs::msg::Path  path_;
 
-        std::string parent_frame;
-        std::string child_frame;
         /* Class methods */
         void BroadcastTransform(const sdv_msgs::msg::EtaPose& msg);
     private:
         rclcpp::Node::SharedPtr node_;
+        std::string parent_frame;
+        std::string child_frame;
         std::unique_ptr<tf2_ros::TransformBroadcaster> br_;
         rclcpp::Subscription<sdv_msgs::msg::EtaPose>::SharedPtr sub_;
 
