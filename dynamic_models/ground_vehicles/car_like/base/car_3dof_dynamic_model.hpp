@@ -20,12 +20,9 @@
 
 #include <eigen3/Eigen/Core>
 #include <eigen3/unsupported/Eigen/Polynomials>
-#include "utils/utils.hpp"
 
 #include "geometry_msgs/msg/accel.hpp"
 #include "geometry_msgs/msg/twist.hpp"
-#include "std_msgs/msg/float32.hpp"
-#include "sdv_msgs/msg/thrust_control.hpp"
 #include "sdv_msgs/msg/eta_pose.hpp"
 
 class CarDynamicModel {
@@ -48,7 +45,8 @@ class CarDynamicModel {
         float m_;           // Vehicle mass
         float Iz_;          // Moment of inertia on Z axis
         float A_;           // Vehicle frontal projected area
-        float Cm_;          // Motor model constant
+        float Cm1_{0.0};      // Motor constant 1
+        float Cm2_{0.0};      // Motor constant 2
         float Cd_;          // Air drag coefficient
         float len_f_;       // Length from the front of the vehicle to the center of mass
         float len_r_;       // Length from the rear of the vehicle to the center of mass
@@ -59,10 +57,6 @@ class CarDynamicModel {
         float alpha_f_;     // Front tire velocity angle
         float alpha_r_;     // Rear tire velocity angle
 
-        /* Motor constants */
-        float Cm1_{0};
-        float Cm2_{0};
-
         /* Model forces */
         float F_grav_;      // Force due to gravity
         float F_brake_;     // Braking force
@@ -71,14 +65,8 @@ class CarDynamicModel {
         float F_rr_;        // Rolling resistance force
         float F_fy_;        // Frontal lateral force
         float F_ry_;        // Rear lateral force
-        float rr_offset_;
-        float t_offset_;
-
-        /* Control inputs */
-        float B_;           // Braking command
-        uint8_t D_;           // Throttle command
-        float delta_;       // Steering angle
-
+        float rr_offset_{0.0};
+        float t_offset_{0.0};
 
         /* Constructor and destructor */
         CarDynamicModel(float sample_time);
@@ -87,8 +75,7 @@ class CarDynamicModel {
         /* Class methods */
         void setOffsets(float rr_offset, float t_offset);
         void setMotorConstants(float Cm1, float Cm2);
-        void setForceInput(const sdv_msgs::msg::ThrustControl& thrust);
-        void setSteeringInput(const std_msgs::msg::Float32& delta);
+        void setSteeringInput(float delta);
         // void manualControl(const sdv_msgs::msg::msg::VehicleControl &manual);
 
     public:
@@ -101,8 +88,14 @@ class CarDynamicModel {
         Eigen::Matrix3f g_;
         Eigen::Vector3f u_;
 
+        /* Control inputs */
+        float B_;           // Braking command
+        uint8_t D_;           // Throttle command
+        float delta_;       // Steering angle
+
         void setInitPose(const std::vector<float>& eta);
         void calculateStates();
+        void setThrottle(uint8_t D);
 };
 
 #endif

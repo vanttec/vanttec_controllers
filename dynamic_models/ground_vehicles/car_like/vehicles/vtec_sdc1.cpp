@@ -18,18 +18,26 @@
 VTecSDC1::VTecSDC1(float sample_time) : CarDynamicModel(sample_time){
 
     /* Vehicle physical parameters */
-    m_ = 1120;   
-    Iz_ = 1908.94666;
+    m_ = 1505;
+    Iz_ = 2565.147;
     A_ = 3.426;
-    Cm_ = 340;            // Chosen so max speed = 35 km/h = 9.722 m/s
     Cd_ = 0.9;            // Cd was chosen based on the book 'fundamentals of vehicle dynamics'
     len_f_ = 1.58;
     len_r_ = 2.69;
-    car_len_ = 4.27;    
-    MAX_R_ = 4.5;
+    car_len_ = 1.9;       // TO CHECK. SHOULD BE THE LENGTH BETWEEN FRONT AND REAR WHEELS, NOT TOTAL LENGTH
+    MAX_R_ = 4.5;         // To check
     // u_dot_brake_ = 0.0;
-    fr_ = 0.015;          // For passenger cars, from fundamentals of vehicle dynamics book
-    C_alpha_ = 51935.3434;// m*g*fr*cos(theta) -> from fundamentals of vehicle dynamics book
+    fr_ = 0.0776;           // Obtained from experiments.
+                            // Makes sense, as 0.015 is a constant for passenger cars,
+                            // according to the fundamentals of vehicle dynamics book
+
+    /*
+    % C alpha calculated from this webpage: https://www.mchenrysoftware.com/medit32/readme/msmac/default.htm?turl=examplestirecorneringstiffnesscalculation1.htm
+    % Calculations made sense, as the Calpha of the Stanford Stanley car
+    % are similar by being calculated with the same method
+    */
+    C_alpha_ = 69788.1178;  // m*g*fr*cos(theta) 
+                            
     alpha_f_ = 0.0;
     alpha_r_ = 0.0;
 }
