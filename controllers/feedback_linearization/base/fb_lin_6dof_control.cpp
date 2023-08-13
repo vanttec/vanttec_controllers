@@ -8,6 +8,9 @@
  * -----------------------------------------------------------------------------
  * */
 
+#include <iostream>
+#include <cmath>
+
 #include "controllers/feedback_linearization/base/fb_lin_6dof_control.hpp"
 
 FBLin6DOF::FBLin6DOF(const std::array<float,6>& u_max){

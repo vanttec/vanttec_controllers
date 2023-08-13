@@ -4,27 +4,27 @@
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Description of a 6DOF PID Controller for the VTec U4 inertial dyn model
+ * @brief: Description of a 6DOF PID Trajectory Tracker Controller for the VTec U4 inertial dyn model
  * -----------------------------------------------------------------------------
  **/
 
 #include "controllers/feedback_linearization/model_based_controllers/UUVs/vtec_u4_6dof_in_pid.hpp"
 
-VTEC_U4_6DOF_PID::VTEC_U4_6DOF_PID(float sample_time, const std::vector<float>& k_p, const std::vector<float>& k_i, 
+VTEC_U4_6DOF_PID_TRACKER::VTEC_U4_6DOF_PID_TRACKER(float sample_time, const std::vector<float>& k_p, const std::vector<float>& k_i, 
         const std::vector<float>& k_d, const std::array<float,6>& u_max,
         const std::array<DOFControllerType_E,6>& type) :
         VTecU4InDynamicModel(sample_time), PID6DOFLin(sample_time, k_p, k_i, k_d, u_max, type)
 {}
 
-VTEC_U4_6DOF_PID::~VTEC_U4_6DOF_PID(){}
+VTEC_U4_6DOF_PID_TRACKER::~VTEC_U4_6DOF_PID_TRACKER(){}
 
-void VTEC_U4_6DOF_PID::updateNonLinearFunctions()
+void VTEC_U4_6DOF_PID_TRACKER::updateNonLinearFunctions()
 {
     PID6DOFLin::f_x_ = VTecU4InDynamicModel::f_x_;
     PID6DOFLin::g_x_ = VTecU4InDynamicModel::g_x_;
 }
 
-void VTEC_U4_6DOF_PID::calculateControlSignals()
+void VTEC_U4_6DOF_PID_TRACKER::calculateControlSignals()
 {
     std::array<float,6> chi1, chi2;
 
@@ -45,7 +45,7 @@ void VTEC_U4_6DOF_PID::calculateControlSignals()
     calculateManipulations(chi1, chi2);
 }
 
-void VTEC_U4_6DOF_PID::updateControlSignals()
+void VTEC_U4_6DOF_PID_TRACKER::updateControlSignals()
 {
     VTecU4InDynamicModel::u_ = PID6DOFLin::u_;
 }
@@ -53,7 +53,7 @@ void VTEC_U4_6DOF_PID::updateControlSignals()
 size_t idx = 0;
 size_t len = 0;
 
-void VTEC_U4_6DOF_PID::updateTrajectoryReference(const vanttec_msgs::Trajectory& trajectory)
+void VTEC_U4_6DOF_PID_TRACKER::updateTrajectoryReference(const vanttec_msgs::Trajectory& trajectory)
 {
     if(reference_.execution_time != trajectory.execution_time) // There must be a better way to know if
     {                                                           // two trajectories are different, but works for now
@@ -63,7 +63,7 @@ void VTEC_U4_6DOF_PID::updateTrajectoryReference(const vanttec_msgs::Trajectory&
     }
 }
 
-void VTEC_U4_6DOF_PID::updateCurrentReference()
+void VTEC_U4_6DOF_PID_TRACKER::updateCurrentReference()
 {
     if(reference_.execution_time != 0 && idx < len)
     {

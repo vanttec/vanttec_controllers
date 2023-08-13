@@ -4,7 +4,7 @@
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Description of a 6DOF PID Controller for the VTec U4 inertial dyn model
+ * @brief: Description of a 6DOF PID Trajectory Tracker Controller for the VTec U4 inertial dyn model
  * -----------------------------------------------------------------------------
  **/
 
@@ -16,15 +16,15 @@
 #include "vanttec_msgs/EtaPose.h"
 #include "vanttec_msgs/Trajectory.h"
 
-class VTEC_U4_6DOF_PID : public VTecU4InDynamicModel, public PID6DOFLin
+class VTEC_U4_6DOF_PID_TRACKER : public VTecU4InDynamicModel, public PID6DOFLin
 {
     public:
         vanttec_msgs::Trajectory reference_;
 
-        VTEC_U4_6DOF_PID(float sample_time, const std::vector<float>& k_p, const std::vector<float>& k_i, 
+        VTEC_U4_6DOF_PID_TRACKER(float sample_time, const std::vector<float>& k_p, const std::vector<float>& k_i, 
                 const std::vector<float>& k_d, const std::array<float,6>& u_max,
                 const std::array<DOFControllerType_E,6>& type);
-        ~VTEC_U4_6DOF_PID();
+        ~VTEC_U4_6DOF_PID_TRACKER();
 
         void updateNonLinearFunctions();
 

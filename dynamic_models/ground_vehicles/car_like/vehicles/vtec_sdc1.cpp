@@ -15,7 +15,9 @@
 
 #include "vtec_sdc1.hpp"
 
-VTecSDC1::VTecSDC1(float sample_time) : CarDynamicModel(sample_time){
+VTecSDC1DynamicModel::VTecSDC1DynamicModel(float sample_time, uint8_t D_MAX) : 
+                    CarDynamicModel(sample_time), D_MAX_(D_MAX)
+{
 
     /* Vehicle physical parameters */
     m_ = 1505;
@@ -42,9 +44,9 @@ VTecSDC1::VTecSDC1(float sample_time) : CarDynamicModel(sample_time){
     alpha_r_ = 0.0;
 }
 
-VTecSDC1::~VTecSDC1(){}
+VTecSDC1DynamicModel::~VTecSDC1DynamicModel(){}
 
-void VTecSDC1::calculateModelParams(){
+void VTecSDC1DynamicModel::calculateModelParams(){
     float rr_off = -0.0178*D_*D_ + 1.4012*D_ + 1018;
     float t_off = -0.0769*D_*D_ + 8.1533*D_ + 1038.7;
 
@@ -56,7 +58,7 @@ void VTecSDC1::calculateModelParams(){
     setMotorConstants(Cm1, Cm2);
 }
 
-void VTecSDC1::updateDBSignals(){
+void VTecSDC1DynamicModel::updateDBSignals(){
 
     /* THROTTLE*/
     /* Find roots of throttle eq. */

@@ -9,11 +9,9 @@
  * */
 
 
-#ifndef __FBLIN__
-#define __FBLIN__
+#ifndef __FBLIN6DOF__
+#define __FBLIN6DOF__
 
-#include <iostream>
-#include <cmath>
 #include <eigen3/Eigen/Dense>
 
 class FBLin6DOF

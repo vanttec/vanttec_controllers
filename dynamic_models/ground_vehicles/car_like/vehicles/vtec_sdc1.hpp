@@ -19,7 +19,7 @@
 #include "base/car_3dof_dynamic_model.hpp"
 #include "rclcpp/rclcpp.hpp"
 
-class VTecSDC1 : public CarDynamicModel {
+class VTecSDC1DynamicModel : public CarDynamicModel {
     private:
         float rr_offset_ {0};
         float throttle_offset_ {0};
@@ -29,13 +29,13 @@ class VTecSDC1 : public CarDynamicModel {
 
     public:
         /* Constructor and destructor */
-        VTecSDC1(float sample_time);
-        ~VTecSDC1();
+        VTecSDC1DynamicModel(float sample_time, uint8_t D_MAX);
+        ~VTecSDC1DynamicModel();
 
+        /* Class methods */
         void calculateModelParams();
         void updateDBSignals();
         
-        /* Class methods */
         // void calculateControlInputs();
 };
 
