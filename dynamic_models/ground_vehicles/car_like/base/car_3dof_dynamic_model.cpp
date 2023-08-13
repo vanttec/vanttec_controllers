@@ -11,7 +11,7 @@
 
 #include "car_3dof_dynamic_model.hpp"
 
-CarDynamicModel::CarDynamicModel(const float sample_time){
+CarDynamicModel::CarDynamicModel(float sample_time){
     sample_time_ = sample_time;
 
     // State vectors

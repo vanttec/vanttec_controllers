@@ -15,7 +15,7 @@
 
 #include "vtec_sdc1.hpp"
 
-VTecSDC1::VTecSDC1(const float sample_time) : CarDynamicModel(sample_time){
+VTecSDC1::VTecSDC1(float sample_time) : CarDynamicModel(sample_time){
 
     /* Vehicle physical parameters */
     m_ = 1120;   
@@ -48,11 +48,31 @@ void VTecSDC1::calculateModelParams(){
     setMotorConstants(Cm1, Cm2);
 }
 
-void VTecSDC1::calculateDBSignals(){
+void VTecSDC1::updateDBSignals(){
+
+    /* THROTTLE*/
     /* Find roots of throttle eq. */
-    // x = roots([(0.0113-0.0028*u(0)) (0.4629*u-2.0783) (134.067-22.399*u) (-1038.7-u(0))]);
-    // y = x((real(x)>0&imag(x)==0));
-    // D_ = real(y(1));
+    float a = 0.0113-0.0028*nu_(0);
+    float b = 0.4629*nu_(0)-2.0783;
+    float c = 134.067-22.399*nu_(0);
+    float d = -1038.7-u_(0);
+    bool has_real_root;
+    float real_root;
+    int root = 0;
+
+    // Create a cubic polynomial using Eigen's PolynomialSolver
+    Eigen::Matrix<float, 4, 1> coeffs;
+    coeffs << d, c, b, a;
+    Eigen::PolynomialSolver<float, 3> solver(coeffs);
+
+    // Compute the roots
+    real_root = solver.smallestRealRoot(has_real_root, 1e-6);
+
+    if(has_real_root)
+        root = static_cast<int>(std::round(real_root));
     
-    D_ = D_ > 255? 255: D_<0? 0:D_;
+    D_ = root>D_MAX_? D_MAX_:root<D_MIN_? D_MIN_:D_;
+
+    /* BRAKING */
+
 }

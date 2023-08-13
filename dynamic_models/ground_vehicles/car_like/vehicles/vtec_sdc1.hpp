@@ -24,13 +24,16 @@ class VTecSDC1 : public CarDynamicModel {
         float rr_offset_ {0};
         float throttle_offset_ {0};
 
+        uint8_t D_MAX_{255};
+        uint8_t D_MIN_{0};
+
     public:
         /* Constructor and destructor */
-        VTecSDC1(const float sample_time);
+        VTecSDC1(float sample_time);
         ~VTecSDC1();
 
         void calculateModelParams();
-        void calculateDBSignals();
+        void updateDBSignals();
         
         /* Class methods */
         // void calculateControlInputs();

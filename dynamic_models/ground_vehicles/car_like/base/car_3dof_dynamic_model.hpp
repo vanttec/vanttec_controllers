@@ -18,7 +18,8 @@
 #ifndef __CAR_DYNAMIC_MODEL__
 #define __CAR_DYNAMIC_MODEL__
 
-#include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Core>
+#include <eigen3/unsupported/Eigen/Polynomials>
 #include "utils/utils.hpp"
 
 #include "geometry_msgs/msg/accel.hpp"
@@ -75,22 +76,17 @@ class CarDynamicModel {
 
         /* Control inputs */
         float B_;           // Braking command
-        float D_;           // Throttle command
+        uint8_t D_;           // Throttle command
         float delta_;       // Steering angle
 
-        /* Constructor and destructor */
-        CarDynamicModel(const float sample_time);
-        virtual ~CarDynamicModel();
 
-        Eigen::Vector3f f_;
-        Eigen::Matrix3f g_;
-        Eigen::Vector3f u_;
+        /* Constructor and destructor */
+        CarDynamicModel(float sample_time);
+        ~CarDynamicModel();
 
         /* Class methods */
-        void setInitPose(const std::vector<float>& eta);
         void setOffsets(float rr_offset, float t_offset);
         void setMotorConstants(float Cm1, float Cm2);
-        void calculateStates();
         void setForceInput(const sdv_msgs::msg::ThrustControl& thrust);
         void setSteeringInput(const std_msgs::msg::Float32& delta);
         // void manualControl(const sdv_msgs::msg::msg::VehicleControl &manual);
@@ -99,7 +95,14 @@ class CarDynamicModel {
         sdv_msgs::msg::EtaPose      eta_pose_;
         geometry_msgs::msg::Twist   velocities_;
         geometry_msgs::msg::Accel   accelerations_;
+        
+        /* Non-linear functions */
+        Eigen::Vector3f f_;
+        Eigen::Matrix3f g_;
+        Eigen::Vector3f u_;
 
+        void setInitPose(const std::vector<float>& eta);
+        void calculateStates();
 };
 
 #endif
