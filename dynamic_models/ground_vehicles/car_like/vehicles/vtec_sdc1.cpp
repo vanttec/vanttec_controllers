@@ -45,13 +45,13 @@ VTecSDC1::VTecSDC1(float sample_time) : CarDynamicModel(sample_time){
 VTecSDC1::~VTecSDC1(){}
 
 void VTecSDC1::calculateModelParams(){
-    float rr_off = -0.0178*std::pow(D_,2) + 1.4012*D_ + 1018;
-    float t_off = -0.0769*std::pow(D_,2) + 8.1533*D_ + 1038.7;
+    float rr_off = -0.0178*D_*D_ + 1.4012*D_ + 1018;
+    float t_off = -0.0769*D_*D_ + 8.1533*D_ + 1038.7;
 
     setOffsets(rr_off, t_off);
 
-    float Cm1 = 0.0113*std::pow(D_,2)-2.1552*D_+142.22;
-    float Cm2 = 0.0028*std::pow(D_,2)-0.4629*D_+22.399;
+    float Cm1 = 0.0113*D_*D_-2.1552*D_+142.22;
+    float Cm2 = 0.0028*D_*D_-0.4629*D_+22.399;
 
     setMotorConstants(Cm1, Cm2);
 }

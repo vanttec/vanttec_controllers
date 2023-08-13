@@ -85,40 +85,26 @@ void CarDynamicModel::calculateStates(){
     // float u_dot_brake = std::min(0,); // Braking pedal model acceleration
 
     F_grav_ = m_*utils::g*std::sin(theta_);
-    F_drag_ = 0.5*utils::air_rho*A_*Cd_*std::pow(u,2);
+    F_drag_ = 0.5*utils::air_rho*A_*Cd_*u*u;
     F_rr_ = m_*utils::g*fr_*cos(theta_);       /* I don't like this friction model.
                                                 Does not account when the vehicle is
                                                 at rest. An alternative could be found
                                                 in the future */
-    F_rr_ -= rr_offset_;    // To compensate for model error
 
-    std::cout << std::endl;
-    std::cout << "F grav = " << F_grav_ << std::endl;
-    std::cout << "F drag = " << F_drag_ << std::endl;
-    std::cout << "F rr = " << F_rr_ << std::endl;
+    F_throttle_ = (Cm1_ - Cm2_*u)*static_cast<float>(D_);
 
-    F_throttle_ = (Cm1_ - Cm2_*u)*static_cast<int>(D_);
-
-    std::cout << "Cm1 = " << Cm1_ << std::endl;
-    std::cout << "Cm2 = " << Cm2_ << std::endl;
-    std::cout << "D = " << static_cast<int>(D_) << std::endl;
-    std::cout << "F throttle = " << F_throttle_ << std::endl;
-
-    if(D_ > 0)
-        F_throttle_ -= t_offset_;
-    else {
-        F_throttle_ = 0;
+    if(D_ > 0){
+        F_throttle_ -= t_offset_;   // To compensate for model error
     }
-    std::cout << "Throttle offset = " << t_offset_ << std::endl;
-
-    std::cout << "F rr = " << F_rr_ << std::endl;
-    std::cout << "F throttle = " << F_throttle_ << std::endl;
+    else {
+        F_rr_ -= rr_offset_;        // To compensate for model error
+    }
 
     u_(0) = F_throttle_;// + F_brake_;
     
     // Next condition was set so the vehicle does not move backwards when
     // the throttle force is less than the resistance
-    if(F_rr_ >= u_(0)  && u < 0.01) {
+    if(F_rr_ >= u_(0)  && u < 1e-2) {
         u_(0) = 0;
         F_rr_ = 0;
     }
@@ -131,13 +117,6 @@ void CarDynamicModel::calculateStates(){
     fx = -(F_drag_ + F_rr_ + F_grav_ + F_fy_*std::sin(delta_) - m_*v*r);
     fy = F_ry_ + F_fy_*std::cos(delta_) - m_*u*r;
     fz = F_fy_*len_f_*std::cos(delta_) - F_ry_*len_r_;
-
-    std::cout << "F fy = " << F_fy_ << std::endl;
-    std::cout << "F ry = " << F_ry_ << std::endl;
-
-    std::cout << "fx = " << fx << std::endl;
-    std::cout << "fy = " << fy << std::endl;
-    std::cout << "fz = " << fz << std::endl;
 
     f_ << fx/m_,
           fy/m_,
