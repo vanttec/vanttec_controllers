@@ -91,7 +91,8 @@ void CarDynamicModel::calculateStates(){
                                                 at rest. An alternative could be found
                                                 in the future */
 
-    F_throttle_ = (Cm1_ - Cm2_*u)*static_cast<float>(D_);
+    // This comes from controller, that is the reason of why it is commented out
+    // F_throttle_ = (Cm1_ - Cm2_*u)*static_cast<float>(D_);
 
     if(D_ > 0){
         F_throttle_ -= t_offset_;   // To compensate for model error
@@ -100,7 +101,8 @@ void CarDynamicModel::calculateStates(){
         F_rr_ -= rr_offset_;        // To compensate for model error
     }
 
-    u_(0) = F_throttle_;// + F_brake_;
+    // This comes from controller, that is the reason of why it is commented out
+    // u_(0) = F_throttle_;// + F_brake_;
     
     // Next condition was set so the vehicle does not move backwards when
     // the throttle force is less than the resistance

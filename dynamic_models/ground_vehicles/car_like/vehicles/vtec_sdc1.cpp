@@ -58,7 +58,7 @@ void VTecSDC1DynamicModel::calculateModelParams(){
     setMotorConstants(Cm1, Cm2);
 }
 
-void VTecSDC1DynamicModel::updateDBSignals(){
+void VTecSDC1DynamicModel::updateDBSignals(float des_vel){
 
     /* THROTTLE*/
     /* Find roots of throttle eq. */
@@ -66,9 +66,8 @@ void VTecSDC1DynamicModel::updateDBSignals(){
     float b = 0.4629*nu_(0)-2.0783;
     float c = 134.067-22.399*nu_(0);
     float d = -1038.7-u_(0);
-    bool has_real_root;
-    float real_root;
-    int root = 0;
+    uint8_t real_root;
+    // float root = 0;
 
     // Create a cubic polynomial using Eigen's PolynomialSolver
     Eigen::Matrix<float, 4, 1> coeffs;
@@ -76,13 +75,25 @@ void VTecSDC1DynamicModel::updateDBSignals(){
     Eigen::PolynomialSolver<float, 3> solver(coeffs);
 
     // Compute the roots
-    real_root = solver.smallestRealRoot(has_real_root, 1e-6);
+    // real_root = solver.smallestRealRoot(has_real_root, 1);
+    Eigen::Matrix<std::complex<float>, 3, 1> roots = solver.roots();
 
-    if(has_real_root)
-        root = static_cast<int>(std::round(real_root));
+    for (int i = 0; i < 3; ++i) {
+        if(std::fabs(roots(i).imag()) < 1e-6)
+            real_root = static_cast<uint8_t>(std::round(roots(i).real()));
+    }
+
+    // if(has_real_root){
+    //     root = static_cast<float>(std::round(real_root));
+    //     std::cout << "no real root" << std::endl;
+    // }
     
-    D_ = root>D_MAX_? D_MAX_:root<D_MIN_? D_MIN_:D_;
+    D_ = real_root>D_MAX_? D_MAX_:real_root<D_MIN_? D_MIN_:real_root;
 
     /* BRAKING */
-
+    // For now and until the break is included in the model, when a zero velocity is desired,
+    // D shall be set to one 
+    
+    if(des_vel < 0.3)
+        D_ = 1;
 }

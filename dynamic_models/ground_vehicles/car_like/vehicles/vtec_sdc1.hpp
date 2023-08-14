@@ -34,7 +34,7 @@ class VTecSDC1DynamicModel : public CarDynamicModel {
 
         /* Class methods */
         void calculateModelParams();
-        void updateDBSignals();
+        void updateDBSignals(float des_vel);
         
         // void calculateControlInputs();
 };
