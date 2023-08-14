@@ -30,6 +30,11 @@ void VTEC_SDC1_1DOF_PID::calculateControlSignals()
     calculateManipulations(chi1);
 }
 
+void VTEC_SDC1_1DOF_PID::calculateControlSignals(float chi1)
+{
+    calculateManipulations(chi1);
+}
+
 void VTEC_SDC1_1DOF_PID::updateControlSignals()
 {
     VTecSDC1DynamicModel::u_(0) = PIDLin::u_;

@@ -20,7 +20,11 @@ class VTEC_SDC1_1DOF_PID : public VTecSDC1DynamicModel, public PIDLin
 
         void updateNonLinearFunctions();
 
+        // For simulations
         void calculateControlSignals();
+
+        // For real world
+        void calculateControlSignals(float chi1);
 
         void updateControlSignals();
 
