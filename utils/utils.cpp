@@ -121,21 +121,21 @@ namespace utils
         return 1/std::cos(angle);
     }
     
-    float sign(float e)
+    int8_t sign(float e)
     {
-        float sign = 0.0;
-        if (e != 0.0)
-        {
-            sign = e / std::fabs(e);
-        } else
-        {
-            sign = 0;
-        }
+        int8_t sign = 0;
+
+        if(std::isfinite(e) && !std::isnan(e))
+            if (e != 0.0)
+                sign = static_cast<int8_t>(e / std::abs(e));
+        
+        // check what to do if e is NaN or inf
+
         return sign;
     }
 
     float sig(float e, float a)
     {
-        return sign(e)*pow(std::fabs(e),a);
+        return static_cast<float>(sign(e))*pow(std::fabs(e),a);
     }
 }

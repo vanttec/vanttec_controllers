@@ -5,7 +5,7 @@
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Adaptive Sliding Mode Controller class, which implements a single DOF controller.
+ * @brief: First Order Adaptive Sliding Mode Controller class.
  * -----------------------------------------------------------------------------
  * */
 
@@ -22,7 +22,7 @@ ASMC::ASMC(float sample_time,float lambda,float K2,float K_alpha,float K1_init,f
     prev_error_2_ = 0.0;
     
     // Auxiliar control
-    ua_ = 0.0;
+    u_ = 0.0;
 
     // Sliding surface
     lambda_ = lambda;
@@ -50,7 +50,7 @@ void ASMC::reset()
     prev_error_1_ = 0.0;
     error_2_ = 0.0;
     prev_error_2_ = 0.0;
-    ua_ = 0.0;
+    u_ = 0.0;
     K1_ = 0.0;
 }
 
@@ -85,7 +85,10 @@ void ASMC::calculateAuxControl(float q,float q_dot)
     // Checar que calc de sign est[e bien]
     s_ = error_2_ + lambda_*error_1_;
 
-    dot_K1_ = K1_ > K_min_ ?  K_alpha_*utils::sign(std::fabs(s_) - mu_) : K_min_;
+    dot_K1_ = K1_ > K_min_ ?  K_alpha_*static_cast<float>(utils::sign(std::fabs(s_) - mu_)) : K_min_;
+
     K1_ += (dot_K1_ + prev_dot_K1_) / 2 * sample_time_;
-    ua_ = -K1_*utils::sig(s_, 0.5) - K2_*s_;
+
+    u_ = -(K1_*utils::sig(s_, 0.5) + K2_*s_);       // that "-" comes from fback lin theory:
+                                                    // u_  = (1 / g_x) * (-f_x + K1... + K2*s);
 }

@@ -39,7 +39,7 @@ namespace utils
                                             const Eigen::VectorXf& eta, const Eigen::VectorXf& eta_dot);
     Eigen::Matrix3f Skew(const Eigen::Vector3f& vect);
     float secant(float angle);
-    float sign(float e);
+    int8_t sign(float e);
     float sig(float e, float a);
 }
 
