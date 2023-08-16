@@ -55,7 +55,7 @@ class ANTSMC
         ~ANTSMC();
 
         void reset();
-        void updateSetPoint(float q_d,float q_dot_d);
+        void updateReferences(float q_d,float q_dot_d);
         void calculateAuxControl(float q,float q_dot);
 
         friend class ANTSMC6DOF;

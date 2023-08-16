@@ -84,14 +84,14 @@ void ASMC6DOF::setMaxThrust(float* MAX_TAU){
 }
 
 
-void ASMC6DOF::updateSetPoints(const vanttec_msgs::EtaPose& q_d)//, const vanttec_msgs::EtaPose& q_dot_d)
+void ASMC6DOF::updateReferencess(const vanttec_msgs::EtaPose& q_d)//, const vanttec_msgs::EtaPose& q_dot_d)
 {
-    ASMC_x_.updateSetPoint(q_d.x, 0.0);        //, q_dot_d.x, 0.0);
-    ASMC_y_.updateSetPoint(q_d.y, 0.0);        //, q_dot_d.y, 0.0);
-    ASMC_z_.updateSetPoint(q_d.z, 0.0);        //, q_dot_d.z, 0.0);
-    ASMC_phi_.updateSetPoint(q_d.phi, 0.0);        //, q_dot_d.phi);
-    ASMC_theta_.updateSetPoint(q_d.theta, 0.0);        //, q_dot_d.theta);
-    ASMC_psi_.updateSetPoint(q_d.psi, 0.0);        //, q_dot_d.psi);
+    ASMC_x_.updateReferences(q_d.x, 0.0);        //, q_dot_d.x, 0.0);
+    ASMC_y_.updateReferences(q_d.y, 0.0);        //, q_dot_d.y, 0.0);
+    ASMC_z_.updateReferences(q_d.z, 0.0);        //, q_dot_d.z, 0.0);
+    ASMC_phi_.updateReferences(q_d.phi, 0.0);        //, q_dot_d.phi);
+    ASMC_theta_.updateReferences(q_d.theta, 0.0);        //, q_dot_d.theta);
+    ASMC_psi_.updateReferences(q_d.psi, 0.0);        //, q_dot_d.psi);
 }
 
 void ASMC6DOF::updatePose(const vanttec_msgs::EtaPose& q)//, const vanttec_msgs::EtaPose& q_dot)

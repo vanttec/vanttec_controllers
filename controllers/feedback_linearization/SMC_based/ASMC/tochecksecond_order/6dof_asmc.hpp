@@ -57,7 +57,7 @@ class ASMC6DOF
         void setMaxThrust(float* MAX_TAU);
         void updateDynamics(const vanttec_msgs::SystemDynamics& non_linear_functions);
         void updatePose(const vanttec_msgs::EtaPose& current);
-        void updateSetPoints(const vanttec_msgs::EtaPose& set_points);
+        void updateReferencess(const vanttec_msgs::EtaPose& set_points);
         void calculateManipulation();
 
         // void updateTwist(const geometry_msgs::Twist& twist);

@@ -55,7 +55,7 @@ void ANTSMC::reset()
     K1_ = 0.0;
 }
 
-void ANTSMC::updateSetPoint(float q_d,float q_dot_d)
+void ANTSMC::updateReferences(float q_d,float q_dot_d)
 {
     q_d_ = q_d;
     q_dot_d_ = q_dot_d;

@@ -5,13 +5,13 @@
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: First Order Adaptive Sliding Mode Controller class.
+ * @brief: Second Order Adaptive Sliding Mode Controller class.
  * -----------------------------------------------------------------------------
  * */
 
-#include "controllers/control_laws/SMC_based/ASMC/asmc.hpp"
+#include "controllers/control_laws/SMC/ASMC/second_order/asmc.hpp"
 
-ASMC::ASMC(float sample_time,float lambda,float K2,float K_alpha,float K1_init,float K_min,float mu, const DOFControllerType_E& type)
+ASMC::ASMC( float sample_time, const ASMC_Config& config)
 {
     sample_time_ = sample_time;
     q_d_ = 0.0;
@@ -23,23 +23,24 @@ ASMC::ASMC(float sample_time,float lambda,float K2,float K_alpha,float K1_init,f
     
     // Auxiliar control
     u_ = 0.0;
+    U_MAX_ = config.u_max;
 
     // Sliding surface
-    lambda_ = lambda;
+    lambda_ = config.lambda;
     s_ = 0.0;
 
     // Gains
-    K1_ = K1_init;
-    K2_ = K2;
+    K1_ = config.K1_init;
+    K2_ = config.K2;
     dot_K1_ = 0.0;
     prev_dot_K1_ = 0.0;
 
     // Adaptive law
-    K_min_ = K_min;
-    K_alpha_ = K_alpha;
-    mu_ = mu;
+    K_min_ = config.K_min;
+    K_alpha_ = config.K_alpha;
+    mu_ = config.mu;
 
-    controller_type_ = type;
+    controller_type_ = config.type;
 }
 
 ASMC::~ASMC(){}
@@ -54,14 +55,14 @@ void ASMC::reset()
     K1_ = 0.0;
 }
 
-void ASMC::updateSetPoint(float q_d,float q_dot_d)
+void ASMC::updateReferences(float q_d, float q_dot_d)
 {
     q_d_ = q_d;
     q_dot_d_ = q_dot_d;
 }
 
 
-void ASMC::calculateAuxControl(float q,float q_dot)
+void ASMC::calculateAuxControl(float q, float q_dot)
 {
     prev_error_1_ = error_1_;
     prev_error_2_ = error_2_;
@@ -91,4 +92,12 @@ void ASMC::calculateAuxControl(float q,float q_dot)
 
     u_ = -(K1_*utils::sig(s_, 0.5) + K2_*s_);       // that "-" comes from fback lin theory:
                                                     // u_  = (1 / g_x) * (-f_x + K1... + K2*s);
+}
+
+// Saturate manipulation function is intended to be used in applications where a FBLin ASMC is not required,
+// as FBLin base classes already saturate the control signals
+void ASMC::saturateManipulation(float q, float q_dot)
+{
+    calculateManipulation(q, q_dot);
+    u_ = std::fabs(u_) > U_MAX_ ? u_ / std::fabs(u_) * U_MAX_ : u_;
 }

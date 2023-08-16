@@ -22,7 +22,7 @@ PID::PID(float sample_time,float k_p,float k_i,float k_d, float u_max, const DOF
     chi2_d_         = 0;
     u_              = 0;
 
-    U_AUX_MAX_ = u_max;
+    U_MAX_ = u_max;
 
     controller_type_   = type;
 }
@@ -67,5 +67,5 @@ void PID::calculateManipulation(float chi1, float chi2)
 void PID::saturateManipulation(float chi1, float chi2)
 {
     calculateManipulation(chi1, chi2);
-    u_ = std::fabs(u_) > U_AUX_MAX_ ? u_ / std::fabs(u_) * U_AUX_MAX_ : u_;
+    u_ = std::fabs(u_) > U_MAX_ ? u_ / std::fabs(u_) * U_MAX_ : u_;
 }

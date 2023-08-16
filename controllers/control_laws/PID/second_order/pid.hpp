@@ -26,7 +26,7 @@ class PID
         float k_i_;
         float k_d_;
 
-        float U_AUX_MAX_;
+        float U_MAX_;
 
         DOFControllerType_E controller_type_;
         

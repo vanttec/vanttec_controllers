@@ -6,7 +6,7 @@
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: First Order Adaptive Sliding Mode Controller class.
+ * @brief: Second Order Adaptive Sliding Mode Controller class.
  * -----------------------------------------------------------------------------
  * */
 
@@ -18,50 +18,68 @@
 // #include "vanttec_msgs/EtaPose.h"
 #include <cmath>
 
+typedef struct 
+{
+    float lambda;
+    float K2;
+    float K_alpha;
+    float K1_init;
+    float K_min;
+    float mu;
+    float u_max;
+    DOFControllerType_E type;
+} ASMC_Config;
+
 class ASMC
 {
     private:
         float sample_time_;
-
-        float q_d_;             // Setpoint
-        float q_dot_d_;
 
         float error_1_;
         float error_2_;
         
         float prev_error_1_;
         float prev_error_2_;
-        
-        // Auxiliar control
-        float u_;
 
-        // Sliding surface
+        /* Setpoint */
+        float q_d_;
+        float q_dot_d_;
+        
+        /* Auxiliar control */
+        float u_;
+        float U_MAX_;
+
+        /* Sliding surface */
         float lambda_;
         float s_;
 
-        // Gains
+        /* Gains */
         float K1_;
         float K2_;
         float dot_K1_;
         float prev_dot_K1_;
 
-        // Adaptive law
+        /* Adaptive law */
         float K_min_;
         float K_alpha_;
         float mu_;
 
         DOFControllerType_E controller_type_;
+
     public:
         // Constructor
-        ASMC(float sample_time,float lambda, float K2,float K_alpha,float K1_init,float K_min,float mu, const DOFControllerType_E& type);
+        ASMC(float sample_time, const ASMC_Config& config);
 
         // Destructor
         ~ASMC();
 
         void reset();
-        void updateSetPoint(float q_d,float q_dot_d);
-        void calculateAuxControl(float q,float q_dot);
+        void updateReferences(float q_d, float q_dot_d);
+        void calculateManipulation(float q, float q_dot);
         
+        // Saturate manipulation function is intended to be used in applications where a FBLin ASMC is not required,
+        // as FBLin base classes already saturate the control signals
+        void saturateManipulation(float q, float q_dot);
         // friend class ASMC6DOF;
 };
 

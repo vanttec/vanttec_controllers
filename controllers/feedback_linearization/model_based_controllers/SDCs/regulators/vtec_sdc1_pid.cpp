@@ -25,9 +25,7 @@ void VTEC_SDC1_1DOF_PID::updateNonLinearFunctions()
 
 void VTEC_SDC1_1DOF_PID::calculateControlSignals()
 {
-    float chi1 = nu_(0);
-
-    calculateManipulations(chi1);
+    calculateManipulations(nu_(0));
 }
 
 void VTEC_SDC1_1DOF_PID::calculateControlSignals(float chi1)
