@@ -10,13 +10,13 @@
 
 #include "controllers/feedback_linearization/PID_based/second_order/fblin_6dof_pid.hpp"
 
-std::array<float,6> U_MAX {FLT_MAX,6};
+std::array<float,6> U_AUX_MAX {FLT_MAX,6};
 
 PID6DOFLin::PID6DOFLin(float sample_time, const std::vector<float>& k_p, const std::vector<float>& k_i, 
                  const std::vector<float>& k_d, const std::array<float,6>& u_max, 
                  const std::array<DOFControllerType_E,6>& type) : 
                  FBLin6DOF (u_max),
-                 control_law_ (sample_time, k_p, k_i, k_d, U_MAX, type)
+                 control_law_ (sample_time, k_p, k_i, k_d, U_AUX_MAX, type)
 {}
 
 PID6DOFLin::~PID6DOFLin(){};

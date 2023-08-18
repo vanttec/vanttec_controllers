@@ -10,7 +10,7 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include "utils/utils.hpp"
+#include "utils.hpp"
 
 namespace utils
 {
@@ -46,7 +46,14 @@ namespace utils
     //     return waypoints;
     // }
 
-    void calculateRotation(Eigen::Matrix3f& R, double phi, double theta, double psi)
+    void calculate2DRotation(Eigen::Matrix3f& R, double psi)
+    {
+        R << std::cos(psi), std::sin(psi), 0,
+            -std::sin(psi), std::cos(psi), 0,
+            0,             0,             1;
+    }
+
+    void calculate3DRotation(Eigen::Matrix3f& R, double phi, double theta, double psi)
     {
         R <<    std::cos(psi)*std::cos(theta),      -std::sin(psi)*std::cos(phi) + std::cos(psi)*std::sin(theta)*std::sin(phi),     std::sin(psi)*std::sin(phi) + std::cos(psi)*std::cos(phi)*std::sin(theta),
                 std::sin(psi)*std::cos(theta),       std::cos(psi)*std::cos(phi) + std::sin(phi)*std::sin(theta)*std::sin(psi),    -std::cos(psi)*std::sin(phi) + std::sin(theta)*std::sin(psi)*std::cos(phi),
@@ -59,7 +66,7 @@ namespace utils
         float theta = eta(4);
         float psi = eta(5);
 
-        calculateRotation(R, phi, theta, psi);
+        calculate3DRotation(R, phi, theta, psi);
 
         T <<   1,     std::sin(phi)*std::tan(theta),  std::cos(phi)*std::tan(theta),
                 0,     std::cos(phi),                  -std::sin(phi),
@@ -114,21 +121,21 @@ namespace utils
         return 1/std::cos(angle);
     }
     
-    float sign(float e)
+    int8_t sign(float e)
     {
-        float sign = 0.0;
-        if (e != 0.0)
-        {
-            sign = e / std::fabs(e);
-        } else
-        {
-            sign = 0;
-        }
+        int8_t sign = 0;
+
+        if(std::isfinite(e) && !std::isnan(e))
+            if (e != 0.0)
+                sign = static_cast<int8_t>(e / std::abs(e));
+        
+        // check what to do if e is NaN or inf
+
         return sign;
     }
 
     float sig(float e, float a)
     {
-        return sign(e)*pow(std::fabs(e),a);
+        return static_cast<float>(sign(e))*pow(std::fabs(e),a);
     }
 }

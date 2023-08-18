@@ -8,7 +8,7 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include "controllers/control_laws/PID/first_order/pid.hpp"
+#include "pid.hpp"
 
 PID::PID(float sample_time, float k_p, float k_i, float k_d, float u_max, const DOFControllerType_E& type)
 {
@@ -59,8 +59,10 @@ void PID::calculateManipulation(float chi1)
         u_ = u;
 }
 
-vod PID::saturateManipulation(float chi1)
+// Saturate manipulation function is intended to be used in applications where a FBLin PID is not required,
+// as FBLin base classes already saturate the control signals
+void PID::saturateManipulation(float chi1)
 {
-    calculateManipulation(float chi1);
+    calculateManipulation(chi1);
     u_ = std::fabs(u_) > U_MAX_ ? u_ / std::fabs(u_) * U_MAX_ : u_;
 }

@@ -62,6 +62,8 @@ void PID::calculateManipulation(float chi1, float chi2)
         u_ = u;
 }
 
+// Saturate manipulation function is intended to be used in applications where a FBLin PID is not required,
+// as FBLin base classes already saturate the control signals
 void PID::saturateManipulation(float chi1, float chi2)
 {
     calculateManipulation(chi1, chi2);
