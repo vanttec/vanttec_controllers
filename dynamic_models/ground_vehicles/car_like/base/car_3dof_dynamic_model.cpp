@@ -164,11 +164,15 @@ void CarDynamicModel::setThrottle(uint8_t D){
     //       0;
 }
 
-void CarDynamicModel::setSteeringInput(float delta){
+void CarDynamicModel::setSteering(float delta){
     delta_ = delta;
-    if(u_(0) < 0.1){
-        delta_ = 0;
-    }
+    // if(u_(0) < 0.1){
+    //     delta_ = 0;
+    // }
+}
+
+void CarDynamicModel::setPitch(float pitch){
+    theta_ = pitch;
 }
 
 // void CarDynamicModel::manualControl(const sdv_msgs::msg::VehicleControl &manual)

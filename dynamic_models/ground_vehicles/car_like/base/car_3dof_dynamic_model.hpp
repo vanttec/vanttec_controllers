@@ -75,7 +75,6 @@ class CarDynamicModel {
         /* Class methods */
         void setOffsets(float rr_offset, float t_offset);
         void setMotorConstants(float Cm1, float Cm2);
-        void setSteeringInput(float delta);
         // void manualControl(const sdv_msgs::msg::msg::VehicleControl &manual);
 
     public:
@@ -96,6 +95,8 @@ class CarDynamicModel {
         void setInitPose(const std::vector<float>& eta);
         void calculateStates();
         void setThrottle(uint8_t D);
+        void setSteering(float delta);
+        void setPitch(float pitch);
 };
 
 #endif

@@ -13,7 +13,12 @@
 
 #include <stdio.h>
 #include <cmath>
-#include "sdv_msgs/msg/eta_pose.hpp"
+
+typedef struct
+{
+    float x;
+    float y;
+} Point;
 
 class StanleyController
 {
@@ -26,13 +31,13 @@ class StanleyController
         float e_;               // Crosstrack error
         float vel_;             // velocity vector norm
         float ak_;
-        sdv_msgs::msg::EtaPose vehicle_pose_;
 
         StanleyController(float delta_max, float k, float k_soft);
         virtual ~StanleyController();
 
-        void calculateCrosstrackError(float x0, float y0, float x1, float y1);
-        void setHeading(const sdv_msgs::msg::EtaPose& pose);
+        // void calculateCrosstrackError(float x, float y, float x0, float y0, float x1, float y1);
+        void calculateCrosstrackError(const Point& vehicle_pos, const Point& p1, const Point& p2);
+        void setYawAngle(float psi);
         void calculateSteering(float vel);
 };
 
