@@ -71,14 +71,14 @@ void CarDynamicModel::setMotorConstants(float Cm1, float Cm2)
 
 void CarDynamicModel::calculateStates(){
     
-    utils::calculate2DRotation(R_, eta_(2));
+    utils::calculateR_z(R_, eta_(2));
     
     float u = nu_(0);
     float v = nu_(1);
     float r = nu_(2);
-    float fx = 0;
-    float fy = 0;
-    float fz = 0;
+    float Fx = 0;
+    float Fy = 0;
+    float Mz = 0;
 
     nu_dot_prev_ = nu_dot_;
     eta_dot_prev_ = eta_dot_;
@@ -113,16 +113,29 @@ void CarDynamicModel::calculateStates(){
 
     alpha_f_ = std::atan2(v + len_f_*r,u) - delta_;
     alpha_r_ = std::atan2(v - len_r_*r,u);
-    F_fy_ = -C_alpha_*alpha_f_;
-    F_ry_ = -C_alpha_*alpha_r_;
 
-    fx = -(F_drag_ + F_rr_ + F_grav_ + F_fy_*std::sin(delta_) - m_*v*r);
-    fy = F_ry_ + F_fy_*std::cos(delta_) - m_*u*r;
-    fz = F_fy_*len_f_*std::cos(delta_) - F_ry_*len_r_;
+    if(u > 1e-2){
+        F_fy_ = -C_alpha_*alpha_f_;
+        F_ry_ = -C_alpha_*alpha_r_;
+    } else {
+        F_fy_ = 0.0;
+        F_ry_ = 0.0;
+    }
 
-    f_ << fx/m_,
-          fy/m_,
-          fz/Iz_;
+    Fx = -(F_drag_ + F_rr_ + F_grav_ + F_fy_*std::sin(delta_) - m_*v*r);
+
+    // So the model doesn't do weird things without moving forward 
+    // if(u > 1e-2){
+    Fy = F_ry_ + F_fy_*std::cos(delta_) - m_*u*r;
+    Mz = F_fy_*len_f_*std::cos(delta_) - F_ry_*len_r_;
+    // } else {
+    //     Fy = 0.0;
+    //     Mz = 0.0;
+    // }
+
+    f_ << Fx/m_,
+          Fy/m_,
+          Mz/Iz_;
 
     g_(0,0) = 1/m_;
 
@@ -131,6 +144,11 @@ void CarDynamicModel::calculateStates(){
 
     /* Integrating acceleration to get velocities */
     nu_ += (nu_dot_prev_ + nu_dot_) / 2 * sample_time_;
+
+    // if(nu_(0) < 1e-2){
+    //     nu_(1) = 0.0;
+    //     nu_(2) = 0.0;
+    // }
 
     /* Changing frames */
     eta_dot_ = R_*nu_;

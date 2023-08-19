@@ -31,8 +31,8 @@ namespace utils
     
     /* Helper functions */
     // vanttec_msgs::GuidanceWaypoints GenerateCircle(float _radius, float _x_center, float _y_center, float _z_center, float _angle_offset);
-    void calculate2DRotation(Eigen::Matrix3f& R, double psi);
-    void calculate3DRotation(Eigen::Matrix3f& R, double phi, double theta, double psi);
+    void calculateR_z(Eigen::Matrix3f& R, double psi);
+    void calculateR_zyx(Eigen::Matrix3f& R, double phi, double theta, double psi);
     void calculate6DOFTransformation(Eigen::Matrix3f& R, Eigen::Matrix3f& T, Eigen::MatrixXf& J, const Eigen::VectorXf& eta);
     void calculate6DOFDifferentialTransform(Eigen::Matrix3f& R, Eigen::MatrixXf& J,  Eigen::MatrixXf& J_inv,
                                             Eigen::Matrix3f& R_dot, Eigen::Matrix3f& T_dot, Eigen::MatrixXf& J_dot,

@@ -46,14 +46,14 @@ namespace utils
     //     return waypoints;
     // }
 
-    void calculate2DRotation(Eigen::Matrix3f& R, double psi)
+    void calculateR_z(Eigen::Matrix3f& R, double psi)
     {
         R << std::cos(psi), std::sin(psi), 0,
             -std::sin(psi), std::cos(psi), 0,
             0,             0,             1;
     }
 
-    void calculate3DRotation(Eigen::Matrix3f& R, double phi, double theta, double psi)
+    void calculateR_zyx(Eigen::Matrix3f& R, double phi, double theta, double psi)
     {
         R <<    std::cos(psi)*std::cos(theta),      -std::sin(psi)*std::cos(phi) + std::cos(psi)*std::sin(theta)*std::sin(phi),     std::sin(psi)*std::sin(phi) + std::cos(psi)*std::cos(phi)*std::sin(theta),
                 std::sin(psi)*std::cos(theta),       std::cos(psi)*std::cos(phi) + std::sin(phi)*std::sin(theta)*std::sin(psi),    -std::cos(psi)*std::sin(phi) + std::sin(theta)*std::sin(psi)*std::cos(phi),
@@ -66,7 +66,7 @@ namespace utils
         float theta = eta(4);
         float psi = eta(5);
 
-        calculate3DRotation(R, phi, theta, psi);
+        calculateR_zyx(R, phi, theta, psi);
 
         T <<   1,     std::sin(phi)*std::tan(theta),  std::cos(phi)*std::tan(theta),
                 0,     std::cos(phi),                  -std::sin(phi),

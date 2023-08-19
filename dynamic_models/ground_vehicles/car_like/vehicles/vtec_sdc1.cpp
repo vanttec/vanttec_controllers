@@ -38,7 +38,7 @@ VTecSDC1DynamicModel::VTecSDC1DynamicModel(float sample_time, uint8_t D_MAX) :
     % Calculations made sense, as the Calpha of the Stanford Stanley car
     % are similar by being calculated with the same method
     */
-    C_alpha_ = 69788.1178;  // m*g*fr*cos(theta) 
+    C_alpha_ = m_*9.81/2*0.165*57.2957;//69788.1178;
                             
     alpha_f_ = 0.0;
     alpha_r_ = 0.0;
