@@ -4,7 +4,7 @@
  * @date: August 18, 2023
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
- * 
+ *
  * @brief: Stanley Controller class
  * -----------------------------------------------------------------------------
  * */
@@ -81,11 +81,12 @@ void StanleyController::setYawAngle(float psi){
 void StanleyController::calculateSteering(float vel){
     vel_ = vel;
     float phi = psi_ - ak_;
-    delta_ = -(phi + std::atan2(k_*e_,k_soft_ + vel_));
+    // delta_ = -(phi + std::atan2(k_*e_,k_soft_ + vel_));
+    delta_ = phi + std::atan2(k_*e_,k_soft_ + vel_);
     // ROS_INFO_STREAM("Delta = " << delta_);
 
-    if (delta_ >= DELTA_MAX_)
+    if (delta_ > DELTA_MAX_)
         delta_ = DELTA_MAX_;
-    else if (delta_ <= -DELTA_MAX_)
+    else if (delta_ < -DELTA_MAX_)
         delta_ = -DELTA_MAX_;
 }

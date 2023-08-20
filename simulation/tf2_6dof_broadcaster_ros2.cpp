@@ -33,7 +33,8 @@ void TF2Broadcaster::BroadcastTransform(const sdv_msgs::msg::EtaPose& _pose)
     transformStamped.transform.translation.z    = -_pose.z;
 
     tf2::Quaternion q;
-    q.setRPY(_pose.phi, -_pose.theta, -_pose.psi);
+    // q.setRPY(_pose.phi, -_pose.theta, -_pose.psi);
+    q.setRPY(_pose.phi, _pose.theta, _pose.psi);
     q.normalize();
     transformStamped.transform.rotation.x = q.x();
     transformStamped.transform.rotation.y = q.y();

@@ -149,10 +149,10 @@ void CarDynamicModel::calculateStates(){
     nu_ += (nu_dot_prev_ + nu_dot_) / 2 * sample_time_;
 
     // So the model doesn't do weird things without moving forward 
-    if(D_ == 0 ){
-        nu_(1) = 0.0;
-        nu_(2) = 0.0;
-    }
+    // if(D_ == 0 ){
+    //     nu_(1) = 0.0;
+    //     nu_(2) = 0.0;
+    // }
 
     /* Changing frames */
     eta_dot_ = R_*nu_;
@@ -187,7 +187,7 @@ void CarDynamicModel::setThrottle(uint8_t D){
 }
 
 void CarDynamicModel::setSteering(float delta){
-    delta_ = delta;
+    delta_ = -delta;
     // if(u_(0) < 0.1){
     //     delta_ = 0;
     // }
