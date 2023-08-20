@@ -9,6 +9,10 @@
  * -----------------------------------------------------------------------------
  * */
 
+#include <stdio.h>
+#include <iostream>
+#include <cmath>
+
 #include "stanley_controller.hpp"
 
 StanleyController::StanleyController(float delta_max, float k, float k_soft)
@@ -55,23 +59,25 @@ void StanleyController::calculateCrosstrackError(const Point& vehicle_pos, const
     } else {
         if(!std::isnormal(ex)){
             yp = vehicle_pos.y;
-            xp = p2.x; // or x2
+            xp = p2.x; // or x1
         }
         if(!std::isnormal(ey)){
-            yp = p2.y; // or y2
+            yp = p2.y; // or y1
             xp = vehicle_pos.x;
         }
     }
 
-    // Crosstrack error in path frame
-    e_ = -(vehicle_pos.x-xp)*std::sin(ak_) + (vehicle_pos.y-yp)*std::cos(ak_);
+    // Crosstrack and along-track errors in path frame
+    ex_ = (p2.x - xp)*std::cos(ak_) + (p2.y - yp)*std::sin(ak_);
+    ey_ = -(vehicle_pos.x - xp)*std::sin(ak_) + (vehicle_pos.y - yp)*std::cos(ak_);
 
-    // ROS_INFO_STREAM("xp = " << xp);
-    // ROS_INFO_STREAM("yp = " << yp);
-    // ROS_INFO_STREAM("x = " << x);
-    // ROS_INFO_STREAM("y = " << y);
-    // ROS_INFO_STREAM("Crosstrack error = " << e_);
-    // ROS_INFO_STREAM("ak = " << ak_);
+    // std::cout << "xp = " << xp << std::endl;
+    // std::cout << "yp = " << yp << std::endl;
+    // std::cout << "x = " << x << std::endl;
+    // std::cout << "y = " << y << std::endl;
+    // std::cout << "Along-track error = " << ex_ << std::endl;
+    // std::cout << "Crosstrack error = " << ey_ << std::endl;
+    // std::cout << "ak = " << ak_ << std::endl;
 }
 
 void StanleyController::setYawAngle(float psi){
@@ -81,9 +87,9 @@ void StanleyController::setYawAngle(float psi){
 void StanleyController::calculateSteering(float vel){
     vel_ = vel;
     float phi = psi_ - ak_;
-    // delta_ = -(phi + std::atan2(k_*e_,k_soft_ + vel_));
-    delta_ = phi + std::atan2(k_*e_,k_soft_ + vel_);
-    // ROS_INFO_STREAM("Delta = " << delta_);
+    // delta_ = -(phi + std::atan2(k_*ey_,k_soft_ + vel_));
+    delta_ = phi + std::atan2(k_*ey_,k_soft_ + vel_);
+    // std::cout << "Delta = " << delta_);
 
     if (delta_ > DELTA_MAX_)
         delta_ = DELTA_MAX_;

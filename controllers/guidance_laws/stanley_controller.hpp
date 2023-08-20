@@ -11,9 +11,6 @@
 #ifndef __STANLEY_CONTROLLER__
 #define __STANLEY_CONTROLLER__
 
-#include <stdio.h>
-#include <cmath>
-
 typedef struct
 {
     float x;
@@ -28,7 +25,8 @@ class StanleyController
         float psi_;             // Current heading
         float k_;               // Controller gain
         float k_soft_;          // Soft gain
-        float e_;               // Crosstrack error
+        float ex_;           // Along-track error
+        float ey_;              // Crosstrack error
         float vel_;             // velocity vector norm
         float ak_;
 
