@@ -92,8 +92,8 @@ void VTecSDC1DynamicModel::updateDBSignals(float des_vel){
 
     /* BRAKING */
     // For now and until the break is included in the model, when a zero velocity is desired,
-    // D shall be set to one 
+    // D shall be set to zeroo (one) 
     
     if(des_vel < 0.3)
-        D_ = 1;
+        D_ = 0;
 }
