@@ -71,13 +71,13 @@ void StanleyController::calculateCrosstrackError(const Point& vehicle_pos, const
     ex_ = (p2.x - xp)*std::cos(ak_) + (p2.y - yp)*std::sin(ak_);
     ey_ = -(vehicle_pos.x - xp)*std::sin(ak_) + (vehicle_pos.y - yp)*std::cos(ak_);
 
-    // std::cout << "xp = " << xp << std::endl;
-    // std::cout << "yp = " << yp << std::endl;
-    // std::cout << "x = " << x << std::endl;
-    // std::cout << "y = " << y << std::endl;
-    // std::cout << "Along-track error = " << ex_ << std::endl;
-    // std::cout << "Crosstrack error = " << ey_ << std::endl;
-    // std::cout << "ak = " << ak_ << std::endl;
+    std::cout << "xp = " << xp << std::endl;
+    std::cout << "yp = " << yp << std::endl;
+    std::cout << "x = " << vehicle_pos.x << std::endl;
+    std::cout << "y = " << vehicle_pos.y << std::endl;
+    std::cout << "Along-track error = " << ex_ << std::endl;
+    std::cout << "Crosstrack error = " << ey_ << std::endl;
+    std::cout << "ak = " << ak_ << std::endl;
 }
 
 void StanleyController::setYawAngle(float psi){
@@ -89,10 +89,12 @@ void StanleyController::calculateSteering(float vel){
     float phi = psi_ - ak_;
     // delta_ = -(phi + std::atan2(k_*ey_,k_soft_ + vel_));
     delta_ = phi + std::atan2(k_*ey_,k_soft_ + vel_);
-    // std::cout << "Delta = " << delta_);
 
     if (delta_ > DELTA_SAT_[0])
         delta_ = DELTA_SAT_[0];
     else if (delta_ < -DELTA_SAT_[1])
         delta_ = -DELTA_SAT_[1];
+
+    std::cout << "psi = " << psi_ << std::endl;
+    std::cout << "Delta = " << delta_ << std::endl;
 }

@@ -22,7 +22,7 @@ typedef struct
 class StanleyController
 {
     public:
-        std::vector<float> DELTA_SAT_;       // Max steering and min steering
+        std::vector<float> DELTA_SAT_;       // {max, min} steering
         float delta_;           // Desired steering
         float psi_;             // Current heading
         float k_;               // Controller gain
