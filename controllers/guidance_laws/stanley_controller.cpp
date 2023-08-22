@@ -15,9 +15,9 @@
 
 #include "stanley_controller.hpp"
 
-StanleyController::StanleyController(float delta_max, float k, float k_soft)
+StanleyController::StanleyController(const std::vector<float>& delta_sat, float k, float k_soft)
 {
-    DELTA_MAX_ = delta_max;
+    DELTA_SAT_ = delta_sat;
     psi_ = 0;
     k_ = k;
     k_soft_ = k_soft;
@@ -91,8 +91,8 @@ void StanleyController::calculateSteering(float vel){
     delta_ = phi + std::atan2(k_*ey_,k_soft_ + vel_);
     // std::cout << "Delta = " << delta_);
 
-    if (delta_ > DELTA_MAX_)
-        delta_ = DELTA_MAX_;
-    else if (delta_ < -DELTA_MAX_)
-        delta_ = -DELTA_MAX_;
+    if (delta_ > DELTA_SAT_[0])
+        delta_ = DELTA_SAT_[0];
+    else if (delta_ < -DELTA_SAT_[1])
+        delta_ = -DELTA_SAT_[1];
 }
