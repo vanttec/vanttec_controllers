@@ -11,6 +11,8 @@
 #ifndef __STANLEY_CONTROLLER__
 #define __STANLEY_CONTROLLER__
 
+#include <vector>
+
 typedef struct
 {
     float x;
