@@ -27,9 +27,6 @@ StanleyController::~StanleyController(){}
 
 // void StanleyController::calculateCrosstrackError(float x, float y, float p1.x, float p1.y, float p2.x, float p2.y){
 void StanleyController::calculateCrosstrackError(const Point& vehicle_pos, const Point& p1, const Point& p2){
-    // float x = vehicle_pose_.x;
-    // float y = vehicle_pose_.y;
-
     float m1;
     float m2;
     float b;
@@ -71,13 +68,13 @@ void StanleyController::calculateCrosstrackError(const Point& vehicle_pos, const
     ex_ = (p2.x - xp)*std::cos(ak_) + (p2.y - yp)*std::sin(ak_);
     ey_ = -(vehicle_pos.x - xp)*std::sin(ak_) + (vehicle_pos.y - yp)*std::cos(ak_);
 
-    std::cout << "xp = " << xp << std::endl;
-    std::cout << "yp = " << yp << std::endl;
-    std::cout << "x = " << vehicle_pos.x << std::endl;
-    std::cout << "y = " << vehicle_pos.y << std::endl;
-    std::cout << "Along-track error = " << ex_ << std::endl;
-    std::cout << "Crosstrack error = " << ey_ << std::endl;
-    std::cout << "ak = " << ak_ << std::endl;
+    // std::cout << "xp = " << xp << std::endl;
+    // std::cout << "yp = " << yp << std::endl;
+    // std::cout << "x = " << vehicle_pos.x << std::endl;
+    // std::cout << "y = " << vehicle_pos.y << std::endl;
+    // std::cout << "Along-track error = " << ex_ << std::endl;
+    // std::cout << "Crosstrack error = " << ey_ << std::endl;
+    // std::cout << "ak = " << ak_ << std::endl;
 }
 
 void StanleyController::setYawAngle(float psi){
@@ -95,7 +92,7 @@ void StanleyController::calculateSteering(float vel){
     else if (delta_ < DELTA_SAT_[1])
         delta_ = DELTA_SAT_[1];
 
-    std::cout << "psi = " << psi_ << std::endl;
-    std::cout << "Delta max = " << DELTA_SAT_[0] << "Delta min = " << DELTA_SAT_[1] << std::endl;
-    std::cout << "Delta = " << delta_ << std::endl;
+    // std::cout << "psi = " << psi_ << std::endl;
+    // std::cout << "Delta max = " << DELTA_SAT_[0] << "Delta min = " << DELTA_SAT_[1] << std::endl;
+    // std::cout << "Delta = " << delta_ << std::endl;
 }
