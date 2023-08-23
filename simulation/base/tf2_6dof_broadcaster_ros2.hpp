@@ -4,8 +4,10 @@
  * @author: Sebastian Martinez
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Used to publish the current pose of the simulated vehicle and correctly
- *         represent it in RViz.
+ * @brief:  Base TF2 broadcaster class to publish transformations
+ *          from a parent frame to a child frame.
+ *          The broadcastTransform() method must be defined in derived classes
+ *           as the transform is strictly dependent of the frame conventions used.
  * -----------------------------------------------------------------------------
  **/
 
@@ -28,20 +30,24 @@
 class TF2Broadcaster
 {
     public:
-        
-        TF2Broadcaster(rclcpp::Node::SharedPtr node,const std::string& _parent, const std::string& _child);
-        virtual ~TF2Broadcaster();
-        
-        nav_msgs::msg::Path  path_;
+        nav_msgs::msg::Path path_;
 
         /* Class methods */
-        void BroadcastTransform(const sdv_msgs::msg::EtaPose& msg);
-    private:
+        // The broadcastTransform() method must be defined in derived classes
+        // as the transform is strictly dependent of the frame conventions used.
+        virtual void broadcastTransform(const sdv_msgs::msg::EtaPose& msg);
+
+    protected:
         rclcpp::Node::SharedPtr node_;
         std::string parent_frame;
         std::string child_frame;
+
+        geometry_msgs::msg::TransformStamped tf_stmpd_;
+
         std::unique_ptr<tf2_ros::TransformBroadcaster> br_;
-        rclcpp::Subscription<sdv_msgs::msg::EtaPose>::SharedPtr sub_;
+
+        TF2Broadcaster(rclcpp::Node::SharedPtr node,const std::string& _parent, const std::string& _child);
+        ~TF2Broadcaster();
 
 };
 

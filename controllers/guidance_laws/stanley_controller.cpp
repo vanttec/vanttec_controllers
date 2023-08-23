@@ -68,13 +68,13 @@ void StanleyController::calculateCrosstrackError(const Point& vehicle_pos, const
     ex_ = (p2.x - xp)*std::cos(ak_) + (p2.y - yp)*std::sin(ak_);
     ey_ = -(vehicle_pos.x - xp)*std::sin(ak_) + (vehicle_pos.y - yp)*std::cos(ak_);
 
-    // std::cout << "xp = " << xp << std::endl;
-    // std::cout << "yp = " << yp << std::endl;
-    // std::cout << "x = " << vehicle_pos.x << std::endl;
-    // std::cout << "y = " << vehicle_pos.y << std::endl;
-    // std::cout << "Along-track error = " << ex_ << std::endl;
-    // std::cout << "Crosstrack error = " << ey_ << std::endl;
-    // std::cout << "ak = " << ak_ << std::endl;
+    std::cout << "xp = " << xp << std::endl;
+    std::cout << "yp = " << yp << std::endl;
+    std::cout << "x = " << vehicle_pos.x << std::endl;
+    std::cout << "y = " << vehicle_pos.y << std::endl;
+    std::cout << "Along-track error = " << ex_ << std::endl;
+    std::cout << "Crosstrack error = " << ey_ << std::endl;
+    std::cout << "ak = " << ak_ << std::endl;
 }
 
 void StanleyController::setYawAngle(float psi){
@@ -83,16 +83,35 @@ void StanleyController::setYawAngle(float psi){
 
 void StanleyController::calculateSteering(float vel){
     vel_ = vel;
+
+    std::cout << "psi = " << psi_ << std::endl;
+
+    // if(ak_ > M_PI_2 && ak_ <  M_PI && psi_ < -M_PI_2 && psi_ > - M_PI)
+    //     psi_ = psi_ + M_PI*2;
+    // else if (ak_ < -M_PI_2 && ak_ > - M_PI && psi_ > M_PI_2 && psi_ <  M_PI)
+    //     psi_ = psi_ - M_PI*2;
+
+    // float phi = psi_ - ak_;
     float phi = psi_ - ak_;
-    // delta_ = -(phi + std::atan2(k_*ey_,k_soft_ + vel_));
+    // float sign = (std::fabs(ey_)/ey_);
+
+    // if(sign > 0)
+    //     sign = -1;
+    // else if (sign < 0)
+    //     sign = 1;
+
     delta_ = phi + std::atan2(k_*ey_,k_soft_ + vel_);
+
+    delta_ = -delta_;
 
     if (delta_ > DELTA_SAT_[0])
         delta_ = DELTA_SAT_[0];
     else if (delta_ < DELTA_SAT_[1])
         delta_ = DELTA_SAT_[1];
 
-    // std::cout << "psi = " << psi_ << std::endl;
-    // std::cout << "Delta max = " << DELTA_SAT_[0] << "Delta min = " << DELTA_SAT_[1] << std::endl;
-    // std::cout << "Delta = " << delta_ << std::endl;
+    std::cout << "atan2 = " << std::atan2(k_*ey_,k_soft_ + vel_) << std::endl;
+    std::cout << "psi = " << psi_ << std::endl;
+    std::cout << "ak = " << ak_ << std::endl;
+    std::cout << "Delta max = " << DELTA_SAT_[0] << ", Delta min = " << DELTA_SAT_[1] << std::endl;
+    std::cout << "Delta = " << delta_    << std::endl;
 }

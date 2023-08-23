@@ -6,7 +6,11 @@
  * 
  * @brief: Description of a generic 6dof UUV model in the inertial frame with
            Euler Angles.
-   @todo: Modify matrices for the true general case of non-diagonal matrices.
+            Coordinate frame convention:
+            - N (front)
+            - E (right)
+            - D (down) 
+   @TODO: Modify matrices for the true general case of non-diagonal matrices.
           Include ALL terms. Also, include offset vector in the case the origin
           is no the COM_.
  * -----------------------------------------------------------------------------
