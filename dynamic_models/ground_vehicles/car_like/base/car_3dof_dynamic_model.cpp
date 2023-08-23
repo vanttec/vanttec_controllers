@@ -4,8 +4,31 @@
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Description of generic 3-DOF car model in the non-inertial frame with
-           Euler Angles.
+ * @brief:  Description of generic 3-DOF car model in a non-inertial frame with
+            Euler Angles.
+            The nonlinear bycicle model was used.
+            This model works for low speed movement and considers no
+            longitudinal slip.
+            Coordinate frame conventions:
+                DYN_MODEL: (equations are in calculated in this frame)
+                - x (front)
+                - y (left)
+                - z (up)
+                BASE_LINK: (in accordance with ned)
+                - x (front)
+                - y (right)
+                - z (down)
+            ------- Both frames share the same origin -------
+
+                INERTIAL_FRAME: (pose is in this frame. Is different from NED)
+                - x (front)
+                - y (left)
+                - z (up)
+
+ * @TODO:   Determine correctly:
+            - Fthrottle
+            - Fbrake
+            - Rolling resistance
  * -----------------------------------------------------------------------------
  **/
 
@@ -71,14 +94,14 @@ void CarDynamicModel::setMotorConstants(float Cm1, float Cm2)
 
 void CarDynamicModel::calculateStates(){
     
-    utils::calculate2DRotation(R_, eta_(2));
+    utils::calculateR_z(R_, eta_(2));
     
     float u = nu_(0);
     float v = nu_(1);
     float r = nu_(2);
-    float fx = 0;
-    float fy = 0;
-    float fz = 0;
+    float Fx = 0;
+    float Fy = 0;
+    float Mz = 0;
 
     nu_dot_prev_ = nu_dot_;
     eta_dot_prev_ = eta_dot_;
@@ -96,8 +119,7 @@ void CarDynamicModel::calculateStates(){
 
     if(D_ > 0){
         F_throttle_ -= t_offset_;   // To compensate for model error
-    }
-    else {
+    } else {
         F_rr_ -= rr_offset_;        // To compensate for model error
     }
 
@@ -113,16 +135,33 @@ void CarDynamicModel::calculateStates(){
 
     alpha_f_ = std::atan2(v + len_f_*r,u) - delta_;
     alpha_r_ = std::atan2(v - len_r_*r,u);
-    F_fy_ = -C_alpha_*alpha_f_;
-    F_ry_ = -C_alpha_*alpha_r_;
 
-    fx = -(F_drag_ + F_rr_ + F_grav_ + F_fy_*std::sin(delta_) - m_*v*r);
-    fy = F_ry_ + F_fy_*std::cos(delta_) - m_*u*r;
-    fz = F_fy_*len_f_*std::cos(delta_) - F_ry_*len_r_;
+    if(u > 1e-2){
+        F_fy_ = -C_alpha_*alpha_f_;
+        F_ry_ = -C_alpha_*alpha_r_;
+    } else {
+        F_fy_ = 0.0;
+        F_ry_ = 0.0;
+    }
 
-    f_ << fx/m_,
-          fy/m_,
-          fz/Iz_;
+    Fx = -(F_drag_ + F_rr_ + F_grav_ + F_fy_*std::sin(delta_) - m_*v*r);
+
+    // So the model doesn't do weird things without moving forward 
+    if(u > 1e-2){
+        Fy = F_ry_ + F_fy_*std::cos(delta_) - m_*u*r;
+        Mz = F_fy_*len_f_*std::cos(delta_) - F_ry_*len_r_;
+    } else {
+        Fy = 0.0;
+        Mz = 0.0;
+    }
+
+    // std::cout << "Fx = " << Fx << std::endl;
+    // std::cout << "Fy = " << Fy << std::endl;
+    // std::cout << "Mz = " << Mz << std::endl;
+
+    f_ << Fx/m_,
+          Fy/m_,
+          Mz/Iz_;
 
     g_(0,0) = 1/m_;
 
@@ -131,6 +170,12 @@ void CarDynamicModel::calculateStates(){
 
     /* Integrating acceleration to get velocities */
     nu_ += (nu_dot_prev_ + nu_dot_) / 2 * sample_time_;
+
+    // So the model doesn't do weird things without moving forward 
+    // if(delta_ == 0.0){
+    //     nu_(1) = 0.0;
+    //     nu_(2) = 0.0;
+    // }
 
     /* Changing frames */
     eta_dot_ = R_*nu_;
@@ -141,38 +186,53 @@ void CarDynamicModel::calculateStates(){
     if (std::fabs(eta_(2)) > M_PI){
         eta_(2) = (eta_(2) / std::fabs(eta_(2))) * (std::fabs(eta_(2)) - 2 * M_PI);
     }
-    
-    /* update ROS Messages */
+
+    /* Update ROS Messages */
+    /* Change of coordinate frame convention (from DYN_MODEL to BASE_LINK):
+        - x (front) -> x (front)
+        - y (left)  -> y (right)
+        - z (up)    -> z (down)
+    */
 
     accelerations_.linear.x = nu_dot_(0);
-    accelerations_.linear.y = nu_dot_(1);
-    accelerations_.angular.z = nu_dot_(2);
+    accelerations_.linear.y = -nu_dot_(1);
+    accelerations_.angular.z = -nu_dot_(2);
 
     velocities_.linear.x = nu_(0);
-    velocities_.linear.y = nu_(1);
-    velocities_.angular.z = nu_(2);
-    
+    velocities_.linear.y = -nu_(1);
+    velocities_.angular.z = -nu_(2);
+
     eta_pose_.x = eta_(0);
     eta_pose_.y = eta_(1);
-    eta_pose_.psi = eta_(2);
+    eta_pose_.psi = -eta_(2);
 }
 
 void CarDynamicModel::setThrottle(uint8_t D){
     D_ = D;
-    // u_ << u,  // throttle + break
-    //       0,
-    //       0;
 }
 
 void CarDynamicModel::setSteering(float delta){
-    delta_ = delta;
-    // if(u_(0) < 0.1){
+    // if(nu_(0) < 1e-2){
     //     delta_ = 0;
+    //     return;
     // }
+
+    /* Change of coordinate frame convention (from BASE_LINK to DYN_MODEL):
+        - x (front) -> x (front)
+        - y (right) -> y (left)
+        - z (down)  -> z (up)
+    */
+
+    delta_ = -delta;
 }
 
 void CarDynamicModel::setPitch(float pitch){
-    theta_ = pitch;
+    /* Change of coordinate frame convention (from BASE_LINK to DYN_MODEL):
+        - x (front) -> x (front)
+        - y (right) -> y (left)
+        - z (down)  -> z (up)
+    */
+    theta_ = -pitch;
 }
 
 // void CarDynamicModel::manualControl(const sdv_msgs::msg::VehicleControl &manual)

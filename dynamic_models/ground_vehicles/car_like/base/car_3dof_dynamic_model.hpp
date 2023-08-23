@@ -4,14 +4,31 @@
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 
- * @brief: Description of generic 3-DOF car model in the non-inertial frame with
-           Euler Angles. 
-           The nonlinear bycicle model was used.
-           This model works for low speed movement and considers no
-           longitudinal slip.
- * @TODO: Determine correctly:
-           - Cm
-           - Cd
+ * @brief:  Description of generic 3-DOF car model in a non-inertial frame with
+            Euler Angles.
+            The nonlinear bycicle model was used.
+            This model works for low speed movement and considers no
+            longitudinal slip.
+            Coordinate frame convention:
+                DYN_MODEL: (equations are in calculated in this frame)
+                - x (front)
+                - y (left)
+                - z (up)
+                BASE_LINK: (in accordance with ned)
+                - x (front)
+                - y (right)
+                - z (down)
+            ------- Both frames share the same origin -------
+
+                INERTIAL_FRAME: (pose is in this frame. Is different from NED)
+                - x (front)
+                - y (left)
+                - z (up)
+
+ * @TODO:   Determine correctly:
+            - Fthrottle
+            - Fbrake
+            - Rolling resistance
  * -----------------------------------------------------------------------------
  **/
 

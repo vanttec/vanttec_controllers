@@ -26,16 +26,18 @@ void TF2Broadcaster::BroadcastTransform(const vanttec_msgs::EtaPose& _pose)
 {    
     geometry_msgs::TransformStamped transformStamped;
     
-    // From NED to NWU RViz reference frame (x forward, y left, z up): negate y and z
+    // To visualize correctly in RViz in the desired reference frame, just make sure to define correctly
+    // your tfs and select the proper fixed frame (ex: map --> odom(ned) --> etc)
+    // The fixed frame would be map, and by displaying the tfs, viewing odom, measuremnts would make sense
     transformStamped.header.stamp               = ros::Time::now();
     transformStamped.header.frame_id            = this->parent_frame;
     transformStamped.child_frame_id             = this->child_frame;
     transformStamped.transform.translation.x    = _pose.x;
-    transformStamped.transform.translation.y    = -_pose.y;
-    transformStamped.transform.translation.z    = -_pose.z;
+    transformStamped.transform.translation.y    = _pose.y;
+    transformStamped.transform.translation.z    = _pose.z;
 
     tf2::Quaternion q;
-    q.setRPY(_pose.phi, -_pose.theta, -_pose.psi);
+    q.setRPY(_pose.phi, _pose.theta, _pose.psi);
     q.normalize();
     transformStamped.transform.rotation.x = q.x();
     transformStamped.transform.rotation.y = q.y();
@@ -49,8 +51,8 @@ void TF2Broadcaster::BroadcastTransform(const vanttec_msgs::EtaPose& _pose)
     pose.header.stamp       = ros::Time::now();
     pose.header.frame_id    = this->parent_frame;
     pose.pose.position.x    = _pose.x;
-    pose.pose.position.y    = -_pose.y;
-    pose.pose.position.z    = -_pose.z;
+    pose.pose.position.y    = _pose.y;
+    pose.pose.position.z    = _pose.z;
     pose.pose.orientation.x = q.x();
     pose.pose.orientation.y = q.y();
     pose.pose.orientation.z = q.z();
