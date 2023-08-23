@@ -18,8 +18,12 @@
                 - x (front)
                 - y (right)
                 - z (down)
-
             ------- Both frames share the same origin -------
+
+                INERTIAL_FRAME: (pose is in this frame. Is different from NED)
+                - x (front)
+                - y (left)
+                - z (up)
 
  * @TODO:   Determine correctly:
             - Fthrottle

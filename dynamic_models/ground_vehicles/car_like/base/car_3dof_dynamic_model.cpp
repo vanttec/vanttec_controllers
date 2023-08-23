@@ -18,8 +18,12 @@
                 - x (front)
                 - y (right)
                 - z (down)
-
             ------- Both frames share the same origin -------
+
+                INERTIAL_FRAME: (pose is in this frame. Is different from NED)
+                - x (front)
+                - y (left)
+                - z (up)
 
  * @TODO:   Determine correctly:
             - Fthrottle
@@ -197,7 +201,7 @@ void CarDynamicModel::calculateStates(){
     velocities_.linear.x = nu_(0);
     velocities_.linear.y = -nu_(1);
     velocities_.angular.z = -nu_(2);
-    
+
     eta_pose_.x = eta_(0);
     eta_pose_.y = eta_(1);
     eta_pose_.psi = -eta_(2);

@@ -3,6 +3,7 @@
  * @date: November 30, 2022
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
+ * @author: Max Pacheco
  * 
  * @brief: Stanley Controller class
  * -----------------------------------------------------------------------------
