@@ -106,5 +106,5 @@ void StanleyController::calculateSteering(float vel){
     // std::cout << "psi = " << psi_ << std::endl;
     // std::cout << "ak = " << ak_ << std::endl;
     // std::cout << "Delta max = " << DELTA_SAT_[0] << ", Delta min = " << DELTA_SAT_[1] << std::endl;
-    std::cout << "Delta = " << delta_    << std::endl;
+    // std::cout << "Delta = " << delta_    << std::endl;
 }

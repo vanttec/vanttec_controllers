@@ -136,7 +136,7 @@ void CarDynamicModel::calculateStates(){
     alpha_f_ = std::atan2(v + len_f_*r,u) - delta_;
     alpha_r_ = std::atan2(v - len_r_*r,u);
 
-    if(u > 1e-2 /* && D_ > 0 */){
+    if(u > 1e-2){
         F_fy_ = -C_alpha_*alpha_f_;
         F_ry_ = -C_alpha_*alpha_r_;
     } else {
@@ -147,7 +147,7 @@ void CarDynamicModel::calculateStates(){
     Fx = -(F_drag_ + F_rr_ + F_grav_ + F_fy_*std::sin(delta_) - m_*v*r);
 
     // So the model doesn't do weird things without moving forward 
-    if(u > 1e-2 /* && D_ > 0 */){
+    if(u > 1e-2){
         Fy = F_ry_ + F_fy_*std::cos(delta_) - m_*u*r;
         Mz = F_fy_*len_f_*std::cos(delta_) - F_ry_*len_r_;
     } else {
@@ -172,7 +172,7 @@ void CarDynamicModel::calculateStates(){
     nu_ += (nu_dot_prev_ + nu_dot_) / 2 * sample_time_;
 
     // So the model doesn't do weird things without moving forward 
-    // if(D_ == 0 ){
+    // if(delta_ == 0.0){
     //     nu_(1) = 0.0;
     //     nu_(2) = 0.0;
     // }
@@ -212,11 +212,17 @@ void CarDynamicModel::setThrottle(uint8_t D){
 }
 
 void CarDynamicModel::setSteering(float delta){
+    // if(nu_(0) < 1e-2){
+    //     delta_ = 0;
+    //     return;
+    // }
+
     /* Change of coordinate frame convention (from BASE_LINK to DYN_MODEL):
         - x (front) -> x (front)
         - y (right) -> y (left)
         - z (down)  -> z (up)
     */
+
     delta_ = -delta;
 }
 
