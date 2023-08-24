@@ -89,12 +89,8 @@ void StanleyController::calculateSteering(float vel){
     double PI = M_PI + 1e-3;
     if(ak_ >= PI/2 && ak_ <=  PI && psi_ <= -PI/2 && psi_ >= - PI){
         psi_ = psi_ + PI*2;
-    }
-    else if (ak_ < -PI/2 && ak_ > - PI && psi_ > PI/2 && psi_ <  PI){
-        std::cout << "2" << std::endl;
+    } else if (ak_ < -PI/2 && ak_ > - PI && psi_ > PI/2 && psi_ <  PI){
         psi_ = psi_ - PI*2;
-    } else {
-        std::cout << ak_ - PI << std::endl;
     }
 
     // float phi = psi_ - ak_;
