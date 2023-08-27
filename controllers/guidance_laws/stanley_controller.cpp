@@ -85,10 +85,13 @@ void StanleyController::setYawAngle(float psi){
 void StanleyController::calculateSteering(float vel){
     vel_ = vel;
 
-    if(ak_ > M_PI_2 && ak_ <  M_PI && psi_ < -M_PI_2 && psi_ > - M_PI)
-        psi_ = psi_ + M_PI*2;
-    else if (ak_ < -M_PI_2 && ak_ > - M_PI && psi_ > M_PI_2 && psi_ <  M_PI)
-        psi_ = psi_ - M_PI*2;
+    // PI error fixed due to rounding in ak_ angle when the path is vertical that makes it greater than M_PI
+    double PI = M_PI + 1e-3;
+    if(ak_ >= PI/2 && ak_ <=  PI && psi_ <= -PI/2 && psi_ >= - PI){
+        psi_ = psi_ + PI*2;
+    } else if (ak_ < -PI/2 && ak_ > - PI && psi_ > PI/2 && psi_ <  PI){
+        psi_ = psi_ - PI*2;
+    }
 
     // float phi = psi_ - ak_;
     float phi = psi_ - ak_;
@@ -101,10 +104,10 @@ void StanleyController::calculateSteering(float vel){
         delta_ = DELTA_SAT_[0];
     else if (delta_ < DELTA_SAT_[1])
         delta_ = DELTA_SAT_[1];
-
+    
     // std::cout << "atan2 = " << std::atan2(k_*ey_,k_soft_ + vel_) << std::endl;
-    // std::cout << "psi = " << psi_ << std::endl;
-    // std::cout << "ak = " << ak_ << std::endl;
+    // std::cout << "Psi = " << psi_ << std::endl;
+    // std::cout << "Ak = " << ak_ << std::endl;
     // std::cout << "Delta max = " << DELTA_SAT_[0] << ", Delta min = " << DELTA_SAT_[1] << std::endl;
     // std::cout << "Delta = " << delta_    << std::endl;
 }

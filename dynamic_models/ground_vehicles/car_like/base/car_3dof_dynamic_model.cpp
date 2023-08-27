@@ -128,7 +128,7 @@ void CarDynamicModel::calculateStates(){
     
     // Next condition was set so the vehicle does not move backwards when
     // the throttle force is less than the resistance
-    if(F_rr_ >= u_(0)  && u < 1e-2) {
+    if(F_rr_ >= u_(0) && u < 1e-2) {
         u_(0) = 0;
         F_rr_ = 0;
     }
@@ -153,6 +153,14 @@ void CarDynamicModel::calculateStates(){
     } else {
         Fy = 0.0;
         Mz = 0.0;
+        if(F_drag_ != 0){
+            Fx = 0.0;
+            u_ << 0, 0, 0;
+            nu_dot_prev_ << 0, 0, 0;
+            eta_dot_prev_ << 0, 0, 0;
+            F_drag_ = 0;
+            g_ << 0, 0, 0;
+        }    
     }
 
     // std::cout << "Fx = " << Fx << std::endl;
