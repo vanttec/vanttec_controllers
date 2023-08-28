@@ -35,7 +35,7 @@
 #ifndef __CAR_DYNAMIC_MODEL__
 #define __CAR_DYNAMIC_MODEL__
 
-#include <eigen3/Eigen/Core>
+#include <eigen3/Eigen/Dense>
 #include <eigen3/unsupported/Eigen/Polynomials>
 
 #include "geometry_msgs/msg/accel.hpp"
