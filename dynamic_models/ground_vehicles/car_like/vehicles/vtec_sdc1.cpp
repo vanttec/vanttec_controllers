@@ -38,7 +38,8 @@ VTecSDC1DynamicModel::VTecSDC1DynamicModel(float sample_time, uint8_t D_MAX) :
     % Calculations made sense, as the Calpha of the Stanford Stanley car
     % are similar by being calculated with the same method
     */
-    C_alpha_ = m_*9.81/2*0.165*57.2957;//69788.1178;
+    C_alpha_ = 69788.1178;
+    // C_alpha_ = m_*9.81/2*0.165*57.2957;//69788.1178;
                             
     alpha_f_ = 0.0;
     alpha_r_ = 0.0;
@@ -66,7 +67,7 @@ void VTecSDC1DynamicModel::updateDBSignals(float des_vel){
     float b = 0.4629*nu_(0)-2.0783;
     float c = 134.067-22.399*nu_(0);
     float d = -1038.7-u_(0);
-    uint8_t real_root;
+    uint8_t real_root = 0;
     // float root = 0;
 
     // Create a cubic polynomial using Eigen's PolynomialSolver
@@ -79,8 +80,11 @@ void VTecSDC1DynamicModel::updateDBSignals(float des_vel){
     Eigen::Matrix<std::complex<float>, 3, 1> roots = solver.roots();
 
     for (int i = 0; i < 3; ++i) {
-        if(std::fabs(roots(i).imag()) < 1e-6)
+        // std::cout << "Real (" << i << ")=" << (int)(std::round(roots(i).real())) << " imag=" << (int)(std::round(roots(i).imag())) << std::endl;
+        if(std::fabs(roots(i).imag()) < 1e-6){
             real_root = static_cast<uint8_t>(std::round(roots(i).real()));
+            // std::cout << "Root: " << (int)real_root << std::endl;
+        }
     }
 
     // if(has_real_root){

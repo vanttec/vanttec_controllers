@@ -153,14 +153,6 @@ void CarDynamicModel::calculateStates(){
     } else {
         Fy = 0.0;
         Mz = 0.0;
-        if(F_drag_ != 0){
-            Fx = 0.0;
-            u_ << 0, 0, 0;
-            nu_dot_prev_ << 0, 0, 0;
-            eta_dot_prev_ << 0, 0, 0;
-            F_drag_ = 0;
-            g_ << 0, 0, 0;
-        }    
     }
 
     // std::cout << "Fx = " << Fx << std::endl;

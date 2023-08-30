@@ -79,7 +79,7 @@ void ASMC::calculateManipulation(float q)
     s_ = error_dot + lambda_*error_;
 
     // Adaptive law
-    dot_K1_ = K1_ > K_min_ ?  K_alpha_*utils::sign(std::fabs(s_) - mu_) : K_min_;
+    dot_K1_ = K1_ > K_min_ ?  K_alpha_*static_cast<float>(utils::sign(std::fabs(s_) - mu_)) : K_min_;
     
     K1_ += (dot_K1_ + prev_dot_K1_) / 2 * sample_time_;
     
