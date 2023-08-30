@@ -14,6 +14,8 @@
 
 #include <vector>
 
+const float MIN_DELTA = 0.08;
+
 typedef struct
 {
     float x;
@@ -28,10 +30,10 @@ class StanleyController
         float psi_;             // Current heading
         float k_;               // Controller gain
         float k_soft_;          // Soft gain
-        float ex_;           // Along-track error
+        float ex_;              // Along-track error
         float ey_;              // Crosstrack error
         float vel_;             // velocity vector norm
-        float ak_;
+        float ak_;              // Trajectory 2D slope
 
         StanleyController(const std::vector<float>& delta_sat, float k, float k_soft);
         virtual ~StanleyController();
