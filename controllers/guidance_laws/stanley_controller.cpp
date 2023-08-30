@@ -104,7 +104,9 @@ void StanleyController::calculateSteering(float vel){
         delta_ = DELTA_SAT_[0];
     else if (delta_ < DELTA_SAT_[1])
         delta_ = DELTA_SAT_[1];
-    
+    else if (abs(delta_) < 0.08)
+        delta_ = delta_;
+    std::cout << abs(delta_) << std::endl;
     // std::cout << "atan2 = " << std::atan2(k_*ey_,k_soft_ + vel_) << std::endl;
     // std::cout << "Psi = " << psi_ << std::endl;
     // std::cout << "Ak = " << ak_ << std::endl;
