@@ -14,7 +14,8 @@
 
 #include <vector>
 
-const float MIN_DELTA = 0.08;
+const float MIN_DELTA = 0.08; // Minimum delta needed for steering, to ...
+// keep the wheel from constantly steering and causing unwanted noise.
 
 typedef struct
 {
