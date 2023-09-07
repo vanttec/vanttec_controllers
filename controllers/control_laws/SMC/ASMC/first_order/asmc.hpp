@@ -33,15 +33,10 @@ class ASMC
     protected:
         float sample_time_;
         
-        float error_;
         float prev_error_;
-
-        /* Setpoint */
-        float q_d_;
-        float q_dot_d_;
         
-        /* Auxiliar control */
-        float u_;
+        float chi1_dot_d;
+
         float U_MAX_;
 
         /* Sliding surface */
@@ -62,6 +57,14 @@ class ASMC
         DOFControllerType_E controller_type_;
 
     public:
+
+        /* Auxiliar control */
+        float u_;
+
+        /* Setpoint */
+        float chi1_d;
+        
+        float error_;
 
         // Constructor
         ASMC(float sample_time, const ASMC_Config& config);

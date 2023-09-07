@@ -13,8 +13,8 @@
 ANTSMC::ANTSMC(float sample_time,float alpha,float beta,float K2,float K_alpha,float K_min,float K1_init,float mu, const DOFControllerType_E& type)
 {
     sample_time_ = sample_time_;
-    q_d_ = 0.0;
-    q_dot_d_ = 0.0;
+    chi1_d = 0.0;
+    chi1_dot_d = 0.0;
     error_1_ = 0.0;
     error_2_ = 0.0;
     prev_error_1_ = 0.0;
@@ -57,8 +57,8 @@ void ANTSMC::reset()
 
 void ANTSMC::updateReferences(float q_d,float q_dot_d)
 {
-    q_d_ = q_d;
-    q_dot_d_ = q_dot_d;
+    chi1_d = q_d;
+    chi1_dot_d = q_dot_d;
 }
 
 void ANTSMC::calculateAuxControl(float q,float q_dot)
@@ -67,8 +67,8 @@ void ANTSMC::calculateAuxControl(float q,float q_dot)
     prev_error_2_ = error_2_;
     prev_dot_K1_ = dot_K1_;
 
-    error_1_ = q_d_ - q;
-    error_2_ = q_dot_d_ - q_dot;
+    error_1_ = chi1_d - q;
+    error_2_ = chi1_dot_d - q_dot;
 
     if (controller_type_ == ANGULAR_DOF)
     {

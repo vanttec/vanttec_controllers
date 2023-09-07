@@ -42,8 +42,8 @@ class ASMC
         float prev_error_2_;
 
         /* Setpoint */
-        float q_d_;
-        float q_dot_d_;
+        float chi1_d;
+        float chi1_dot_d;
         
         /* Auxiliar control */
         float u_;

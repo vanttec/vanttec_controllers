@@ -26,5 +26,4 @@ void FBLin::updateControlSignal(){
 
     u_ = std::fabs(u_) > U_MAX_ ? u_ / std::fabs(u_) * U_MAX_ : u_;
 
-    // std::cout << "u_vec: " << std::endl << u_ << std::endl;
 }

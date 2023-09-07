@@ -51,9 +51,7 @@ void PID::calculateManipulation(float chi1)
     error_d = (error_ - prev_error_) / sample_time_;
     error_i = ((error_ + prev_error_) / 2 * sample_time_) + error_;
 
-    u  = -(k_p_ * error_ + k_i_ * error_i + k_d_ * error_d);   // that "-" comes from fback lin theory:
-                                                               // u_  = (1 / g_x) * (-f_x + k_p_ * error_
-                                                               // + k_i_ * error_i + k_d_ * error_d_);
+    u  = k_p_ * error_ + k_i_ * error_i + k_d_ * error_d;
                                                                
     if(std::isnormal(u))
         u_ = u;

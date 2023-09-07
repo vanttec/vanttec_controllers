@@ -18,7 +18,7 @@ ASMC::ASMC(float sample_time, const ASMC_Config& config )
     prev_error_ = 0.0;
 
     /* Setpoint */
-    q_d_ = 0.0;
+    chi1_d = 0.0;
     
     /* Auxiliar control */
     u_ = 0.0;
@@ -54,7 +54,7 @@ void ASMC::reset()
 
 void ASMC::updateReferences(float q_d)
 {
-    q_d_ = q_d;
+    chi1_d = q_d;
 }
 
 void ASMC::calculateManipulation(float q)
@@ -63,7 +63,7 @@ void ASMC::calculateManipulation(float q)
     prev_error_ = error_;
     prev_dot_K1_ = dot_K1_;
 
-    error_ = q_d_ - q;
+    error_ = chi1_d - q;
 
     if (controller_type_ == ANGULAR_DOF)
     {
@@ -83,8 +83,7 @@ void ASMC::calculateManipulation(float q)
     
     K1_ += (dot_K1_ + prev_dot_K1_) / 2 * sample_time_;
     
-    u_ = -K1_*utils::sig(s_, 0.5) - K2_*s_;     // that "-" comes from fback lin theory:
-                                                // u_  = (1 / g_x) * (-f_x + K1... + K2*s);
+    u_ = K1_*utils::sig(s_, 0.5) + K2_*s_;
 }
 
 // Saturate manipulation function is intended to be used in applications where a FBLin ASMC is not required,

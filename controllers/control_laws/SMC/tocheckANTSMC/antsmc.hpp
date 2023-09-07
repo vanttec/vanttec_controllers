@@ -19,8 +19,8 @@ class ANTSMC
 {
     private:
         float sample_time_;
-        float q_d_;         // Setpoint
-        float q_dot_d_;
+        float chi1_d;         // Setpoint
+        float chi1_dot_d;
         float error_1_;
         float error_2_;
         float prev_error_1_;

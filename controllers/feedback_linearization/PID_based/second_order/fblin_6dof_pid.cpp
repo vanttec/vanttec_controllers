@@ -25,12 +25,12 @@ void PID6DOFLin::calculateManipulations(const std::array<float,6>& chi1, const s
 {
     control_law_.calculateManipulations(chi1,chi2);
 
-    u_aux_ << control_law_.PID_x_.u_,
-              control_law_.PID_y_.u_,
-              control_law_.PID_z_.u_,
-              control_law_.PID_phi_.u_,
-              control_law_.PID_theta_.u_,
-              control_law_.PID_psi_.u_;
+    u_aux_ << -control_law_.PID_x_.u_,
+              -control_law_.PID_y_.u_,
+              -control_law_.PID_z_.u_,
+              -control_law_.PID_phi_.u_,
+              -control_law_.PID_theta_.u_,
+              -control_law_.PID_psi_.u_;
 
     updateControlSignal();
 }

@@ -25,7 +25,7 @@ void PIDLin::calculateManipulations(float chi1)
 {
     control_law_.calculateManipulation(chi1);
 
-    u_aux_ = control_law_.u_;
+    u_aux_ = -control_law_.u_;
 
     updateControlSignal();
 }
