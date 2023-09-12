@@ -24,7 +24,7 @@ class FBLin6DOF
         std::array<float,6> U_MAX_;
         Eigen::VectorXf u_aux_;
         Eigen::VectorXf u_n_;
-        Eigen::VectorXf chi2_dot_d_;
+        Eigen::VectorXf chiX_dot_d_;
 
         // u_ = g_x_^(-1)*(chi2_dot_d - f_x_ + u_n - u_aux)
         

@@ -22,7 +22,7 @@ class FBLin
         float U_MAX_{0};
         float u_aux_{0};
         float u_n_{0};
-        float chi1_dot_d_{0};
+        float chiX_dot_d_{0};
 
         // u_ = g_x_^(-1)*(chi1_dot_d - f_x_ + u_n - u_aux)
         

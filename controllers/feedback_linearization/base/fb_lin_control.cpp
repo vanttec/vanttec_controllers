@@ -21,7 +21,7 @@ void FBLin::updateControlSignal(){
 
     if(std::isnormal(g_x_))
     {
-        u_ = (chi1_dot_d_ - f_x_ + u_n_ - u_aux_)/g_x_;
+        u_ = (chiX_dot_d_ - f_x_ + u_n_ - u_aux_)/g_x_;
     }
 
     u_ = std::fabs(u_) > U_MAX_ ? u_ / std::fabs(u_) * U_MAX_ : u_;

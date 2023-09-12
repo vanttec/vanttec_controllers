@@ -17,7 +17,7 @@ FBLin6DOF::FBLin6DOF(const std::array<float,6>& u_max){
     f_x_ = Eigen::VectorXf::Zero(6, 1);
     g_x_ = Eigen::MatrixXf::Zero(6, 6);
 
-    chi2_dot_d_ = Eigen::VectorXf::Zero(6, 1);
+    chiX_dot_d_ = Eigen::VectorXf::Zero(6, 1);
     u_n_ = Eigen::VectorXf::Zero(6, 1);
     u_ = Eigen::VectorXf::Zero(6, 1);
     u_aux_ = Eigen::VectorXf::Zero(6, 1);
@@ -32,7 +32,7 @@ void FBLin6DOF::updateControlSignal(){
     Eigen::FullPivLU<Eigen::MatrixXf> glu(g_x_);
     if (glu.isInvertible())
     {
-        u_ = g_x_.inverse()*(chi2_dot_d_ - f_x_ + u_n_ - u_aux_);
+        u_ = g_x_.inverse()*(chiX_dot_d_ - f_x_ + u_n_ - u_aux_);
     }
 
     for(size_t i = 0; i < 6; ++i)

@@ -34,5 +34,5 @@ void PIDLin::updateReferences(float chi1_d, float chi1_dot_d)
 {
     control_law_.updateReferences(chi1_d);
 
-    chi1_dot_d_ = chi1_dot_d;
+    chiX_dot_d_ = chi1_dot_d;
 }

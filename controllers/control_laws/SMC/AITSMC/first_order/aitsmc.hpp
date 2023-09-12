@@ -1,80 +1,85 @@
 /** ----------------------------------------------------------------------------
- * @file: asmc.hpp
- * @date: August 15, 2023
+ * @file: aitsmc.hpp
+ * @date: September 12, 2023
+ * @author: Andres Sanchez
  * @author: Sebas Mtz
- * @email: sebas.martp@gmail.com
  * 
- * @brief: First Order Adaptive Sliding Mode Controller class.
+ * @brief: First Order Adaptive Integral Terminal Sliding Mode Controller class.
  * -----------------------------------------------------------------------------
  * */
 
-#ifndef __ASMC_H__
-#define __ASMC_H__
+#ifndef __AITSMC_H__
+#define __AITSMC_H__
 
 #include "utils/utils.hpp"
 #include "sdv_msgs/msg/eta_pose.hpp"
-// #include "vanttec_msgs/EtaPose.h"
 #include <cmath>
 
 typedef struct 
 {
+    /* Sliding surface */
     float lambda;
-    float K2;
-    float K_alpha;
-    float K1_init;
-    float K_min;
-    float mu;
-    float u_max;
-    DOFControllerType_E type;
-} ASMC_Config;
+    float beta;
 
-class ASMC
+    /* Adaptive law*/
+    float K_min;
+    float K_alpha;
+
+    /* Gains */
+    float K1_init;
+    float K2;
+
+    float mu;
+    float U_MAX;
+    
+    DOFControllerType_E type;
+} AITSMC_Params;
+
+class AITSMC
 {
     protected:
         float sample_time_;
         
-        float prev_error_;
-        
-        float U_MAX_;
-
         /* Sliding surface */
-        float lambda_;
         float s_;
 
-        /* Gains */
+        /* Adaptive Law Gains */
         float K1_;
-        float K2_;
         float dot_K1_;
         float prev_dot_K1_;
+        
+        /* Errors */
+        float error_I_;
+        float error_I_dot_;
+        float prev_error_I_dot_;
 
-        /* Adaptive law */
-        float K_min_;
-        float K_alpha_;
-        float mu_;
+        bool init_val_{false};
+
+        AITSMC_Params params_;
 
         DOFControllerType_E controller_type_;
 
     public:
-
         /* Auxiliar control */
         float u_;
 
         /* Setpoint */
         float chi1_d;
-        
-        float error_;
 
+        float error_;
+        float lambda_;
+        
         // Constructor
-        ASMC(float sample_time, const ASMC_Config& config);
+        AITSMC(float sample_time, const AITSMC_Params& config);
 
         // Destructor
-        ~ASMC();
+        ~AITSMC();
 
         void reset();
         void updateReferences(float q_d);
         void calculateManipulation(float q);
 
-        // Saturate manipulation function is intended to be used in applications where a FBLin ASMC is not required,
+        // Saturate manipulation function is intended to be used in applications where a FBLin AITSMC is not required,
         // as FBLin base classes already saturate the control signals
         void saturateManipulation(float q);
 };

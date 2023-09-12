@@ -39,7 +39,7 @@ void PID6DOFLin::updateReferences(const std::array<float,6>& chi1_d, const std::
 {
     control_law_.updateReferences(chi1_d, chi2_d);
 
-    chi2_dot_d_ << chi2_dot_d[0],
+    chiX_dot_d_ << chi2_dot_d[0],
                    chi2_dot_d[1],
                    chi2_dot_d[2],
                    chi2_dot_d[3],
