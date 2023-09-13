@@ -68,7 +68,8 @@ void VTecSDC1DynamicModel::updateDBSignals(float des_vel){
     float c = 134.067-22.399*nu_(0);
     float d = -1038.7-u_(0);
     uint8_t real_root = 0;
-    // float root = 0;
+    float root = 0;
+    bool has_real_root;
 
     // Create a cubic polynomial using Eigen's PolynomialSolver
     Eigen::Matrix<float, 4, 1> coeffs;
@@ -76,23 +77,30 @@ void VTecSDC1DynamicModel::updateDBSignals(float des_vel){
     Eigen::PolynomialSolver<float, 3> solver(coeffs);
 
     // Compute the roots
-    // real_root = solver.smallestRealRoot(has_real_root, 1);
-    Eigen::Matrix<std::complex<float>, 3, 1> roots = solver.roots();
+    // Eigen::Matrix<std::complex<float>, 3, 1> roots = solver.roots();
+    // for (int i = 0; i < 3; ++i) {
+    //     // std::cout << "root(" << i << "): ";
+    //     // std::cout << "real = " << (int)(std::round(roots(i).real())) << ", imag=" << (int)(std::round(roots(i).imag())) << std::endl;
+    //     if(std::fabs(roots(i).imag()) < 1e-6){
+    //         real_root = static_cast<uint8_t>(std::round(roots(i).real()));
+    //         std::cout << "root: " << (int)real_root << std::endl;
+    //     }
+    // }
 
-    for (int i = 0; i < 3; ++i) {
-        // std::cout << "Real (" << i << ")=" << (int)(std::round(roots(i).real())) << " imag=" << (int)(std::round(roots(i).imag())) << std::endl;
-        if(std::fabs(roots(i).imag()) < 1e-6){
-            real_root = static_cast<uint8_t>(std::round(roots(i).real()));
-            // std::cout << "Root: " << (int)real_root << std::endl;
+    root = solver.smallestRealRoot(has_real_root, 1e-6);
+
+    if(has_real_root){
+        std::cout << "Root found = " << std::round(root)<< std::endl;
+        std::cout << "U = " << u_(0) << std::endl;
+        std::cout << "F_rr_ = " << F_rr_ << std::endl;
+        std::cout << "vel = " << nu_(0) << std::endl;
+
+        if(std::round(root) > 0){
+            real_root = static_cast<uint8_t>(std::round(root));
+            // std::cout << "Smallest real root found = " << (int)real_root << std::endl;
+            D_ = real_root>D_MAX_? D_MAX_:real_root<D_MIN_? D_MIN_:real_root;
         }
     }
-
-    // if(has_real_root){
-    //     root = static_cast<float>(std::round(real_root));
-    //     std::cout << "no real root" << std::endl;
-    // }
-    
-    D_ = real_root>D_MAX_? D_MAX_:real_root<D_MIN_? D_MIN_:real_root;
 
     /* BRAKING */
     // For now and until the break is included in the model, when a zero velocity is desired,

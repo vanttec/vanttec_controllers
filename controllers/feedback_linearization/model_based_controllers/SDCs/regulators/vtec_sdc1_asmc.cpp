@@ -27,11 +27,25 @@ void VTEC_SDC1_1DOF_ASMC::calculateControlSignals()
     float chi1 = nu_(0);
 
     calculateManipulations(chi1);
+
+    // Only in the case of the car, the next condition must be considered, as achieving reverse is not done by
+    // computing negative control signals.
+    // This must not be programed in any of the base controllers classes, as in the case of the boat and submarine,
+    // reverse is straightforward
+    if(AITSMCLin::u_ < 0)
+        AITSMCLin::u_ = 0;
 }
 
 void VTEC_SDC1_1DOF_ASMC::calculateControlSignals(float chi1)
 {
     calculateManipulations(chi1);
+
+    // Only in the case of the car, the next condition must be considered, as achieving reverse is not done by
+    // computing negative control signals.
+    // This must not be programed in any of the base controllers classes, as in the case of the boat and submarine,
+    // reverse is straightforward
+    if(AITSMCLin::u_ < 0)
+        AITSMCLin::u_ = 0;
 }
 
 void VTEC_SDC1_1DOF_ASMC::updateControlSignals()
