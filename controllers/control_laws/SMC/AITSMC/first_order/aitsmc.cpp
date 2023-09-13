@@ -26,7 +26,6 @@ AITSMC::AITSMC(float sample_time, const AITSMC_Params& params )
 
     /* Sliding surface */
     s_ = 0.0;
-    lambda_ = params.lambda;
 
     /* Gains */
     K1_ = params.K1_init;
@@ -59,7 +58,7 @@ void AITSMC::calculateManipulation(float q)
 
     error_ = chi1_d - q;
 
-    if (params_.type == ANGULAR_DOF)
+    if (params_.controller_type == ANGULAR_DOF)
     {
         if (std::fabs(error_) > M_PI)
         {
@@ -70,13 +69,13 @@ void AITSMC::calculateManipulation(float q)
     error_I_dot_ = utils::sig(error_, params_.beta);
 
     if(!init_val_){
-        error_I_ = -error_/lambda_;
+        error_I_ = -error_/params_.lambda;;
         init_val_ = true;
     }
 
     error_I_ += (error_I_dot_ + prev_error_I_dot_) / 2 * sample_time_;
 
-    s_ =  error_ + lambda_*error_I_;
+    s_ =  error_ + params_.lambda*error_I_;
 
     // Adaptive law
     dot_K1_ = K1_ > params_.K_min ?  params_.K_alpha*static_cast<float>(utils::sign(std::fabs(s_) - params_.mu)) : params_.K_min;

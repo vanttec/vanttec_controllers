@@ -15,10 +15,9 @@
 
 class AITSMCLin : public FBLin
 {
-    private:
+    public:
         AITSMC control_law_;
 
-    public:
         AITSMCLin(float sample_time, const AITSMC_Params& config, float u_max);
         ~AITSMCLin();
 

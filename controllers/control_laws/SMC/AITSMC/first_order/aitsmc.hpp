@@ -32,7 +32,7 @@ typedef struct
     float mu;
     float U_MAX;
     
-    DOFControllerType_E type;
+    DOFControllerType_E controller_type;
 } AITSMC_Params;
 
 class AITSMC
@@ -40,35 +40,35 @@ class AITSMC
     protected:
         float sample_time_;
         
-        /* Sliding surface */
-        float s_;
-
         /* Adaptive Law Gains */
-        float K1_;
         float dot_K1_;
         float prev_dot_K1_;
         
         /* Errors */
-        float error_I_;
         float error_I_dot_;
         float prev_error_I_dot_;
 
         bool init_val_{false};
 
-        AITSMC_Params params_;
-
-        DOFControllerType_E controller_type_;
-
     public:
         /* Auxiliar control */
         float u_;
 
+        /* Sliding surface */
+        float s_;
+        
+        /* Adaptive Law Gains */
+        float K1_;
+
         /* Setpoint */
         float chi1_d;
 
+        /* Errors */
         float error_;
-        float lambda_;
+        float error_I_;
         
+        AITSMC_Params params_;
+
         // Constructor
         AITSMC(float sample_time, const AITSMC_Params& config);
 
