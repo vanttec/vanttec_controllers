@@ -102,7 +102,7 @@ void StanleyController::calculateSteering(float vel, uint8_t precision){
     // To round the float to the nearest tenth (0.1) set precision=10
     // To round the float to the nearest tenth/2 (0.05) set precision=20
     // To round the float to the nearest hundredth (0.01) set precision=100
-    // This is intended to help with noise reduction in steering mechanism
+    // This is intended to help with vibration reduction in steering mechanism
     delta_ = std::round(delta_ * static_cast<float>(precision)) / static_cast<float>(precision);
     
     if (delta_ > DELTA_SAT_[0])
