@@ -1,12 +1,11 @@
 /** ----------------------------------------------------------------------------
- * @file: stanley_controller.cpp
+ * @file: LOS.cpp
  * @date: November 30, 2022
- * @date: August 18, 2023
+ * @date: September 13, 2023
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
- * @author: Max Pacheco
- *
- * @brief: Stanley Controller class
+ * 
+ * @brief: Line-Of-Sight Controller class
  * -----------------------------------------------------------------------------
  * */
 
@@ -14,20 +13,24 @@
 #include <iostream>
 #include <cmath>
 
-#include "stanley_controller.hpp"
+#include "LOS.hpp"
 
-StanleyController::StanleyController(const std::vector<float>& delta_sat, float k, float k_soft)
+LOS::LOS(const std::vector<float>& delta_sat, float kappa, float KAPPA_MAX)
 {
     DELTA_SAT_ = delta_sat;
     psi_ = 0;
-    k_ = k;
-    k_soft_ = k_soft;
+    ey_ = 0;               // Alongtrack error
+    ex_ = 0;               // Crosstrack error
+    vel_ = 0;             // velocity vector norm
+    ak_ = 0;              // path angle
+    beta_ = 0;            // desired heading
+    kappa_ = kappa;
+    KAPPA_MAX_ = KAPPA_MAX;
 }
 
-StanleyController::~StanleyController(){}
+LOS::~LOS(){}
 
-// void StanleyController::calculateCrosstrackError(float x, float y, float p1.x, float p1.y, float p2.x, float p2.y){
-void StanleyController::calculateCrosstrackError(const Point& vehicle_pos, const Point& p1, const Point& p2){
+void LOS::calculateCrosstrackError(const Point& vehicle_pos, const Point& p1, const Point& p2){
     float m1;
     float m2;
     float b;
@@ -78,26 +81,17 @@ void StanleyController::calculateCrosstrackError(const Point& vehicle_pos, const
     // std::cout << "ak = " << ak_ << std::endl;
 }
 
-void StanleyController::setYawAngle(float psi){
+void LOS::setYawAngle(float psi){
     psi_ = psi;
 }
 
-void StanleyController::calculateSteering(float vel, uint8_t precision){
+void LOS::calculateSteering(float vel, float L, uint8_t precision){
     vel_ = vel;
 
-    // PI error fixed due to rounding in ak_ angle when the path is vertical that makes it greater than M_PI
-    double PI = M_PI + 1e-3;
-    if(ak_ >= PI/2 && ak_ <=  PI && psi_ <= -PI/2 && psi_ >= - PI){
-        psi_ = psi_ + PI*2;
-    } else if (ak_ < -PI/2 && ak_ > - PI && psi_ > PI/2 && psi_ <  PI){
-        psi_ = psi_ - PI*2;
-    }
-
-    float phi = psi_ - ak_;
-    delta_ = phi + std::atan2(k_*ey_,k_soft_ + vel_);
-
-    // You want to reduce psi by delta so ...
-    delta_ = -delta_;
+    beta_ = ak_ + std::atan2(-ey_,kappa_);
+    delta_ = psi_ - beta_;
+    // beta_ = std::atan2(2*L*e_,kappa_*kappa_);
+    // delta_ = beta_;
 
     // To round the float to the nearest tenth (0.1) set precision=10
     // To round the float to the nearest tenth/2 (0.05) set precision=20

@@ -31,8 +31,8 @@ void VTEC_SDC1_1DOF_PID::calculateControlSignals()
     // computing negative control signals.
     // This must not be programed in any of the base controllers classes, as in the case of the boat and submarine,
     // reverse is straightforward
-    if(AITSMCLin::u_ < 0)
-        AITSMCLin::u_ = 0;
+    if(PIDLin::u_ < 0)
+        PIDLin::u_ = 0;
 }
 
 void VTEC_SDC1_1DOF_PID::calculateControlSignals(float chi1)
@@ -43,8 +43,8 @@ void VTEC_SDC1_1DOF_PID::calculateControlSignals(float chi1)
     // computing negative control signals.
     // This must not be programed in any of the base controllers classes, as in the case of the boat and submarine,
     // reverse is straightforward
-    if(AITSMCLin::u_ < 0)
-        AITSMCLin::u_ = 0;
+    if(PIDLin::u_ < 0)
+        PIDLin::u_ = 0;
 }
 
 void VTEC_SDC1_1DOF_PID::updateControlSignals()
