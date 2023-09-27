@@ -90,10 +90,10 @@ void VTecSDC1DynamicModel::updateDBSignals(float des_vel){
     root = solver.smallestRealRoot(has_real_root, 1e-6);
 
     if(has_real_root){
-        std::cout << "Root found = " << std::round(root)<< std::endl;
-        std::cout << "U = " << u_(0) << std::endl;
-        std::cout << "F_rr_ = " << F_rr_ << std::endl;
-        std::cout << "vel = " << nu_(0) << std::endl;
+        // std::cout << "Root found = " << std::round(root)<< std::endl;
+        // std::cout << "U = " << u_(0) << std::endl;
+        // std::cout << "F_rr_ = " << F_rr_ << std::endl;
+        // std::cout << "vel = " << nu_(0) << std::endl;
 
         if(std::round(root) > 0){
             real_root = static_cast<uint8_t>(std::round(root));

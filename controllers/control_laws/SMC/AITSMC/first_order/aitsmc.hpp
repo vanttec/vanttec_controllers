@@ -44,10 +44,6 @@ class AITSMC
         float dot_K1_;
         float prev_dot_K1_;
         
-        /* Errors */
-        float error_I_dot_;
-        float prev_error_I_dot_;
-
         bool init_val_{false};
 
     public:
@@ -66,6 +62,8 @@ class AITSMC
         /* Errors */
         float error_;
         float error_I_;
+        float error_I_dot_;
+        float prev_error_I_dot_;
         
         AITSMC_Params params_;
 
