@@ -22,6 +22,8 @@ StanleyController::StanleyController(const std::vector<float>& delta_sat, float 
     psi_ = 0;
     k_ = k;
     k_soft_ = k_soft;
+    delta_last_ = 0.0;
+
 }
 
 StanleyController::~StanleyController(){}
@@ -100,17 +102,35 @@ void StanleyController::calculateSteering(float vel, uint8_t precision){
     delta_ = -delta_;
 
     
+    // NEW CORRECTIONS (TO TEST)
+    float min_turn = 0.05;
+    float max_turn = 0.3;
+    float diff_abs = std::fabs(delta_ - delta_last_);
+    if(diff_abs >= max_turn){
+        if(delta_ - delta_last_ < -max_turn)
+            delta_ = delta_last_ - max_turn;
+        else if(delta_ - delta_last_ > max_turn)
+            delta_ = delta_last_ + max_turn;
+        std::cout << delta_ << std::endl;
+    }
+
+    if(diff_abs < min_turn && delta_ != delta_last_){
+        delta_ = delta_last_;
+    }
+
+    
+    // To round the float to the nearest tenth (0.1) set precision=10
+    // To round the float to the nearest tenth/2 (0.05) set precision=20
+    // To round the float to the nearest hundredth (0.01) set precision=100
+    // This is intended to help with vibration reduction in steering mechanism
+    // delta_ = std::round(delta_ * static_cast<float>(precision)) / static_cast<float>(precision);
+
     if (delta_ > DELTA_SAT_[0])
         delta_ = DELTA_SAT_[0];
     else if (delta_ < DELTA_SAT_[1])
         delta_ = DELTA_SAT_[1];
-    else{
-        // To round the float to the nearest tenth (0.1) set precision=10
-        // To round the float to the nearest tenth/2 (0.05) set precision=20
-        // To round the float to the nearest hundredth (0.01) set precision=100
-        // This is intended to help with vibration reduction in steering mechanism
-        delta_ = std::round(delta_ * static_cast<float>(precision)) / static_cast<float>(precision);
-    }
+
+    delta_last_ = delta_;
 
     // std::cout << "atan2 = " << std::atan2(k_*ey_,k_soft_ + vel_) << std::endl;
     // std::cout << "Psi = " << psi_ << std::endl;

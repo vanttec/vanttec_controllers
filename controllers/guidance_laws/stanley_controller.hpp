@@ -25,6 +25,9 @@ class StanleyController
     public:
         std::vector<float> DELTA_SAT_;       // {max, min} steering
         float delta_;           // Desired steering
+        float delta_last_;           // Last steering
+        float delta_last_2_;           // Last steering
+        float delta_last_3_;           // Last steering
         float psi_;             // Current heading
         float k_;               // Controller gain
         float k_soft_;          // Soft gain
