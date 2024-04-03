@@ -34,6 +34,11 @@ TEST(PID, ClampU) {
   PID pid(param);
   EXPECT_LE(pid.update(0, 1), 100);
   EXPECT_GE(pid.update(0, -1), -100);
+
+  PIDParameters no_negative_param = param;
+  no_negative_param.kUMin = 0;
+  PID no_negative_pid(no_negative_param);
+  EXPECT_GE(pid.update(0, -1), 0);
 }
 
 TEST(PID, RampRateLimit){

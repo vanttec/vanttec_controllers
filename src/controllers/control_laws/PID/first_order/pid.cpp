@@ -32,9 +32,5 @@ double PID::update(double measurement, double desired) {
     set_u_ += std::copysign(params_.ramp_rate * params_.kDt, u - set_u_);
   }
 
-  if(set_u_ < 0){
-    u = 0;
-  }
-
   return std::clamp(set_u_, params_.kUMin, params_.kUMax);
 }
