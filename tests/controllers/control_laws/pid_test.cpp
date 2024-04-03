@@ -22,6 +22,20 @@ TEST(PID, SimpleModel){
 
   // Position should be near setpoint.
   EXPECT_NEAR(position, 5, 0.1);
+
+  pid = PID(param);
+  position = 0;
+  velocity = 0;
+  // Run a simple simulation, check that setpoint is reached with full PID impl.
+  for(int i = 0; i < 1000; i++){
+    double u = pid.update(position, -5);
+
+    position += (velocity + u) * param.kDt;
+    velocity += 0.1 * param.kDt;
+  }
+
+
+  EXPECT_NEAR(position, -5, 0.1);
 }
 
 TEST(PID, ClampU) {
