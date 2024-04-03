@@ -16,11 +16,11 @@ struct PIDParameters {
     double kP{0}, kI{0}, kD{0};
     double kDt{0.01};
     
-    double kUMax{std::numeric_limits<double>::max()};
-    double kUMin{std::numeric_limits<double>::min()};
+    double kUMax{1e9};
+    double kUMin{-1e9};
 
     bool enable_ramp_rate_limit{false};
-    double ramp_rate{1}; // 
+    double ramp_rate{1}; // units / second
 };
 
 class PID {
