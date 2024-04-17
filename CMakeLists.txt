@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 project(vanttec_controllers)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -14,9 +14,19 @@ FetchContent_MakeAvailable(googletest)
 
 file(GLOB_RECURSE vanttec_controllers_SRC src/*.cpp)
 
-# TODO Once refactor is done, all files will be used
-add_library(vanttec_controllers src/controllers/control_laws/PID/first_order/pid.cpp)
-target_include_directories(vanttec_controllers PUBLIC src/)
+add_library(vanttec_controllers "")
+
+# Add header files that can be included in other projects.
+target_include_directories(vanttec_controllers
+    PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<INSTALL_INTERFACE:include/vanttec_controllers> # This will install headers prefixed with "vanttec_controllers"
+)
+# Add cpp sources here.
+target_sources(vanttec_controllers
+  PRIVATE
+  src/controllers/control_laws/PID/first_order/pid.cpp
+)
 
 include(GoogleTest)
 file(GLOB_RECURSE vanttec_controllers_TESTS tests/*.cpp)
