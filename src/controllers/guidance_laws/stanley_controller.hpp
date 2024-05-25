@@ -16,30 +16,31 @@
 
 typedef struct
 {
-    float x;
-    float y;
+    double x;
+    double y;
 } Point;
 
 class StanleyController
 {
     public:
-        std::vector<float> DELTA_SAT_;       // {max, min} steering
-        float delta_;           // Desired steering
-        float psi_;             // Current heading
-        float k_;               // Controller gain
-        float k_soft_;          // Soft gain
-        float ex_;              // Along-track error
-        float ey_;              // Crosstrack error
-        float vel_;             // velocity vector norm
-        float ak_;              // path angle
+        double delta_min_;
+        double delta_max_;
+        double delta_;           // Desired steering
+        double psi_;             // Current heading
+        double k_;               // Controller gain
+        double k_soft_;          // Soft gain
+        double ex_;              // Along-track error
+        double ey_;              // Crosstrack error
+        double vel_;             // velocity vector norm
+        double ak_;              // path angle
 
-        StanleyController(const std::vector<float>& delta_sat, float k, float k_soft);
+        StanleyController();
+        StanleyController(double delta_min, double delta_max, double k, double k_soft);
         virtual ~StanleyController();
 
-        // void calculateCrosstrackError(float x, float y, float x0, float y0, float x1, float y1);
         void calculateCrosstrackError(const Point& vehicle_pos, const Point& p1, const Point& p2);
-        void setYawAngle(float psi);
-        void calculateSteering(float vel, uint8_t precision);
+        void setYawAngle(double psi);
+        void calculateSteering(double vel, uint8_t precision);
 };
 
 #endif

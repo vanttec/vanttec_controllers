@@ -29,6 +29,8 @@ public:
 
   double update(double measurement, double desired);
 
+  static PIDParameters defaultParams();
+
 private:
   PIDParameters params_;
   double prev_error_{0};

@@ -25,7 +25,7 @@ double PID::update(double measurement, double desired) {
 
   // If ramp rate is disabled, or if we are within ramp rate, go to U.
   if (!params_.enable_ramp_rate_limit ||
-      std::abs((set_u_ - u) * params_.kDt) < params_.ramp_rate) {
+      std::abs((set_u_ - u)) < params_.ramp_rate * params_.kDt) {
         set_u_ = u;
   } else {
     // Ramp rate is enabled, and we can only increase by ramp rate.
@@ -33,4 +33,17 @@ double PID::update(double measurement, double desired) {
   }
 
   return std::clamp(set_u_, params_.kUMin, params_.kUMax);
+}
+
+PIDParameters PID::defaultParams() {
+  PIDParameters p{};
+  p.kD = 0.0;
+  p.kI = 0.0;
+  p.kD = 0.0;
+  p.kDt = 0.0;
+  p.kUMax = 0.0;
+  p.kUMin = 0.0;
+  p.enable_ramp_rate_limit = false;
+  p.ramp_rate = 0.0;
+  return p;
 }

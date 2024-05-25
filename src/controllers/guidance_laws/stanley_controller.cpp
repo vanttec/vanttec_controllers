@@ -16,9 +16,10 @@
 
 #include "stanley_controller.hpp"
 
-StanleyController::StanleyController(const std::vector<float>& delta_sat, float k, float k_soft)
+StanleyController::StanleyController(double delta_min, double delta_max, double k, double k_soft)
 {
-    DELTA_SAT_ = delta_sat;
+    delta_min_ = delta_min;
+    delta_max_ = delta_max;
     psi_ = 0;
     k_ = k;
     k_soft_ = k_soft;
@@ -26,17 +27,17 @@ StanleyController::StanleyController(const std::vector<float>& delta_sat, float 
 
 StanleyController::~StanleyController(){}
 
-// void StanleyController::calculateCrosstrackError(float x, float y, float p1.x, float p1.y, float p2.x, float p2.y){
+// void StanleyController::calculateCrosstrackError(double x, double y, double p1.x, double p1.y, double p2.x, double p2.y){
 void StanleyController::calculateCrosstrackError(const Point& vehicle_pos, const Point& p1, const Point& p2){
-    float m1;
-    float m2;
-    float b;
-    float c;
-    float xp;
-    float yp;
+    double m1;
+    double m2;
+    double b;
+    double c;
+    double xp;
+    double yp;
 
-    float ex = p2.x - p1.x;
-    float ey = p2.y - p1.y;
+    double ex = p2.x - p1.x;
+    double ey = p2.y - p1.y;
 
     // Angle of path frame
     ak_ = std::atan2(ey,ex);
@@ -78,11 +79,11 @@ void StanleyController::calculateCrosstrackError(const Point& vehicle_pos, const
     // std::cout << "ak = " << ak_ << std::endl;
 }
 
-void StanleyController::setYawAngle(float psi){
+void StanleyController::setYawAngle(double psi){
     psi_ = psi;
 }
 
-void StanleyController::calculateSteering(float vel, uint8_t precision){
+void StanleyController::calculateSteering(double vel, uint8_t precision){
     vel_ = vel;
 
     // PI error fixed due to rounding in ak_ angle when the path is vertical that makes it greater than M_PI
@@ -93,28 +94,7 @@ void StanleyController::calculateSteering(float vel, uint8_t precision){
         psi_ = psi_ - PI*2;
     }
 
-    float phi = psi_ - ak_;
+    double phi = psi_ - ak_;
     delta_ = phi + std::atan2(k_*ey_,k_soft_ + vel_);
-
-    // You want to reduce psi by delta so ...
-    delta_ = -delta_;
-
-    
-    if (delta_ > DELTA_SAT_[0])
-        delta_ = DELTA_SAT_[0];
-    else if (delta_ < DELTA_SAT_[1])
-        delta_ = DELTA_SAT_[1];
-    else{
-        // To round the float to the nearest tenth (0.1) set precision=10
-        // To round the float to the nearest tenth/2 (0.05) set precision=20
-        // To round the float to the nearest hundredth (0.01) set precision=100
-        // This is intended to help with vibration reduction in steering mechanism
-        delta_ = std::round(delta_ * static_cast<float>(precision)) / static_cast<float>(precision);
-    }
-
-    // std::cout << "atan2 = " << std::atan2(k_*ey_,k_soft_ + vel_) << std::endl;
-    // std::cout << "Psi = " << psi_ << std::endl;
-    // std::cout << "Ak = " << ak_ << std::endl;
-    // std::cout << "Delta max = " << DELTA_SAT_[0] << ", Delta min = " << DELTA_SAT_[1] << std::endl;
-    // std::cout << "Delta = " << delta_    << std::endl;
+    delta_ = std::clamp(-delta_, delta_min_, delta_max_);
 }
