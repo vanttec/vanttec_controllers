@@ -73,11 +73,9 @@ CarDynamicModel::CarDynamicModel(float sample_time){
 
 CarDynamicModel::~CarDynamicModel(){}
 
-void CarDynamicModel::setInitPose(const std::vector<float>& eta)
+void CarDynamicModel::setInitPose(const Eigen::Vector3f& pose)
 {
-    eta_(0) = eta[0];
-    eta_(1) = eta[1];
-    eta_(2) = eta[2];
+    eta_ = pose;
 }
 
 void CarDynamicModel::setOffsets(float rr_offset, float t_offset)
@@ -194,17 +192,9 @@ void CarDynamicModel::calculateStates(){
         - z (up)    -> z (down)
     */
 
-    accelerations_.linear.x = nu_dot_(0);
-    accelerations_.linear.y = -nu_dot_(1);
-    accelerations_.angular.z = -nu_dot_(2);
-
-    velocities_.linear.x = nu_(0);
-    velocities_.linear.y = -nu_(1);
-    velocities_.angular.z = -nu_(2);
-
-    eta_pose_.x = eta_(0);
-    eta_pose_.y = eta_(1);
-    eta_pose_.psi = -eta_(2);
+    accelerations_ << nu_dot_(0), -nu_dot_(1), -nu_dot_(2);
+    velocities_ << nu_(0), -nu_(1), -nu_(2);
+    eta_pose_ << eta_(0), eta_(1), -eta_(2);
 }
 
 void CarDynamicModel::setThrottle(uint8_t D){

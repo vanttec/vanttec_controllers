@@ -26,6 +26,10 @@ target_include_directories(vanttec_controllers
 target_sources(vanttec_controllers
   PRIVATE
   src/controllers/control_laws/PID/first_order/pid.cpp
+  src/dynamic_models/ground_vehicles/car_like/base/car_3dof_dynamic_model.cpp
+  src/dynamic_models/ground_vehicles/car_like/vehicles/vtec_sdc1.cpp
+  src/dynamic_models/ground_vehicles/car_like/base/car_3dof_dynamic_model.hpp
+  src/dynamic_models/ground_vehicles/car_like/vehicles/vtec_sdc1.hpp
 )
 
 include(GoogleTest)

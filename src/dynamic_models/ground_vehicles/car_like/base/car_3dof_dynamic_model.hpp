@@ -38,10 +38,6 @@
 #include <eigen3/Eigen/Dense>
 #include <eigen3/unsupported/Eigen/Polynomials>
 
-#include "geometry_msgs/msg/accel.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-#include "sdv_msgs/msg/eta_pose.hpp"
-
 class CarDynamicModel {
     protected:
         float sample_time_;
@@ -95,9 +91,9 @@ class CarDynamicModel {
         // void manualControl(const sdv_msgs::msg::msg::VehicleControl &manual);
 
     public:
-        sdv_msgs::msg::EtaPose      eta_pose_;
-        geometry_msgs::msg::Twist   velocities_;
-        geometry_msgs::msg::Accel   accelerations_;
+        Eigen::Vector3f     eta_pose_;
+        Eigen::Vector3f   velocities_;
+        Eigen::Vector3f   accelerations_;
         
         /* Non-linear functions */
         Eigen::Vector3f f_;
@@ -109,7 +105,7 @@ class CarDynamicModel {
         uint8_t D_;           // Throttle command
         float delta_;       // Steering angle
 
-        void setInitPose(const std::vector<float>& eta);
+        void setInitPose(const Eigen::Vector3f &pose);
         void calculateStates();
         void setThrottle(uint8_t D);
         void setSteering(float delta);
