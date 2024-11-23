@@ -59,16 +59,16 @@ void VTecSDC1DynamicModel::calculateModelParams(){
     setMotorConstants(Cm1, Cm2);
 }
 
-void VTecSDC1DynamicModel::updateDBSignals(float des_vel){
+void VTecSDC1DynamicModel::updateDBSignals(double surge, double surge_d, double throttle){
 
     /* THROTTLE*/
     /* Find roots of throttle eq. */
-    float a = 0.0113-0.0028*nu_(0);
-    float b = 0.4629*nu_(0)-2.0783;
-    float c = 134.067-22.399*nu_(0);
-    float d = -1038.7-u_(0);
+    float a = 0.0113-0.0028*surge;
+    float b = 0.4629*surge-2.0783;
+    float c = 134.067-22.399*surge;
+    float d = -1038.7-throttle;
     uint8_t real_root = 0;
-    float root = 0;
+    double root = 0;
     bool has_real_root;
 
     // Create a cubic polynomial using Eigen's PolynomialSolver
@@ -95,17 +95,17 @@ void VTecSDC1DynamicModel::updateDBSignals(float des_vel){
         // std::cout << "F_rr_ = " << F_rr_ << std::endl;
         // std::cout << "vel = " << nu_(0) << std::endl;
 
-        if(std::round(root) > 0){
-            real_root = static_cast<uint8_t>(std::round(root));
+        // if(std::round(root) > 0){
+            // real_root = static_cast<uint8_t>(std::round(root));
             // std::cout << "Smallest real root found = " << (int)real_root << std::endl;
-            D_ = real_root>D_MAX_? D_MAX_:real_root<D_MIN_? D_MIN_:real_root;
-        }
+        D_ = std::clamp(root, D_MIN_, D_MAX_);
+        // }
     }
 
     /* BRAKING */
     // For now and until the break is included in the model, when a zero velocity is desired,
     // D shall be set to zeroo (one) 
     
-    if(des_vel < 0.3)
+    if(surge_d < 0.3)
         D_ = 0;
 }

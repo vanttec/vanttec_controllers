@@ -11,17 +11,18 @@
 #pragma once
 
 #include <limits>
+#include <utils/utils.hpp>
 
-struct PIDParameters {
-    double kP{0}, kI{0}, kD{0};
-    double kDt{0.01};
+// struct PIDParameters {
+//     double kP{0}, kI{0}, kD{0};
+//     double kDt{0.01};
     
-    double kUMax{1e9};
-    double kUMin{-1e9};
+//     double kUMax{1e9};
+//     double kUMin{-1e9};
 
-    bool enable_ramp_rate_limit{false};
-    double ramp_rate{1}; // units / second
-};
+//     bool enable_ramp_rate_limit{false};
+//     double ramp_rate{1}; // units / second
+// };
 
 class PID {
 public:

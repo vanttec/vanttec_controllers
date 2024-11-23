@@ -16,15 +16,15 @@
 #ifndef __VTEC_SDC1__
 #define __VTEC_SDC1__
 
-#include "../base/car_3dof_dynamic_model.hpp"
+#include "dynamic_models/ground_vehicles/car_like/base/car_3dof_dynamic_model.hpp"
 
 class VTecSDC1DynamicModel : public CarDynamicModel {
     private:
         float rr_offset_ {0};
         float throttle_offset_ {0};
 
-        uint8_t D_MAX_{255};
-        uint8_t D_MIN_{0};
+        double D_MAX_{255};
+        double D_MIN_{0};
 
     public:
         /* Constructor and destructor */
@@ -33,7 +33,7 @@ class VTecSDC1DynamicModel : public CarDynamicModel {
 
         /* Class methods */
         void calculateModelParams();
-        void updateDBSignals(float des_vel);
+        void updateDBSignals(double surge, double surge_d, double throttle);
         
         // void calculateControlInputs();
 };

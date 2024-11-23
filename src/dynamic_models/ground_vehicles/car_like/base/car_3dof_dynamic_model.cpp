@@ -36,6 +36,7 @@
 
 #include <iostream>
 #include "utils/utils.hpp"
+#include "utils/utils.cpp"
 
 CarDynamicModel::CarDynamicModel(float sample_time){
     sample_time_ = sample_time;
@@ -114,6 +115,7 @@ void CarDynamicModel::calculateStates(){
 
     // This comes from controller, that is the reason of why it is commented out
     // F_throttle_ = (Cm1_ - Cm2_*u)*static_cast<float>(D_);
+    F_throttle_ = (Cm1_ - Cm2_*u)*(D_);
 
     if(D_ > 0){
         F_throttle_ -= t_offset_;   // To compensate for model error
@@ -122,7 +124,7 @@ void CarDynamicModel::calculateStates(){
     }
 
     // This comes from controller, that is the reason of why it is commented out
-    // u_(0) = F_throttle_;// + F_brake_;
+    u_(0) = F_throttle_;// + F_brake_;
     
     // Next condition was set so the vehicle does not move backwards when
     // the throttle force is less than the resistance
@@ -241,3 +243,15 @@ void CarDynamicModel::setPitch(float pitch){
 //     { 
 //         delta_ = 0;
 //     }
+
+double CarDynamicModel::get_f_(){
+    return f_(0);
+}
+double CarDynamicModel::get_g_(){
+    return g_(0);
+}
+
+double CarDynamicModel::get_D_(){
+    std::cout << "D: " << D_/1. << std::endl;
+    return D_/1.;
+}

@@ -102,7 +102,7 @@ class CarDynamicModel {
 
         /* Control inputs */
         float B_;           // Braking command
-        uint8_t D_;           // Throttle command
+        double D_;           // Throttle command
         float delta_;       // Steering angle
 
         void setInitPose(const Eigen::Vector3f &pose);
@@ -110,6 +110,10 @@ class CarDynamicModel {
         void setThrottle(uint8_t D);
         void setSteering(float delta);
         void setPitch(float pitch);
+
+        double get_D_();
+        double get_f_();
+        double get_g_();
 };
 
 #endif

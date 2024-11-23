@@ -22,6 +22,17 @@ typedef enum DOFControllerType_E
     ANGULAR_DOF = 1,
 } DOFControllerType_E;
 
+struct PIDParameters {
+    double kP{0}, kI{0}, kD{0};
+    double kDt{0.01};
+    
+    double kUMax{1e9};
+    double kUMin{-1e9};
+
+    bool enable_ramp_rate_limit{false};
+    double ramp_rate{1}; // units / second
+};
+
 namespace utils
 {
     /* Helper constants */
