@@ -16,14 +16,14 @@
 #include "utils/utils.hpp"
 
 class PIDLin : public FBLin {
-public:
-  PIDLin(const PIDParameters &params);
-  ~PIDLin();
+  public:
+    PIDLin(double FB_LIN_UMAX, double FB_LIN_UMIN, const PIDParameters &params);
+    ~PIDLin();
 
-  double calculateManipulations(double surge, double surge_d);
+    double calculateManipulations(double chi1, double chi1_d, double chi1_dot_d);
 
-private:
-  PID control_law_;
+  private:
+    PID control_law_;
 };
 
 #endif

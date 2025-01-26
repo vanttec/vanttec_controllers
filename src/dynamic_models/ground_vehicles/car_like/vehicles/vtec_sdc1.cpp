@@ -59,14 +59,14 @@ void VTecSDC1DynamicModel::calculateModelParams(){
     setMotorConstants(Cm1, Cm2);
 }
 
-void VTecSDC1DynamicModel::updateDBSignals(double surge, double surge_d, double throttle){
+void VTecSDC1DynamicModel::updateDBSignals(double surge_d){
 
     /* THROTTLE*/
     /* Find roots of throttle eq. */
-    float a = 0.0113-0.0028*surge;
-    float b = 0.4629*surge-2.0783;
-    float c = 134.067-22.399*surge;
-    float d = -1038.7-throttle;
+    float a = 0.0113-0.0028*nu_(0);
+    float b = 0.4629*nu_(0)-2.0783;
+    float c = 134.067-22.399*nu_(0);
+    float d = -1038.7-u_(0);
     uint8_t real_root = 0;
     double root = 0;
     bool has_real_root;
@@ -98,7 +98,7 @@ void VTecSDC1DynamicModel::updateDBSignals(double surge, double surge_d, double 
         // if(std::round(root) > 0){
             // real_root = static_cast<uint8_t>(std::round(root));
             // std::cout << "Smallest real root found = " << (int)real_root << std::endl;
-        D_ = std::clamp(root, D_MIN_, D_MAX_);
+        D_ = std::clamp(static_cast<uint8_t>(root), D_MIN_, D_MAX_);
         // }
     }
 

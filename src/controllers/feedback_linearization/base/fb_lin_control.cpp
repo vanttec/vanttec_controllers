@@ -13,7 +13,8 @@
 
 #include "controllers/feedback_linearization/base/fb_lin_control.hpp"
 
-FBLin::FBLin(double u_max) : U_MAX_(u_max) {}
+FBLin::FBLin(double FB_LIN_UMAX, double FB_LIN_UMIN)
+        : U_MAX_(FB_LIN_UMAX), U_MIN_(FB_LIN_UMIN) {}
 
 FBLin::~FBLin(){}
 
@@ -21,17 +22,9 @@ void FBLin::updateControlSignal(){
 
     if(std::isnormal(g_x_))
     {
-        // u_ = (chiX_dot_d_ - f_x_ + u_n_ - u_aux_)/g_x_;
-        u_ = (- f_x_ - u_aux_)/g_x_;
-        std::cout << "u_: " << u_ << "\nf: " << f_x_ << "\ng: " << g_x_ << std::endl;
+        u_ = (chiX_dot_d_ - f_x_ + u_n_ - u_aux_)/g_x_;
     }
 
-    // u_ = std::clamp(u_, -U_MAX_*100000, U_MAX_*100000);
-    
     // std::fabs(u_) > U_MAX_ ? u_ / std::fabs(u_) * U_MAX_ : u_;
-
-}
-
-double FBLin::get_control_signal(){
-    return u_;
+    u_ = std::clamp(u_, U_MIN_, U_MAX_);
 }

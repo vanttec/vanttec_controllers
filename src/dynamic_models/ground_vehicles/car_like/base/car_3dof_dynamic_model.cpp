@@ -115,7 +115,6 @@ void CarDynamicModel::calculateStates(){
 
     // This comes from controller, that is the reason of why it is commented out
     // F_throttle_ = (Cm1_ - Cm2_*u)*static_cast<float>(D_);
-    F_throttle_ = (Cm1_ - Cm2_*u)*(D_);
 
     if(D_ > 0){
         F_throttle_ -= t_offset_;   // To compensate for model error
@@ -124,7 +123,7 @@ void CarDynamicModel::calculateStates(){
     }
 
     // This comes from controller, that is the reason of why it is commented out
-    u_(0) = F_throttle_;// + F_brake_;
+    // u_(0) = F_throttle_;// + F_brake_;
     
     // Next condition was set so the vehicle does not move backwards when
     // the throttle force is less than the resistance
@@ -187,7 +186,6 @@ void CarDynamicModel::calculateStates(){
         eta_(2) = (eta_(2) / std::fabs(eta_(2))) * (std::fabs(eta_(2)) - 2 * M_PI);
     }
 
-    /* Update ROS Messages */
     /* Change of coordinate frame convention (from DYN_MODEL to BASE_LINK):
         - x (front) -> x (front)
         - y (left)  -> y (right)
@@ -204,17 +202,11 @@ void CarDynamicModel::setThrottle(uint8_t D){
 }
 
 void CarDynamicModel::setSteering(float delta){
-    // if(nu_(0) < 1e-2){
-    //     delta_ = 0;
-    //     return;
-    // }
-
     /* Change of coordinate frame convention (from BASE_LINK to DYN_MODEL):
         - x (front) -> x (front)
         - y (right) -> y (left)
         - z (down)  -> z (up)
     */
-
     delta_ = -delta;
 }
 
@@ -227,31 +219,14 @@ void CarDynamicModel::setPitch(float pitch){
     theta_ = -pitch;
 }
 
-// void CarDynamicModel::manualControl(const sdv_msgs::msg::VehicleControl &manual)
-// {
-    
-//     //RCLCPP_WARN(node_->get_logger(), "Could not create directory!");
-//     F_throttle_ = (manual.throttle==1) ? F_throttle_+10 : F_throttle_;
-//     F_throttle_ = (manual.brake==1) ? F_throttle_-10 : F_throttle_;
-//     F_throttle_ = (F_throttle_>=Cm_) ? Cm_ : F_throttle_;
-//     F_throttle_ = (F_throttle_<=0) ? 0 : F_throttle_;
-//     u_ << F_throttle_,
-//         0,
-//         0;
-//     delta_ = manual.steer;
-//     if (u_(0) < 0.1)
-//     { 
-//         delta_ = 0;
-//     }
+// double CarDynamicModel::get_f_(){
+//     return f_(0);
+// }
+// double CarDynamicModel::get_g_(){
+//     return g_(0);
+// }
 
-double CarDynamicModel::get_f_(){
-    return f_(0);
-}
-double CarDynamicModel::get_g_(){
-    return g_(0);
-}
-
-double CarDynamicModel::get_D_(){
-    std::cout << "D: " << D_/1. << std::endl;
-    return D_/1.;
-}
+// double CarDynamicModel::get_D_(){
+//     std::cout << "D: " << D_/1. << std::endl;
+//     return D_/1.;
+// }

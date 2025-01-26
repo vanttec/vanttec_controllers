@@ -58,8 +58,8 @@ class CarDynamicModel {
         float m_;           // Vehicle mass
         float Iz_;          // Moment of inertia on Z axis
         float A_;           // Vehicle frontal projected area
-        float Cm1_{0.0};      // Motor constant 1
-        float Cm2_{0.0};      // Motor constant 2
+        float Cm1_{0.0};    // Motor constant 1
+        float Cm2_{0.0};    // Motor constant 2
         float Cd_;          // Air drag coefficient
         float len_f_;       // Length from the front of the vehicle to the center of mass
         float len_r_;       // Length from the rear of the vehicle to the center of mass
@@ -88,7 +88,6 @@ class CarDynamicModel {
         /* Class methods */
         void setOffsets(float rr_offset, float t_offset);
         void setMotorConstants(float Cm1, float Cm2);
-        // void manualControl(const sdv_msgs::msg::msg::VehicleControl &manual);
 
     public:
         Eigen::Vector3f     eta_pose_;
@@ -102,7 +101,7 @@ class CarDynamicModel {
 
         /* Control inputs */
         float B_;           // Braking command
-        double D_;           // Throttle command
+        uint8_t D_;         // Throttle command
         float delta_;       // Steering angle
 
         void setInitPose(const Eigen::Vector3f &pose);
@@ -111,9 +110,9 @@ class CarDynamicModel {
         void setSteering(float delta);
         void setPitch(float pitch);
 
-        double get_D_();
-        double get_f_();
-        double get_g_();
+//         double get_D_();
+//         double get_f_();
+//         double get_g_();
 };
 
 #endif

@@ -9,25 +9,20 @@
  * -----------------------------------------------------------------------------
  **/
 
-#include "controllers/feedback_linearization/PID_based/first_order/fblin_pid.hpp"
+#include "controllers/feedback_linearization/PID/first_order/fblin_pid.hpp"
 #include "dynamic_models/ground_vehicles/car_like/vehicles/vtec_sdc1.hpp"
 #include "utils/utils.hpp"
 
-class VTEC_SDC1_1DOF_PID : public VTecSDC1DynamicModel, public PIDLin {
-public:
-  VTEC_SDC1_1DOF_PID(const PIDParameters &params);
-  ~VTEC_SDC1_1DOF_PID();
+class VTEC_SDC1_1DOF_PID : public PIDLin {
+  public:
+    VTEC_SDC1_1DOF_PID(const PIDParameters &params, VTecSDC1DynamicModel* model);
+    ~VTEC_SDC1_1DOF_PID();
 
-  // void updateNonLinearFunctions();
-  void updateNonLinearFunctions(double f_x, double g_x);
+    void updateNonLinearFunctions();
 
-  // For simulations
-  // void calculateControlSignals();
+    double calculateControlSignals(double chi1, double chi1_d, double chi1_dot_d);
 
-  // For real world
-  double calculateControlSignals(double surge, double surge_d);
+    void updateControlSignals();
 
-  void updateControlSignals();
-
-  // void updateCurrentReference(float chi1_d, float chi1_dot_d);
+    VTecSDC1DynamicModel* model;
 };

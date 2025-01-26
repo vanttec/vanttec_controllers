@@ -13,28 +13,21 @@
 #include <limits>
 #include <utils/utils.hpp>
 
-// struct PIDParameters {
-//     double kP{0}, kI{0}, kD{0};
-//     double kDt{0.01};
-    
-//     double kUMax{1e9};
-//     double kUMin{-1e9};
-
-//     bool enable_ramp_rate_limit{false};
-//     double ramp_rate{1}; // units / second
-// };
-
 class PID {
-public:
-  PID(const PIDParameters &params);
+  public:
+    PID(const PIDParameters &params);
 
-  double update(double measurement, double desired);
+    double update(double chi1, double chi1_d);
 
-  static PIDParameters defaultParams();
+    // In model based controllers, you want to saturate the end computed control signal, not the auxiliar
+    // control signal (PID in this case)
+    // updateSaturated method is intended to be used in applications where a FBLin PID is not required,
+    // as FBLin base classes already saturate the control signals.
+    double updateSaturated(double chi1, double chi1_d);
 
-private:
-  PIDParameters params_;
-  double prev_error_{0};
+  private:
+    PIDParameters params_;
+    double prev_error_{0};
 
-  double set_u_{0}; // Used to limit ramp rate.
+    double set_u_{0}; // Used to limit ramp rate.
 };

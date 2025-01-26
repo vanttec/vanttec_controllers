@@ -11,30 +11,24 @@
 
 #include "vtec_sdc1_pid.hpp"
 
-VTEC_SDC1_1DOF_PID::VTEC_SDC1_1DOF_PID(const PIDParameters &params)
-    : VTecSDC1DynamicModel(params.kDt, 255),
-      PIDLin(params) {}
+VTEC_SDC1_1DOF_PID::VTEC_SDC1_1DOF_PID(const PIDParameters &params, VTecSDC1DynamicModel* model)
+    : PIDLin(params.kUMax, params.kUMin, params) {}
 
 VTEC_SDC1_1DOF_PID::~VTEC_SDC1_1DOF_PID() {}
 
-void VTEC_SDC1_1DOF_PID::updateNonLinearFunctions(double f_x, double g_x) {
-  PIDLin::f_x_ = f_x;
-  PIDLin::g_x_ = g_x;
+void VTEC_SDC1_1DOF_PID::updateNonLinearFunctions() {
+  PIDLin::f_x_ = model->f_(0);
+  PIDLin::g_x_ = model->g_(0);
 }
 
-// void VTEC_SDC1_1DOF_PID::calculateControlSignals() {
-//   calculateManipulations(nu_(0));
-// }
-
-double VTEC_SDC1_1DOF_PID::calculateControlSignals(double surge, double surge_d) {
-  return std::clamp(calculateManipulations(surge, surge_d), 0., 255.);
+double VTEC_SDC1_1DOF_PID::calculateControlSignals(double chi1, double chi1_d, double chi1_dot_d) {
+  // Only in the case of the car, the next condition must be considered, as
+  // achieving reverse is not done by computing negative control signals. This
+  // must not be programed in any of the base controllers classes, as in the
+  // case of the boat and submarine, reverse is straightforward
+  return std::max(calculateManipulations(chi1, chi1_d, chi1_dot_d), 0.);
 }
 
 void VTEC_SDC1_1DOF_PID::updateControlSignals() {
-  VTecSDC1DynamicModel::u_(0) = PIDLin::u_;
+  model->u_(0) = PIDLin::u_;
 }
-
-// void VTEC_SDC1_1DOF_PID::updateCurrentReference(float chi1_d,
-//                                                 float chi1_dot_d) {
-//   updateReferences(chi1_d, chi1_dot_d);
-// }

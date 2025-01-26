@@ -23,8 +23,8 @@ class VTecSDC1DynamicModel : public CarDynamicModel {
         float rr_offset_ {0};
         float throttle_offset_ {0};
 
-        double D_MAX_{255};
-        double D_MIN_{0};
+        uint8_t D_MAX_{255};
+        uint8_t D_MIN_{0};
 
     public:
         /* Constructor and destructor */
@@ -33,7 +33,7 @@ class VTecSDC1DynamicModel : public CarDynamicModel {
 
         /* Class methods */
         void calculateModelParams();
-        void updateDBSignals(double surge, double surge_d, double throttle);
+        void updateDBSignals(double surge_d);
         
         // void calculateControlInputs();
 };
