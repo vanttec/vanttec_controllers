@@ -1,8 +1,6 @@
 /** ----------------------------------------------------------------------------
  * @file: utils.cpp
  * @date: March 2, 2022
- * @author: Pedro Sanchez
- * @email: pedro.sc.97@gmail.com
  * @author: Sebas Mtz
  * @email: sebas.martp@gmail.com
  * 

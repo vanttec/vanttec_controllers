@@ -8,7 +8,6 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include <iostream>
 #include <cmath>
 
 #include "controllers/feedback_linearization/base/fb_lin_control.hpp"

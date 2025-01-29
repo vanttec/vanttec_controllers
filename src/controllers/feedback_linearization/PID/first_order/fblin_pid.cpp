@@ -8,7 +8,7 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include "controllers/feedback_linearization/PID/first_order/fblin_pid.hpp"
+#include "fblin_pid.hpp"
 
 PIDLin::PIDLin(double FB_LIN_UMAX, double FB_LIN_UMIN, const PIDParameters &params) : 
                FBLin (FB_LIN_UMAX, FB_LIN_UMIN),
