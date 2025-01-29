@@ -11,7 +11,6 @@
 #include "controllers/control_laws/PID/first_order/pid.hpp"
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 
 PID::PID(const PIDParameters &params)
 { 

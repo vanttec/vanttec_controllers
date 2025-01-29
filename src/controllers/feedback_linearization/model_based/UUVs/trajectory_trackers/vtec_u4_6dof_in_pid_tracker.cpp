@@ -8,7 +8,7 @@
  * -----------------------------------------------------------------------------
  **/
 
-#include "controllers/feedback_linearization/model_based_controllers/UUVs/vtec_u4_6dof_in_pid.hpp"
+#include "controllers/feedback_linearization/model_based/UUVs/vtec_u4_6dof_in_pid.hpp"
 
 VTEC_U4_6DOF_PID_TRACKER::VTEC_U4_6DOF_PID_TRACKER(float sample_time, const std::vector<float>& k_p, const std::vector<float>& k_i, 
         const std::vector<float>& k_d, const std::array<float,6>& u_max,

@@ -11,14 +11,14 @@
 
 #include "vtec_sdc1_pid.hpp"
 
-VTEC_SDC1_1DOF_PID::VTEC_SDC1_1DOF_PID(const PIDParameters &params, VTecSDC1DynamicModel* model)
-    : PIDLin(params.kUMax, params.kUMin, params) {}
+VTEC_SDC1_1DOF_PID::VTEC_SDC1_1DOF_PID(const PIDParameters &params, std::shared_ptr<VTecSDC1DynamicModel> model)
+    : PIDLin(params.kUMax, params.kUMin, params), sdc1_model_(model) {}
 
 VTEC_SDC1_1DOF_PID::~VTEC_SDC1_1DOF_PID() {}
 
 void VTEC_SDC1_1DOF_PID::updateNonLinearFunctions() {
-  PIDLin::f_x_ = model->f_(0);
-  PIDLin::g_x_ = model->g_(0);
+  PIDLin::f_x_ = sdc1_model_->f_(0);
+  PIDLin::g_x_ = sdc1_model_->g_(0);
 }
 
 double VTEC_SDC1_1DOF_PID::calculateControlSignals(double chi1, double chi1_d, double chi1_dot_d) {
@@ -30,5 +30,5 @@ double VTEC_SDC1_1DOF_PID::calculateControlSignals(double chi1, double chi1_d, d
 }
 
 void VTEC_SDC1_1DOF_PID::updateControlSignals() {
-  model->u_(0) = PIDLin::u_;
+  sdc1_model_->u_(0) = PIDLin::u_;
 }

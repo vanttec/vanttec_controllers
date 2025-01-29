@@ -12,10 +12,11 @@
 #include "controllers/feedback_linearization/PID/first_order/fblin_pid.hpp"
 #include "dynamic_models/ground_vehicles/car_like/vehicles/vtec_sdc1.hpp"
 #include "utils/utils.hpp"
+#include <memory>
 
 class VTEC_SDC1_1DOF_PID : public PIDLin {
   public:
-    VTEC_SDC1_1DOF_PID(const PIDParameters &params, VTecSDC1DynamicModel* model);
+    VTEC_SDC1_1DOF_PID(const PIDParameters &params, std::shared_ptr<VTecSDC1DynamicModel> model);
     ~VTEC_SDC1_1DOF_PID();
 
     void updateNonLinearFunctions();
@@ -24,5 +25,5 @@ class VTEC_SDC1_1DOF_PID : public PIDLin {
 
     void updateControlSignals();
 
-    VTecSDC1DynamicModel* model;
+    std::shared_ptr<VTecSDC1DynamicModel> sdc1_model_; 
 };

@@ -30,6 +30,7 @@ target_sources(vanttec_controllers
   src/controllers/control_laws/PID/first_order/pid.cpp
   src/controllers/feedback_linearization/base/fb_lin_control.cpp
   src/controllers/feedback_linearization/PID/first_order/fblin_pid.cpp
+  src/controllers/feedback_linearization/model_based/SDCs/regulators/vtec_sdc1_pid.cpp
 
   src/dynamic_models/ground_vehicles/car_like/base/car_3dof_dynamic_model.cpp
   src/dynamic_models/ground_vehicles/car_like/vehicles/vtec_sdc1.cpp

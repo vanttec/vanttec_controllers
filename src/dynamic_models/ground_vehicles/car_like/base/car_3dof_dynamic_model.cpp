@@ -34,7 +34,6 @@
 
 #include "car_3dof_dynamic_model.hpp"
 
-#include <iostream>
 #include "utils/utils.hpp"
 #include "utils/utils.cpp"
 
