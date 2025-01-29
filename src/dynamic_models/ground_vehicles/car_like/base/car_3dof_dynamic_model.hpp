@@ -38,10 +38,6 @@
 #include <eigen3/Eigen/Dense>
 #include <eigen3/unsupported/Eigen/Polynomials>
 
-#include "geometry_msgs/msg/accel.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-#include "sdv_msgs/msg/eta_pose.hpp"
-
 class CarDynamicModel {
     protected:
         float sample_time_;
@@ -62,8 +58,8 @@ class CarDynamicModel {
         float m_;           // Vehicle mass
         float Iz_;          // Moment of inertia on Z axis
         float A_;           // Vehicle frontal projected area
-        float Cm1_{0.0};      // Motor constant 1
-        float Cm2_{0.0};      // Motor constant 2
+        float Cm1_{0.0};    // Motor constant 1
+        float Cm2_{0.0};    // Motor constant 2
         float Cd_;          // Air drag coefficient
         float len_f_;       // Length from the front of the vehicle to the center of mass
         float len_r_;       // Length from the rear of the vehicle to the center of mass
@@ -92,12 +88,11 @@ class CarDynamicModel {
         /* Class methods */
         void setOffsets(float rr_offset, float t_offset);
         void setMotorConstants(float Cm1, float Cm2);
-        // void manualControl(const sdv_msgs::msg::msg::VehicleControl &manual);
 
     public:
-        sdv_msgs::msg::EtaPose      eta_pose_;
-        geometry_msgs::msg::Twist   velocities_;
-        geometry_msgs::msg::Accel   accelerations_;
+        Eigen::Vector3f     eta_pose_;
+        Eigen::Vector3f   velocities_;
+        Eigen::Vector3f   accelerations_;
         
         /* Non-linear functions */
         Eigen::Vector3f f_;
@@ -106,14 +101,18 @@ class CarDynamicModel {
 
         /* Control inputs */
         float B_;           // Braking command
-        uint8_t D_;           // Throttle command
+        uint8_t D_;         // Throttle command
         float delta_;       // Steering angle
 
-        void setInitPose(const std::vector<float>& eta);
+        void setInitPose(const Eigen::Vector3f &pose);
         void calculateStates();
         void setThrottle(uint8_t D);
         void setSteering(float delta);
         void setPitch(float pitch);
+
+//         double get_D_();
+//         double get_f_();
+//         double get_g_();
 };
 
 #endif

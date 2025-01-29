@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 project(vanttec_controllers)
 set(CMAKE_CXX_STANDARD 17)
 
+find_package(Eigen3 REQUIRED)
+
 include(FetchContent)
 FetchContent_Declare(
         googletest
@@ -11,22 +13,32 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-
 file(GLOB_RECURSE vanttec_controllers_SRC src/*.cpp)
 
 add_library(vanttec_controllers "")
 
-# Add header files that can be included in other projects.
 target_include_directories(vanttec_controllers
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<INSTALL_INTERFACE:include/vanttec_controllers> # This will install headers prefixed with "vanttec_controllers"
+    ${EIGEN3_INCLUDE_DIR}  # Include Eigen headers
 )
+
 # Add cpp sources here.
 target_sources(vanttec_controllers
   PRIVATE
   src/controllers/control_laws/PID/first_order/pid.cpp
+  src/controllers/feedback_linearization/base/fb_lin_control.cpp
+  src/controllers/feedback_linearization/PID/first_order/fblin_pid.cpp
+  src/controllers/feedback_linearization/model_based/SDCs/regulators/vtec_sdc1_pid.cpp
+
+  src/dynamic_models/ground_vehicles/car_like/base/car_3dof_dynamic_model.cpp
+  src/dynamic_models/ground_vehicles/car_like/vehicles/vtec_sdc1.cpp
+
+  src/utils/utils.cpp
 )
+
+target_link_libraries(vanttec_controllers Eigen3::Eigen)
 
 include(GoogleTest)
 file(GLOB_RECURSE vanttec_controllers_TESTS tests/*.cpp)

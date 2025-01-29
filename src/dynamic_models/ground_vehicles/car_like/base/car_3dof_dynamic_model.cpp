@@ -34,8 +34,8 @@
 
 #include "car_3dof_dynamic_model.hpp"
 
-#include <iostream>
 #include "utils/utils.hpp"
+#include "utils/utils.cpp"
 
 CarDynamicModel::CarDynamicModel(float sample_time){
     sample_time_ = sample_time;
@@ -73,11 +73,9 @@ CarDynamicModel::CarDynamicModel(float sample_time){
 
 CarDynamicModel::~CarDynamicModel(){}
 
-void CarDynamicModel::setInitPose(const std::vector<float>& eta)
+void CarDynamicModel::setInitPose(const Eigen::Vector3f& pose)
 {
-    eta_(0) = eta[0];
-    eta_(1) = eta[1];
-    eta_(2) = eta[2];
+    eta_ = pose;
 }
 
 void CarDynamicModel::setOffsets(float rr_offset, float t_offset)
@@ -187,24 +185,15 @@ void CarDynamicModel::calculateStates(){
         eta_(2) = (eta_(2) / std::fabs(eta_(2))) * (std::fabs(eta_(2)) - 2 * M_PI);
     }
 
-    /* Update ROS Messages */
     /* Change of coordinate frame convention (from DYN_MODEL to BASE_LINK):
         - x (front) -> x (front)
         - y (left)  -> y (right)
         - z (up)    -> z (down)
     */
 
-    accelerations_.linear.x = nu_dot_(0);
-    accelerations_.linear.y = -nu_dot_(1);
-    accelerations_.angular.z = -nu_dot_(2);
-
-    velocities_.linear.x = nu_(0);
-    velocities_.linear.y = -nu_(1);
-    velocities_.angular.z = -nu_(2);
-
-    eta_pose_.x = eta_(0);
-    eta_pose_.y = eta_(1);
-    eta_pose_.psi = -eta_(2);
+    accelerations_ << nu_dot_(0), -nu_dot_(1), -nu_dot_(2);
+    velocities_ << nu_(0), -nu_(1), -nu_(2);
+    eta_pose_ << eta_(0), eta_(1), -eta_(2);
 }
 
 void CarDynamicModel::setThrottle(uint8_t D){
@@ -212,17 +201,11 @@ void CarDynamicModel::setThrottle(uint8_t D){
 }
 
 void CarDynamicModel::setSteering(float delta){
-    // if(nu_(0) < 1e-2){
-    //     delta_ = 0;
-    //     return;
-    // }
-
     /* Change of coordinate frame convention (from BASE_LINK to DYN_MODEL):
         - x (front) -> x (front)
         - y (right) -> y (left)
         - z (down)  -> z (up)
     */
-
     delta_ = -delta;
 }
 
@@ -235,19 +218,14 @@ void CarDynamicModel::setPitch(float pitch){
     theta_ = -pitch;
 }
 
-// void CarDynamicModel::manualControl(const sdv_msgs::msg::VehicleControl &manual)
-// {
-    
-//     //RCLCPP_WARN(node_->get_logger(), "Could not create directory!");
-//     F_throttle_ = (manual.throttle==1) ? F_throttle_+10 : F_throttle_;
-//     F_throttle_ = (manual.brake==1) ? F_throttle_-10 : F_throttle_;
-//     F_throttle_ = (F_throttle_>=Cm_) ? Cm_ : F_throttle_;
-//     F_throttle_ = (F_throttle_<=0) ? 0 : F_throttle_;
-//     u_ << F_throttle_,
-//         0,
-//         0;
-//     delta_ = manual.steer;
-//     if (u_(0) < 0.1)
-//     { 
-//         delta_ = 0;
-//     }
+// double CarDynamicModel::get_f_(){
+//     return f_(0);
+// }
+// double CarDynamicModel::get_g_(){
+//     return g_(0);
+// }
+
+// double CarDynamicModel::get_D_(){
+//     std::cout << "D: " << D_/1. << std::endl;
+//     return D_/1.;
+// }

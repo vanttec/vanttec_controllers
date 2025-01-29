@@ -9,7 +9,7 @@
  **/
 
 #include "dynamic_models/marine_vehicles/underwater/vtec_u4_in_6dof_dynamic_model.hpp"
-#include "controllers/feedback_linearization/PID_based/second_order/fblin_6dof_pid.hpp"
+#include "controllers/feedback_linearization/PID/second_order/fblin_6dof_pid.hpp"
 
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Accel.h"

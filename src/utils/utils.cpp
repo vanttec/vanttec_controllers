@@ -14,38 +14,6 @@
 
 namespace utils
 {
-    // vanttec_msgs::GuidanceWaypoints GenerateCircle(float radius, float x_center, float y_center, float z_center, float angle_offset)
-    // {
-    //     vanttec_msgs::GuidanceWaypoints waypoints;
-        
-    //     float angle = angle_offset;
-    //     uint8_t counter = 0;
-        
-    //     while (angle <= (angle_offset + M_PI))
-    //     {
-    //         waypoints.waypoint_list_x.push_back(radius * std::cos(angle) + x_center);
-    //         waypoints.waypoint_list_y.push_back(radius * std::sin(angle) + y_center);
-    //         waypoints.waypoint_list_z.push_back(z_center);
-    //         angle += M_PI / 6;
-    //         counter++;
-    //     }
-        
-    //     angle = angle_offset - M_PI;
-
-    //     while (angle <= angle_offset)
-    //     {
-    //         waypoints.waypoint_list_x.push_back(radius * std::cos(angle) + x_center);
-    //         waypoints.waypoint_list_y.push_back(radius * std::sin(angle) + y_center);
-    //         waypoints.waypoint_list_z.push_back(z_center);
-    //         angle += M_PI / 6;
-    //         counter++;
-    //     }
-        
-    //     waypoints.waypoint_list_length = counter;
-
-    //     return waypoints;
-    // }
-
     void calculateR_z(Eigen::Matrix3f& R, double psi)
     {
         R << std::cos(psi), std::sin(psi), 0,

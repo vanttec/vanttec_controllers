@@ -8,14 +8,22 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include "pid.hpp"
+#include "controllers/control_laws/PID/first_order/pid.hpp"
 #include <algorithm>
 #include <cmath>
 
-PID::PID(const PIDParameters &params) { params_ = params; }
+PID::PID(const PIDParameters &params)
+{ 
+  params_ = params;
+}
 
-double PID::update(double measurement, double desired) {
-  double error = desired - measurement;
+double PID::update(double chi1, double chi1_d)
+{
+  double error = chi1_d - chi1;
+
+  if (params_.controller_type == ANGULAR_DOF)
+      if (std::abs(error) > M_PI)
+          error = (error / std::abs(error)) * (std::abs(error) - 2 * M_PI);
 
   double d = (error - prev_error_) / params_.kDt;
   double i = ((error + prev_error_) / 2 * params_.kDt) + error;
@@ -32,18 +40,10 @@ double PID::update(double measurement, double desired) {
     set_u_ += std::copysign(params_.ramp_rate * params_.kDt, u - set_u_);
   }
 
-  return std::clamp(set_u_, params_.kUMin, params_.kUMax);
+  return set_u_;
 }
 
-PIDParameters PID::defaultParams() {
-  PIDParameters p{};
-  p.kD = 0.0;
-  p.kI = 0.0;
-  p.kD = 0.0;
-  p.kDt = 0.0;
-  p.kUMax = 0.0;
-  p.kUMin = 0.0;
-  p.enable_ramp_rate_limit = false;
-  p.ramp_rate = 0.0;
-  return p;
+double PID::updateSaturated(double chi1, double chi1_d)
+{
+  return std::clamp(update(chi1, chi1_d), params_.kUMin, params_.kUMax);
 }

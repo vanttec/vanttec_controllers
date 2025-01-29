@@ -16,8 +16,7 @@
 #ifndef __VTEC_SDC1__
 #define __VTEC_SDC1__
 
-#include "base/car_3dof_dynamic_model.hpp"
-#include "rclcpp/rclcpp.hpp"
+#include "dynamic_models/ground_vehicles/car_like/base/car_3dof_dynamic_model.hpp"
 
 class VTecSDC1DynamicModel : public CarDynamicModel {
     private:
@@ -34,7 +33,7 @@ class VTecSDC1DynamicModel : public CarDynamicModel {
 
         /* Class methods */
         void calculateModelParams();
-        void updateDBSignals(float des_vel);
+        void updateDBSignals(double surge_d);
         
         // void calculateControlInputs();
 };

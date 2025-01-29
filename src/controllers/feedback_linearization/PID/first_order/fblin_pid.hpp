@@ -13,18 +13,17 @@
 
 #include "controllers/control_laws/PID/first_order/pid.hpp"
 #include "controllers/feedback_linearization/base/fb_lin_control.hpp"
+#include "utils/utils.hpp"
 
 class PIDLin : public FBLin {
-public:
-  PIDLin(double sample_time, double k_p, double k_i, double k_d, double u_max,
-         const DOFControllerType_E &type);
-  ~PIDLin();
+  public:
+    PIDLin(double FB_LIN_UMAX, double FB_LIN_UMIN, const PIDParameters &params);
+    ~PIDLin();
 
-  void calculateManipulations(double chi1);
-  void updateReferences(double chi1_d, double chi1_dot_d);
+    double calculateManipulations(double chi1, double chi1_d, double chi1_dot_d);
 
-private:
-  PID control_law_;
+  private:
+    PID control_law_;
 };
 
 #endif

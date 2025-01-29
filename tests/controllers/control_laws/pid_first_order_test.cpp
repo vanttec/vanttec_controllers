@@ -34,7 +34,6 @@ TEST(PID, SimpleModel){
     velocity += 0.1 * param.kDt;
   }
 
-
   EXPECT_NEAR(position, -5, 0.1);
 }
 
@@ -46,13 +45,13 @@ TEST(PID, ClampU) {
   param.enable_ramp_rate_limit = false;
 
   PID pid(param);
-  EXPECT_LE(pid.update(0, 1), 100);
-  EXPECT_GE(pid.update(0, -1), -100);
+  EXPECT_LE(pid.updateSaturated(0, 1), 100);
+  EXPECT_GE(pid.updateSaturated(0, -1), -100);
 
   PIDParameters no_negative_param = param;
   no_negative_param.kUMin = 0;
   PID no_negative_pid(no_negative_param);
-  EXPECT_GE(no_negative_pid.update(0, -1), 0);
+  EXPECT_GE(no_negative_pid.updateSaturated(0, -1), 0);
 }
 
 TEST(PID, RampRateLimit){

@@ -8,7 +8,7 @@
  * -----------------------------------------------------------------------------
  * */
 
-#include "controllers/feedback_linearization/PID_based/second_order/fblin_6dof_pid.hpp"
+#include "controllers/feedback_linearization/PID/second_order/fblin_6dof_pid.hpp"
 
 std::array<float,6> U_AUX_MAX {FLT_MAX,6};
 
