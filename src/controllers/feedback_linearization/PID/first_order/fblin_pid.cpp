@@ -22,5 +22,6 @@ double PIDLin::calculateManipulations(double chi1, double chi1_d, double chi1_do
     chiX_dot_d_ = chi1_dot_d;
     u_aux_ = -control_law_.update(chi1, chi1_d);
     updateControlSignal();
+
     return u_;
 }

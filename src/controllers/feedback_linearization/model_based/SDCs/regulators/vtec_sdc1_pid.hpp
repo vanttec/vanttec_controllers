@@ -21,7 +21,7 @@ class VTEC_SDC1_1DOF_PID : public PIDLin {
 
     void updateNonLinearFunctions();
 
-    double calculateControlSignals(double chi1, double chi1_d, double chi1_dot_d);
+    void calculateControlSignals(double chi1, double chi1_d, double chi1_dot_d);
 
     void updateControlSignals();
 

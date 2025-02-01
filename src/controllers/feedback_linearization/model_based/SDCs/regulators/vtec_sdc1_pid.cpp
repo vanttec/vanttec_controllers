@@ -21,12 +21,12 @@ void VTEC_SDC1_1DOF_PID::updateNonLinearFunctions() {
   PIDLin::g_x_ = sdc1_model_->g_(0);
 }
 
-double VTEC_SDC1_1DOF_PID::calculateControlSignals(double chi1, double chi1_d, double chi1_dot_d) {
+void VTEC_SDC1_1DOF_PID::calculateControlSignals(double chi1, double chi1_d, double chi1_dot_d) {
   // Only in the case of the car, the next condition must be considered, as
   // achieving reverse is not done by computing negative control signals. This
   // must not be programed in any of the base controllers classes, as in the
   // case of the boat and submarine, reverse is straightforward
-  return std::max(calculateManipulations(chi1, chi1_d, chi1_dot_d), 0.);
+  PIDLin::u_ = std::max(calculateManipulations(chi1, chi1_d, chi1_dot_d), 0.);
 }
 
 void VTEC_SDC1_1DOF_PID::updateControlSignals() {
