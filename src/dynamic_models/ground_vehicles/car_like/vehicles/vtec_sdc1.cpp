@@ -106,6 +106,6 @@ void VTecSDC1DynamicModel::updateDBSignals(double surge_d){
     // For now and until the break is included in the model, when a zero velocity is desired,
     // D shall be set to zeroo (one) 
     
-    if(surge_d < 0.3)
-        D_ = 0;
+    // if(surge_d < 0.3)
+    //     D_ = 0;
 }

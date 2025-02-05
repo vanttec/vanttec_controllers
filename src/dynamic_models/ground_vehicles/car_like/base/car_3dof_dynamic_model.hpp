@@ -41,11 +41,12 @@
 class CarDynamicModel {
     protected:
         float sample_time_;
+        float v_threshold_{1e-2};
 
         // State vectors
-        Eigen::Vector3f eta_;           // x, y, psi
+        Eigen::Vector3f eta_;           // x, y, psi    INERTIAL_FRAME
         Eigen::Vector3f eta_dot_;       // x_dot, y_dot, psi_dot
-        Eigen::Vector3f eta_dot_prev_;  // x_dot, y_dot, psi_dot
+        Eigen::Vector3f eta_dot_prev_;
         Eigen::Vector3f nu_;            // u, v, r
         Eigen::Vector3f nu_dot_;        // u_dot, v_dot, r_dot
         Eigen::Vector3f nu_dot_prev_;
@@ -90,9 +91,9 @@ class CarDynamicModel {
         void setMotorConstants(float Cm1, float Cm2);
 
     public:
-        Eigen::Vector3f     eta_pose_;
-        Eigen::Vector3f   velocities_;
-        Eigen::Vector3f   accelerations_;
+        Eigen::Vector3f   eta_pose_;        // NED
+        Eigen::Vector3f   velocities_;      // Body
+        Eigen::Vector3f   accelerations_;   // Body
         
         /* Non-linear functions */
         Eigen::Vector3f f_;

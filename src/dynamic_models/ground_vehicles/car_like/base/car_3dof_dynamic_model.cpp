@@ -113,20 +113,22 @@ void CarDynamicModel::calculateStates(){
                                                 in the future */
 
     // This comes from controller, that is the reason of why it is commented out
-    // F_throttle_ = (Cm1_ - Cm2_*u)*static_cast<float>(D_);
+    F_throttle_ = (Cm1_ - Cm2_*u)*static_cast<float>(D_);
 
+    /* TB Replaced by Hybrid Model
     if(D_ > 0){
         F_throttle_ -= t_offset_;   // To compensate for model error
     } else {
         F_rr_ -= rr_offset_;        // To compensate for model error
     }
+    */
 
     // This comes from controller, that is the reason of why it is commented out
-    // u_(0) = F_throttle_;// + F_brake_;
+    u_(0) = F_throttle_;// + F_brake_;
     
     // Next condition was set so the vehicle does not move backwards when
     // the throttle force is less than the resistance
-    if(F_rr_ >= u_(0) && u < 1e-2) {
+    if(F_rr_ >= std::fabs(u_(0)) && std::fabs(u) < v_threshold_) {
         u_(0) = 0;
         F_rr_ = 0;
     }
@@ -134,7 +136,7 @@ void CarDynamicModel::calculateStates(){
     alpha_f_ = std::atan2(v + len_f_*r,u) - delta_;
     alpha_r_ = std::atan2(v - len_r_*r,u);
 
-    if(u > 1e-2){
+    if(std::fabs(u) > v_threshold_) {
         F_fy_ = -C_alpha_*alpha_f_;
         F_ry_ = -C_alpha_*alpha_r_;
     } else {
@@ -145,7 +147,7 @@ void CarDynamicModel::calculateStates(){
     Fx = -(F_drag_ + F_rr_ + F_grav_ + F_fy_*std::sin(delta_) - m_*v*r);
 
     // So the model doesn't do weird things without moving forward 
-    if(u > 1e-2){
+    if(std::fabs(u) > v_threshold_) {
         Fy = F_ry_ + F_fy_*std::cos(delta_) - m_*u*r;
         Mz = F_fy_*len_f_*std::cos(delta_) - F_ry_*len_r_;
     } else {
@@ -167,8 +169,14 @@ void CarDynamicModel::calculateStates(){
     nu_dot_ = f_ + g_*u_;
 
     /* Integrating acceleration to get velocities */
-    nu_ += (nu_dot_prev_ + nu_dot_) / 2 * sample_time_;
+    // nu_ += (nu_dot_prev_ + nu_dot_) / 2 * sample_time_;
+    Eigen::Vector3f k1_nu = nu_dot_;  // Use the calculated nu_dot_
+    Eigen::Vector3f k2_nu = f_ + g_*(u_ + 0.5*sample_time_*k1_nu);
+    Eigen::Vector3f k3_nu = f_ + g_*(u_ + 0.5*sample_time_*k2_nu);
+    Eigen::Vector3f k4_nu = f_ + g_*(u_ + sample_time_*k3_nu);
 
+    nu_ += (k1_nu + 2*k2_nu + 2*k3_nu + k4_nu) / 6 * sample_time_;
+    
     // So the model doesn't do weird things without moving forward 
     // if(delta_ == 0.0){
     //     nu_(1) = 0.0;
@@ -179,9 +187,15 @@ void CarDynamicModel::calculateStates(){
     eta_dot_ = R_*nu_;
 
     /* Integrating velocities to get positions */
-    eta_ += (eta_dot_prev_ + eta_dot_) / 2 * sample_time_;
+    // eta_ += (eta_dot_prev_ + eta_dot_) / 2 * sample_time_;
+    Eigen::Vector3f k1_eta = eta_dot_;  // Use the calculated eta_dot_
+    Eigen::Vector3f k2_eta = R_*(nu_ + 0.5*sample_time_*k1_eta);
+    Eigen::Vector3f k3_eta = R_*(nu_ + 0.5*sample_time_*k2_eta);
+    Eigen::Vector3f k4_eta = R_*(nu_ + sample_time_*k3_eta);
 
-    if (std::fabs(eta_(2)) > M_PI){
+    eta_ += (k1_eta + 2*k2_eta + 2*k3_eta + k4_eta) / 6 * sample_time_;
+
+    if (std::fabs(eta_(2)) > M_PI) {
         eta_(2) = (eta_(2) / std::fabs(eta_(2))) * (std::fabs(eta_(2)) - 2 * M_PI);
     }
 
