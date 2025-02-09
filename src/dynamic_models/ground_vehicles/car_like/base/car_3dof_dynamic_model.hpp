@@ -105,8 +105,9 @@ class CarDynamicModel {
         uint8_t D_;         // Throttle command
         float delta_;       // Steering angle
 
+        void computeDynamics();
+        virtual void computeState();
         void setInitPose(const Eigen::Vector3f &pose);
-        void calculateStates();
         void setThrottle(uint8_t D);
         void setSteering(float delta);
         void setPitch(float pitch);

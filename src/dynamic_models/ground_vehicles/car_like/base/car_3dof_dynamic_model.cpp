@@ -90,7 +90,7 @@ void CarDynamicModel::setMotorConstants(float Cm1, float Cm2)
     Cm2_ = Cm2;
 }
 
-void CarDynamicModel::calculateStates(){
+void CarDynamicModel::computeDynamics(){
     
     utils::calculateR_z(R_, eta_(2));
     
@@ -165,6 +165,10 @@ void CarDynamicModel::calculateStates(){
 
     g_(0,0) = 1/m_;
 
+    computeState();
+}
+
+void CarDynamicModel::computeState() {
     /* 3-DOF state calculation */
     nu_dot_ = f_ + g_*u_;
 

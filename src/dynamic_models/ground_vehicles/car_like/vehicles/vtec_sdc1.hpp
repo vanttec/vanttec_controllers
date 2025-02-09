@@ -19,7 +19,7 @@
 #include "dynamic_models/ground_vehicles/car_like/base/car_3dof_dynamic_model.hpp"
 
 class VTecSDC1DynamicModel : public CarDynamicModel {
-    private:
+    protected:
         float rr_offset_ {0};
         float throttle_offset_ {0};
 
